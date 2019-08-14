@@ -31,6 +31,14 @@ public class DateHelper {
         return DateTime.now().toString(format);
     }
 
+    /**
+     * 格式化当前时间
+     * @return
+     */
+    public static String formatNowDate() {
+        return DateTime.now().toString(YYYY_MM_DD);
+    }
+
     public static String getNDate(Date date,String format,int day){
         return new DateTime(date).plusDays(day).toString(format);
     }
