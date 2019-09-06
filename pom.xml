@@ -85,12 +85,6 @@
       <version>${mybatis.pagehelper.version}</version>
     </dependency>
 
-    <!-- 任务调度 -->
-    <dependency>
-      <groupId>org.quartz-scheduler</groupId>
-      <artifactId>quartz</artifactId>
-    </dependency>
-
 
     <!-- 控制台 SQL日志打印插件 -->
     <dependency>

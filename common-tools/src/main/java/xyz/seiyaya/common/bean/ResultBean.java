@@ -45,7 +45,7 @@ public class ResultBean implements Serializable {
     /**
      * code常量
      */
-    enum ResultConstant{
+    public enum ResultConstant{
 
         /**
          * 成功
