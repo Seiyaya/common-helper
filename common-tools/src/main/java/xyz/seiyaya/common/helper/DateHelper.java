@@ -39,6 +39,25 @@ public class DateHelper {
         return DateTime.now().toString(YYYY_MM_DD);
     }
 
+    /**
+     * 格式化指定时间
+     * @param date
+     * @return
+     */
+    public static String formatDate(Date date){
+        return formatDate(date,YYYY_MM_DD_HH_MM_SS);
+    }
+
+    /**
+     * 格式化指定时间
+     * @param date
+     * @param pattern
+     * @return
+     */
+    public static String formatDate(Date date,String pattern){
+        return new DateTime(date).toString(pattern);
+    }
+
     public static String getNDate(Date date,String format,int day){
         return new DateTime(date).plusDays(day).toString(format);
     }

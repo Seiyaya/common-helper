@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils;
  * @author seiyaya
  * @date 2019/8/13 15:26
  */
-public class StringHelper {
+public class StringHelper extends StringUtils {
 
     /**
      * 下划线方式的命名转成驼峰

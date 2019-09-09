@@ -8,6 +8,7 @@ import xyz.seiyaya.common.base.BaseController;
 import xyz.seiyaya.common.bean.ResultBean;
 import xyz.seiyaya.common.quartz.bean.dto.QuartzInfoDto;
 import xyz.seiyaya.common.quartz.bean.dto.QuartzLogDto;
+import xyz.seiyaya.common.quartz.utils.QuartzHelper;
 
 /**
  * @author wangjia
@@ -35,7 +36,8 @@ public class QuartzController extends BaseController {
      * @return
      */
     @RequestMapping("/add")
-    public ResultBean add(@RequestBody QuartzInfoDto quartzInfoDto){
+    public ResultBean add(@RequestBody QuartzInfoDto quartzInfoDto) throws Exception {
+        QuartzHelper.addJob(quartzInfoDto);
         return new ResultBean();
     }
 
