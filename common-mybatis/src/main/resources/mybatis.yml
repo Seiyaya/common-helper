@@ -1,19 +1,19 @@
 # 数据库连接信息
 db:
-  dbName: demo
-  url: jdbc:mysql://127.0.0.1:3306/${db.dbName}?characterEncoding=utf8
+  databaseName: activiti
+  url: jdbc:mysql://127.0.0.1:3306/${databaseName}?characterEncoding=utf8
   user: root
   password: 123456
-  tableName: table1
+  tableName: act_evt_log
   dbClass: com.mysql.jdbc.Driver
 
 # 类的信息配置
 class:
-  author: Seiyaya
+  author: seiyaya
   function: 演示表
   commonName: xyz.seiyaya.common.base  # 主要包含BaseDao BaseService
   packageName: xyz.seiyaya.mybatis.generate
-  moduleName: 1
+  moduleName: quartz
   mybatisDir: config/mappers
   dbType: mysql
-  classNamePrefix: ${db.tableName}
+  classNamePrefix: ${tableName}

@@ -5,7 +5,6 @@ import ${packageName}.${moduleName}.domain.${ClassName};
 
 /**
  * ${functionName}Dao
- * 
  * @author ${classAuthor}
  * @version 1.0.0
  * @date ${classDate}

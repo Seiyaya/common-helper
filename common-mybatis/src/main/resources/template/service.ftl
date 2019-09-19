@@ -1,7 +1,6 @@
 package ${packageName}.${moduleName}.service;
 
 import ${commonName}.service.BaseService;
-import ${packageName}.${moduleName}.${ClassName};
 import com.github.pagehelper.Page;
 
 import java.util.List;
@@ -13,9 +12,6 @@ import java.util.Map;
  * @author ${classAuthor}
  * @version 1.0.0
  * @date ${classDate}
-
- *
- *
  */
 public interface ${ClassName}Service extends BaseService<${ClassName}, Long>{
     /**

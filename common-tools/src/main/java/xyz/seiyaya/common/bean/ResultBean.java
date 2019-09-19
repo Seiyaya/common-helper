@@ -38,8 +38,9 @@ public class ResultBean implements Serializable {
         return this;
     }
 
-    public void setData(Object value){
+    public ResultBean setData(Object value){
         results.put(DEFAULT_KEY,value);
+        return this;
     }
 
     /**

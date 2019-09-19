@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<!-- ${tableName}表:${functionName}模块 -->
 <mapper namespace="${packageName}.${moduleName}.mapper.${ClassName}Mapper">
     <!--返回Map-->        
-    <resultMap id="BaseResultMap" type="${packageName}.${moduleName}.domain.${ClassName}">
+    <resultMap id="BaseResultMap" type="${packageName}.${moduleName}.bean.${ClassName}">
     <#list list as column>
     <#if column.columnName == "id">
         <id column="${column.typeName}" property="${column.columnName}" jdbcType="${column.jdbcType}" />

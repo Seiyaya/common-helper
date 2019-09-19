@@ -23,12 +23,8 @@ import java.util.Map;
  * @author ${classAuthor}
  * @version 1.0.0
  * @date ${classDate}
-
- *
- *
  */
-
-@Service("${className}Service")
+@Service
 public class ${ClassName}ServiceImpl extends BaseServiceImpl<${ClassName}, Long> implements ${ClassName}Service {
 
     private static final Logger logger = LoggerFactory.getLogger(${ClassName}ServiceImpl.class);

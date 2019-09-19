@@ -1,14 +1,23 @@
 package xyz.seiyaya.common.quartz.controller;
 
+import com.github.pagehelper.Page;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.seiyaya.common.base.BaseController;
 import xyz.seiyaya.common.bean.ResultBean;
+import xyz.seiyaya.common.quartz.bean.QuartzInfo;
+import xyz.seiyaya.common.quartz.bean.QuartzLog;
 import xyz.seiyaya.common.quartz.bean.dto.QuartzInfoDto;
 import xyz.seiyaya.common.quartz.bean.dto.QuartzLogDto;
+import xyz.seiyaya.common.quartz.service.QuartzInfoService;
+import xyz.seiyaya.common.quartz.service.QuartzLogService;
 import xyz.seiyaya.common.quartz.utils.QuartzHelper;
+
+import java.util.List;
 
 /**
  * @author wangjia
@@ -20,14 +29,23 @@ import xyz.seiyaya.common.quartz.utils.QuartzHelper;
 @Slf4j
 public class QuartzController extends BaseController {
 
+
+    @Autowired
+    private QuartzInfoService quartzInfoService;
+
+    @Autowired
+    private QuartzLogService quartzLogService;
+
     /**
      * 定时任务列表(分页)
      * @param quartzInfoDto
      * @return
      */
-    @RequestMapping("/page")
-    public ResultBean pageList(@RequestBody QuartzInfoDto quartzInfoDto){
-        return new ResultBean();
+    @RequestMapping("/page/{currentPage}/{pageSize}")
+    public ResultBean pageList(@RequestBody QuartzInfoDto quartzInfoDto,
+                               @PathVariable Integer currentPage,@PathVariable Integer pageSize){
+        Page<QuartzInfo> page = quartzInfoService.page(quartzInfoDto,currentPage,pageSize);
+        return new ResultBean().setData(page);
     }
 
     /**
@@ -37,6 +55,7 @@ public class QuartzController extends BaseController {
      */
     @RequestMapping("/add")
     public ResultBean add(@RequestBody QuartzInfoDto quartzInfoDto) throws Exception {
+        quartzInfoService.insert(quartzInfoDto);
         QuartzHelper.addJob(quartzInfoDto);
         return new ResultBean();
     }
@@ -48,6 +67,7 @@ public class QuartzController extends BaseController {
      */
     @RequestMapping("/update")
     public ResultBean update(@RequestBody QuartzInfoDto quartzInfoDto){
+        quartzInfoService.updateById(quartzInfoDto);
         return new ResultBean();
     }
 
@@ -68,7 +88,8 @@ public class QuartzController extends BaseController {
      */
     @RequestMapping("/list")
     public ResultBean list(@RequestBody QuartzInfoDto quartzInfoDto){
-        return new ResultBean();
+        List<QuartzInfo> resultList = quartzInfoService.getList(quartzInfoDto);
+        return new ResultBean().setData(resultList);
     }
 
     /**
@@ -76,8 +97,10 @@ public class QuartzController extends BaseController {
      * @param quartzLogDto
      * @return
      */
-    @RequestMapping("/log/page")
-    public ResultBean logPage(@RequestBody QuartzLogDto quartzLogDto){
-        return new ResultBean();
+    @RequestMapping("/log/page/{currentPage}/{pageSize}")
+    public ResultBean logPage(@RequestBody QuartzLogDto quartzLogDto,
+                              @PathVariable Integer currentPage,@PathVariable Integer pageSize){
+        Page<QuartzLog> page = quartzLogService.page(quartzLogDto, currentPage, pageSize);
+        return new ResultBean().setData(page);
     }
 }

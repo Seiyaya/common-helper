@@ -4,6 +4,11 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.ui.Model;
 import xyz.seiyaya.common.helper.DateHelper;
@@ -12,6 +17,7 @@ import xyz.seiyaya.common.helper.FreeMarkerHelper;
 
 import java.io.File;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,7 +27,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static xyz.seiyaya.common.helper.StringHelper.splitCharTransToUpper;
+import static xyz.seiyaya.mybatis.generate.constant.GenerateConstants.DB_MYSQL;
 
 /**
  * mybatis代码生成器
@@ -30,41 +39,64 @@ import static xyz.seiyaya.common.helper.StringHelper.splitCharTransToUpper;
  * @date 2019/8/8 19:00
  */
 @Slf4j
+@SpringBootApplication
+@PropertySource(value = "classpath:mybatis.yml")
 public class MybatisStarter {
 
+    @Value("${dbType}")
     private String dbType;
 
+    @Value("${tableName}")
     private String tableName;
+    @Value("${databaseName}")
     private String databaseName;
+    @Value("${packageName}")
     private String packageName;
 
-
-    private String dbClass = "";
+    @Value("${dbClass}")
+    private String dbClass;
+    @Value("${url}")
     private String dbUrl;
+    @Value("${user}")
     private String username;
+    @Value("${password}")
     private String password;
 
 
-    private String configTable;
+    @Value("${classNamePrefix}")
     private String classNamePrefix;
+    @Value("${mybatisDir}")
     private String mybatisDir;
+    @Value("${commonName}")
     private String commonName;
+    @Value("${author}")
     private String classAuthor;
+    @Value("${function}")
     private String classFunction;
+    @Value("${moduleName}")
+    private String moduleName;
 
     private static final String FILE_SEPARATOR = File.separator;
 
 
     public static void main(String[] args) throws Exception {
 
+        ConfigurableApplicationContext run = SpringApplication.run(MybatisStarter.class, args);
 
-        log.info("代码生成开始====================");
+        MybatisStarter bean = run.getBean(MybatisStarter.class);
+        log.info("bean{}",bean);
 
-        MybatisStarter starter = new MybatisStarter();
-        starter.init();
-        starter.start();
+        log.info(" code generate start");
 
-        log.info("代码生成结束====================");
+        try {
+            bean.init();
+            bean.start();
+        }catch (Exception e){
+            log.info("",e);
+            run.close();
+        }
+
+        log.info("code generate end");
     }
 
     /**
@@ -77,32 +109,33 @@ public class MybatisStarter {
      * 开始生成
      */
     private void start() throws Exception {
-        String executeSQL = null;
+        String executeSql = null;
         String showTableSql = null;
-        if("mysql".equals(dbType)){
+        if(DB_MYSQL.equals(dbType)){
             dbClass = "com.mysql.jdbc.Driver";
             showTableSql = "show tables";
-            executeSQL = "SELECT COLUMN_NAME, DATA_TYPE, COLUMN_COMMENT FROM INFORMATION_SCHEMA.`COLUMNS` WHERE table_name = '"+tableName+" ' and table_scheme= '"+databaseName+"'";
+            executeSql = String.format("SELECT COLUMN_NAME, DATA_TYPE, COLUMN_COMMENT FROM INFORMATION_SCHEMA.`COLUMNS` WHERE table_name = '%s' and table_schema= '%s'",tableName,databaseName);
         }
 
         Connection connection = DBHelper.getConnection(dbClass, dbUrl, username, password);
         Statement statement = connection.createStatement();
         ResultSet tableSet = statement.executeQuery(showTableSql);
         while(tableSet.next()){
-            String dbTableName = tableSet.getString(0);
-            if(!configTable.equals(dbTableName)){
+            String dbTableName = tableSet.getString(1);
+            if(!tableName.equals(dbTableName)){
                 continue;
             }
 
             //将首字母大写
-            String className = new StringBuilder(classNamePrefix.substring(0,1).toUpperCase()).append(classNamePrefix.substring(1,classNamePrefix.length())).toString();
+            //需要将className的_转为空，且后面第一个字母大写
+            String className = convertClassName(classNamePrefix);
             File projectPath = new DefaultResourceLoader().getResource("").getFile();
             while (!new File(projectPath.getPath() + FILE_SEPARATOR + "src").exists()) {
                 projectPath = projectPath.getParentFile();
             }
 
             //模版文件路径
-            String templatePath = StringUtils.replace(projectPath + "/main/resources/template/mysql", "/", FILE_SEPARATOR);
+            String templatePath = StringUtils.replace(projectPath + "/src/main/resources/template/", "/", FILE_SEPARATOR);
 
             //java文件路径
             String javaPath = StringUtils.replaceEach(projectPath + "/src/main/java/" + StringUtils.lowerCase(packageName), new String[] { "/", "." },
@@ -120,10 +153,11 @@ public class MybatisStarter {
             params.put("ClassName", className);
             params.put("classAuthor", classAuthor);
             params.put("classDate", DateHelper.formatNowDate());
-            params.put("functionName", classFunction);
+            params.put("functionName", new String(classFunction.getBytes(ISO_8859_1), UTF_8));
             params.put("tableName", StringUtils.lowerCase(tableName));
-            List<Column> columnList = getList(connection, executeSQL);
-            params.put("list", getList(connection,executeSQL));
+            params.put("moduleName",moduleName);
+            List<Column> columnList = getList(connection, executeSql);
+            params.put("list", columnList);
             params.put("listSize", columnList.size());
             // mybatis {替代单词
             params.put("leftBraces", "{");
@@ -144,7 +178,7 @@ public class MybatisStarter {
 
             //生成接口mapper
             String mapperContent = FreeMarkerHelper.renderTemplate(cfg.getTemplate("mapper.ftl"), params);
-            String mapperPath = batisXMLPath+FILE_SEPARATOR+params.get("ClassName")+".java";
+            String mapperPath = batisXMLPath+FILE_SEPARATOR+params.get("ClassName")+"Mapper.java";
             FileHelper.writeFile(mapperContent,mapperPath);
 
             //生成service接口和service实现类
@@ -159,6 +193,20 @@ public class MybatisStarter {
 
         connection.close();
         statement.close();
+    }
+
+    /**
+     * 将className转成驼峰形式
+     * @param className
+     * @return
+     */
+    private String convertClassName(String className) {
+        String[] classNames = className.split("_");
+        StringBuilder result = new StringBuilder();
+        for(String name : classNames){
+            result.append(name.substring(0, 1).toUpperCase() + name.substring(1));
+        }
+        return result.toString();
     }
 
     /**
