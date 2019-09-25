@@ -1,5 +1,6 @@
 package xyz.seiyaya.common.base;
 
+import com.github.pagehelper.Page;
 import xyz.seiyaya.common.helper.DBParam;
 
 import java.io.Serializable;
@@ -53,4 +54,18 @@ public interface BaseMapper<T,ID extends Serializable> {
      * @return
      */
     List<T> listSelective(DBParam param);
+
+    /**
+     * 获取分页
+     * @param t
+     * @return
+     */
+    Page<T> page(T t);
+
+    /**
+     * 获取查询列表
+     * @param t
+     * @return
+     */
+    List<T> getList(T t);
 }

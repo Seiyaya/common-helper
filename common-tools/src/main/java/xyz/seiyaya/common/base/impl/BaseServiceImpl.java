@@ -1,9 +1,12 @@
 package xyz.seiyaya.common.base.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import xyz.seiyaya.common.base.BaseMapper;
 import xyz.seiyaya.common.base.BaseService;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author wangjia
@@ -27,6 +30,17 @@ public abstract class BaseServiceImpl<T, ID extends Serializable> implements Bas
     @Override
     public int updateById(T t) {
         return mapper.update(t);
+    }
+
+    @Override
+    public Page<T> page(T t, Integer currentPage, Integer pageSize) {
+        PageHelper.startPage(currentPage,pageSize);
+        return mapper.page(t);
+    }
+
+    @Override
+    public List<T> getList(T t) {
+        return mapper.getList(t);
     }
 
     /**
