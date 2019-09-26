@@ -9,7 +9,7 @@ import java.util.Objects;
 /**
  * @author wangjia
  * @version 1.0
- * @date: 2019/9/25 15:44
+ * @date 2019/9/25 15:44
  */
 @Slf4j
 public class DBHelper {

@@ -12,7 +12,7 @@ import java.sql.SQLException;
  * 查询tester，作为debug的入口
  * @author wangjia
  * @version 1.0
- * @date: 2019/9/25 15:44
+ * @date 2019/9/25 15:44
  */
 @Slf4j
 public class QueryTester {
@@ -21,7 +21,7 @@ public class QueryTester {
         queryUser();
     }
 
-    public static void queryUser() throws SQLException {
+    private static void queryUser() throws SQLException {
         String sql = "select * from t_test_user where id = ?";
         int id = 1;
         /**
