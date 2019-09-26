@@ -14,7 +14,7 @@ import java.util.Objects;
 @Slf4j
 public class DBHelper {
 
-    private static String url = "jdbc:mysql://127.0.0.1:3306/common_tester?useUnicode=true&characterEncoding=utf8&autoReconnect=true&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull";
+    private static String url = "jdbc:mysql://127.0.0.1:3306/common_tester?useUnicode=true&characterEncoding=utf8&autoReconnect=true&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull&&useServerPrepStmts=false";
     private static String dbClass = "com.mysql.jdbc.Driver";
     private static String username = "root";
     private static String password = "123456";

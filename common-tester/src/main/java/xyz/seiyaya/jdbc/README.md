@@ -16,6 +16,7 @@
     - 在这个过程中会主要包含建立连接以及身份验证 `com.mysql.jdbc.ConnectionImpl.getInstance(host(props), port(props), props, database(props), url);`
     - ` createNewIO(false);`--> `coreConnect()`再该方法创建MysqlIO,该对象进行建立连接(`socketFactory.connect(this.host, this.port, props);`)
     - 连接上之后就回去验证登录名和密码`this.io.doHandshake(this.user, this.password, this.database);`,至此就得到了mysql连接对象
++ 大致的调用流程见`QueryTester`
 
 ## 创建PreparedStatement，并设置参数
 + 
