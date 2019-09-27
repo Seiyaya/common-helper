@@ -3,6 +3,7 @@ package xyz.seiyaya.mybatis.bean;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author wangjia
@@ -17,4 +18,6 @@ public class UserBean {
     private String password;
     private Integer age;
     private Date birthday;
+
+    private AccountBean accountList;
 }
