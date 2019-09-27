@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="xyz.seiyaya.mybatis.mapper.UserBeanMapper">
-    <select id="findUser" resultType="userBean">
-        SELECT * FROM t_test_user where id = #{id}
+
+    <select id="findUser" resultType="xyz.seiyaya.mybatis.bean.UserBean" databaseId="mysql">
+        SELECT * FROM t_test_user
+        <where>
+            <if test="id != null">and id = #{id}</if>
+        </where>
     </select>
+
+    <update id="updateUserById">
+        update t_test_user
+        <set>
+            <if test="name != null"> name = #{name}</if>
+        </set>
+        where id = #{id}
+    </update>
 </mapper>

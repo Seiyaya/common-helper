@@ -11,4 +11,6 @@ import xyz.seiyaya.mybatis.bean.UserBean;
 public interface UserBeanMapper {
 
     UserBean findUser(@Param("id") Integer id);
+
+    void updateUserById(UserBean userBean);
 }
