@@ -22,7 +22,7 @@
     <select id="findUser" resultType="xyz.seiyaya.mybatis.bean.UserBean">
         SELECT * FROM t_test_user
         <where>
-            <if test="id != null">and id = #{id}</if>
+            <if test="id != null">and id = #{id,javaType=int,jdbcType=INTEGER}</if>
         </where>
     </select>
 
