@@ -2,7 +2,24 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="xyz.seiyaya.mybatis.mapper.UserBeanMapper">
 
-    <select id="findUser" resultType="xyz.seiyaya.mybatis.bean.UserBean" databaseId="mysql">
+    <resultMap id="userBeanMap" type="xyz.seiyaya.mybatis.bean.UserBean">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="password" column="password"/>
+        <result property="age" column="age"/>
+        <result property="birthday" column="birthday"/>
+        <association property="accountId" column="account_id" resultMap="accountMap"/>
+    </resultMap>
+
+    <resultMap id="accountMap" type="xyz.seiyaya.mybatis.bean.AccountBean">
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="currentBalance" column="current_balance"/>
+        <result property="totalBalance" column="total_balance"/>
+        <result property="initBalance" column="init_balance"/>
+    </resultMap>
+
+    <select id="findUser" resultType="xyz.seiyaya.mybatis.bean.UserBean">
         SELECT * FROM t_test_user
         <where>
             <if test="id != null">and id = #{id}</if>

@@ -19,5 +19,5 @@ public class UserBean {
     private Integer age;
     private Date birthday;
 
-    private AccountBean accountList;
+    private AccountBean accountId;
 }

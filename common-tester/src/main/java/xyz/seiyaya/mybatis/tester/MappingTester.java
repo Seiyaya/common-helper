@@ -2,6 +2,7 @@ package xyz.seiyaya.mybatis.tester;
 
 import org.apache.ibatis.binding.MapperRegistry;
 import org.apache.ibatis.builder.xml.XMLConfigBuilder;
+import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.parsing.XPathParser;
 import org.junit.Test;
@@ -34,6 +35,19 @@ public class MappingTester {
         resourceAsStream = getClass().getClassLoader().getResourceAsStream("mybatis-config.xml");
         XMLConfigBuilder xmlConfigBuilder = new XMLConfigBuilder(resourceAsStream);
         mapperElementMethod.invoke(xmlConfigBuilder, mappersNode);
+        /**
+         * 其中主要做的是
+         * 1.解析mapper.xml各个节点
+         *      @see XMLMapperBuilder#configurationElement(org.apache.ibatis.parsing.XNode)
+         *      1).namespace属性
+         *      2).<cache-ref/>     主要用来和别的mapper共用二级缓存
+         *      3).<cache/>         主要用来配置二级缓存
+         *      4).<resultMap/>
+         *      5).<sql/>
+         *      6).<select/> <delete/> <update/> <insert/>
+         * 2.添加资源路径到现有集合缓存
+         * 3.通过命名空间绑定Mapper接口
+         */
 
         /**
          * 此处直接返回的mapper的key视图，也就是key=接口全路径  value时代理工厂
