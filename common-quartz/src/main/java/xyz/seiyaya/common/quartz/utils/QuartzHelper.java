@@ -2,12 +2,10 @@ package xyz.seiyaya.common.quartz.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
-import org.quartz.impl.JobDetailImpl;
 import org.quartz.impl.StdSchedulerFactory;
-import org.quartz.impl.triggers.CronTriggerImpl;
 import xyz.seiyaya.common.exception.ParamsException;
 import xyz.seiyaya.common.helper.StringHelper;
-import xyz.seiyaya.common.quartz.bean.dto.QuartzInfoDto;
+import xyz.seiyaya.common.quartz.bean.QuartzInfo;
 
 /**
  * @author wangjia
@@ -28,7 +26,7 @@ public class QuartzHelper {
      * @param quartzInfoDto
      * @throws Exception
      */
-    public static void addJob(QuartzInfoDto quartzInfoDto) throws Exception {
+    public static void addJob(QuartzInfo quartzInfoDto) throws Exception {
         if(StringHelper.isEmpty(quartzInfoDto.getName()) || StringHelper.isEmpty(quartzInfoDto.getClassName())){
             throw new ParamsException();
         }
@@ -41,5 +39,41 @@ public class QuartzHelper {
         if (!scheduler.isShutdown()) {
             scheduler.start();
         }
+    }
+
+    /**
+     * 从quartz容器中移除
+     * @param code
+     */
+    public static void removeJob(String code) throws Exception {
+        Scheduler scheduler = gSchedulerFactory.getScheduler();
+
+        TriggerKey triggerKey = new TriggerKey(code, TRIGGER_GROUP_NAME);
+        // 停止触发器
+        scheduler.pauseTrigger(triggerKey);
+        // 移除触发器
+        scheduler.unscheduleJob(triggerKey);
+
+        //删除定时任务
+        JobKey jobKey = new JobKey(code, JOB_GROUP_NAME);
+        scheduler.deleteJob(jobKey);
+    }
+
+    /**
+     * 立即执行定时任务
+     * @param code
+     */
+    public static void startJob(String code) throws Exception{
+        Scheduler scheduler = gSchedulerFactory.getScheduler();
+        JobKey jobKey = new JobKey(code,JOB_GROUP_NAME);
+        scheduler.triggerJob(jobKey);
+    }
+
+    /**
+     * 启动容器中所有的定时任务
+     */
+    public static void startJobs() throws SchedulerException {
+        Scheduler scheduler = gSchedulerFactory.getScheduler();
+        scheduler.start();
     }
 }

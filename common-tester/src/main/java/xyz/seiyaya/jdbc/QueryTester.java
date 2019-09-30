@@ -1,6 +1,8 @@
 package xyz.seiyaya.jdbc;
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Test;
+import sun.reflect.Reflection;
 import xyz.seiyaya.jdbc.utils.DBHelper;
 
 import java.sql.Connection;
@@ -63,5 +65,10 @@ public class QueryTester {
         while(resultSet.next()){
             log.info("name:{}",resultSet.getString(2));
         }
+    }
+
+    @Test
+    public void testCallerClass(){
+        log.info("{}", Reflection.getCallerClass());
     }
 }

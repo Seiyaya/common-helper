@@ -48,4 +48,11 @@ public interface BaseService<T,ID extends Serializable> {
      * @return
      */
     List<T> getList(T t);
+
+    /**
+     * 通过指定条件获取对象
+     * @param t
+     * @return
+     */
+    T getByCondition(T t);
 }
