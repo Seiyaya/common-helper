@@ -68,4 +68,11 @@ public interface BaseMapper<T,ID extends Serializable> {
      * @return
      */
     List<T> getList(T t);
+
+    /**
+     * 根据条件获取对象
+     * @param t
+     * @return
+     */
+    T getByCondition(T t);
 }
