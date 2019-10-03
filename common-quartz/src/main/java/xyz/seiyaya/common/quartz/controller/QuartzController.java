@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.seiyaya.common.base.BaseController;
+import xyz.seiyaya.common.bean.ConstantBean;
 import xyz.seiyaya.common.bean.ResultBean;
 import xyz.seiyaya.common.quartz.bean.QuartzInfo;
 import xyz.seiyaya.common.quartz.bean.QuartzLog;
@@ -61,12 +62,28 @@ public class QuartzController extends BaseController {
     }
 
     /**
-     * 更新定时任务
+     * 更新定时任务,启用和禁用
      * @param quartzInfoDto
      * @return
      */
     @RequestMapping("/update")
-    public ResultBean update(@RequestBody QuartzInfoDto quartzInfoDto){
+    public ResultBean update(@RequestBody QuartzInfoDto quartzInfoDto)throws Exception{
+        QuartzInfo quartzInfo = quartzInfoService.getById(quartzInfoDto.getId());
+        if (quartzInfo == null) {
+            return new ResultBean("定时任务不存在",ResultBean.ResultConstant.CODE_ERROR.getCode());
+        }
+        if(quartzInfo.getState().equals(quartzInfo.getState())){
+            return new ResultBean("参数错误",ResultBean.ResultConstant.CODE_ERROR.getCode());
+        }
+
+        if(ConstantBean.NUMBER_ZERO.equals(quartzInfo.getState())){
+            //禁用定时任务
+            QuartzHelper.removeJob(quartzInfo.getCode());
+        }else if(ConstantBean.NUMBER_ONE.equals(quartzInfo.getState())){
+            //启动定时任务
+            Object clazz = Class.forName(quartzInfo.getClassName()).newInstance();
+            QuartzHelper.addJob(quartzInfo);
+        }
         quartzInfoService.updateById(quartzInfoDto);
         return new ResultBean();
     }
@@ -77,7 +94,14 @@ public class QuartzController extends BaseController {
      * @return
      */
     @RequestMapping("/justRun")
-    public ResultBean justRun(@RequestBody QuartzInfoDto quartzInfoDto){
+    public ResultBean justRun(@RequestBody QuartzInfoDto quartzInfoDto) throws Exception {
+        QuartzInfo quartzInfo = quartzInfoService.getById(quartzInfoDto.getId());
+
+        if (quartzInfo == null || ConstantBean.NUMBER_ZERO.equals(quartzInfo.getState())) {
+            return new ResultBean("定时任务不存在或者已经停止",ResultBean.ResultConstant.CODE_ERROR.getCode());
+        }
+
+        QuartzHelper.startJob(quartzInfo.getCode());
         return new ResultBean();
     }
 

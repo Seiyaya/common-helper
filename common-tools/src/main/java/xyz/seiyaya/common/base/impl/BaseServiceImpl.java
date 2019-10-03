@@ -43,6 +43,11 @@ public abstract class BaseServiceImpl<T, ID extends Serializable> implements Bas
         return mapper.getList(t);
     }
 
+    @Override
+    public T getByCondition(T t) {
+        return mapper.getByCondition(t);
+    }
+
     /**
      * 子类需要实现的，直接调用mapper操作公用方法
      * @return
