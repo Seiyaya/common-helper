@@ -39,7 +39,7 @@
     </sql>
     
     
-    <insert id="save" parameterType="${packageName}.${moduleName}.domain.${ClassName}">
+    <insert id="insert" parameterType="${packageName}.${moduleName}.domain.${ClassName}">
         insert into ${tableName}(<#list list as column><#if column.columnName == "id"><#else>${column.typeName}<#if column_index+1 != listSize>,<#else></#if></#if></#list>)values(<#list list as column><#if column.columnName == "id"><#else >#${leftBraces}${column.columnName},jdbcType=${column.jdbcType}${rightBraces}<#if column_index+1 != listSize>,<#else></#if></#if ></#list>)
     </insert>
 
@@ -57,7 +57,7 @@
     </update>
 
 
-    <update id="updateSelective"  parameterType="java.util.HashMap">
+    <update id="updateByCondition"  parameterType="java.util.HashMap">
         update ${tableName}
           <set>
             <#list list as column>
@@ -86,14 +86,14 @@
         where id = #${leftBraces}id,jdbcType=INTEGER${rightBraces}
     </select>
 
-	<select id="findSelective" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+	<select id="getByCondition" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
         from ${tableName}
         <include refid="searchBy"/>
     </select>
                
-    <select id="listSelective" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+    <select id="getList" resultMap="BaseResultMap" parameterType="java.util.HashMap">
         select
         <include refid="Base_Column_List" />
         from ${tableName}

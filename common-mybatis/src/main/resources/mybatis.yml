@@ -1,17 +1,18 @@
 # 数据库连接信息
 db:
-  databaseName: activiti
+  databaseName: website
   url: jdbc:mysql://127.0.0.1:3306/${databaseName}?characterEncoding=utf8
   user: root
   password: 123456
-  tableName: act_evt_log
+  tableName: t_upload_pic
   dbClass: com.mysql.jdbc.Driver
 
 # 类的信息配置
 class:
   author: seiyaya
-  function: 演示表
-  commonName: xyz.seiyaya.common.base  # 主要包含BaseDao BaseService
+  function: 图片上传
+  # 主要包含BaseDao BaseService
+  commonName: xyz.seiyaya.common.base
   packageName: xyz.seiyaya.mybatis.generate
   moduleName: quartz
   mybatisDir: config/mappers

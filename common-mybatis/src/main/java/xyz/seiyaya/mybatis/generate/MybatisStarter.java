@@ -97,6 +97,7 @@ public class MybatisStarter {
         }
 
         log.info("code generate end");
+        run.close();
     }
 
     /**
@@ -204,7 +205,9 @@ public class MybatisStarter {
         String[] classNames = className.split("_");
         StringBuilder result = new StringBuilder();
         for(String name : classNames){
-            result.append(name.substring(0, 1).toUpperCase() + name.substring(1));
+            if(!"t".equals(name)){
+                result.append(name.substring(0, 1).toUpperCase() + name.substring(1));
+            }
         }
         return result.toString();
     }

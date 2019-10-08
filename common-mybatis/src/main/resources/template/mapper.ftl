@@ -1,6 +1,7 @@
 package ${packageName}.${moduleName}.mapper;
 
-import ${commonName}.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
+import xyz.seiyaya.common.base.BaseMapper;
 import ${packageName}.${moduleName}.domain.${ClassName};
 
 /**
@@ -9,8 +10,7 @@ import ${packageName}.${moduleName}.domain.${ClassName};
  * @version 1.0.0
  * @date ${classDate}
  */
+@Mapper
 public interface ${ClassName}Mapper extends BaseMapper<${ClassName}, Long> {
-
-    
 
 }

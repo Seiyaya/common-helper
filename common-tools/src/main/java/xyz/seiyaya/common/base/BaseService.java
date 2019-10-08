@@ -1,6 +1,7 @@
 package xyz.seiyaya.common.base;
 
 import com.github.pagehelper.Page;
+import xyz.seiyaya.common.helper.DBParam;
 
 import java.io.Serializable;
 import java.util.List;
@@ -55,4 +56,11 @@ public interface BaseService<T,ID extends Serializable> {
      * @return
      */
     T getByCondition(T t);
+
+    /**
+     * 根据指定条件更新
+     * @param param
+     * @return
+     */
+    int updateByCondition(DBParam param);
 }

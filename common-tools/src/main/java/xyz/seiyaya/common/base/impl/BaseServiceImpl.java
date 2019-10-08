@@ -4,6 +4,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import xyz.seiyaya.common.base.BaseMapper;
 import xyz.seiyaya.common.base.BaseService;
+import xyz.seiyaya.common.helper.DBParam;
 
 import java.io.Serializable;
 import java.util.List;
@@ -35,7 +36,7 @@ public abstract class BaseServiceImpl<T, ID extends Serializable> implements Bas
     @Override
     public Page<T> page(T t, Integer currentPage, Integer pageSize) {
         PageHelper.startPage(currentPage,pageSize);
-        return mapper.page(t);
+        return (Page<T>)mapper.getList(t);
     }
 
     @Override
@@ -46,6 +47,11 @@ public abstract class BaseServiceImpl<T, ID extends Serializable> implements Bas
     @Override
     public T getByCondition(T t) {
         return mapper.getByCondition(t);
+    }
+
+    @Override
+    public int updateByCondition(DBParam param) {
+        return mapper.updateByCondition(param);
     }
 
     /**

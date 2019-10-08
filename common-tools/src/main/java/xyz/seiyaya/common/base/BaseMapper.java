@@ -28,39 +28,11 @@ public interface BaseMapper<T,ID extends Serializable> {
     int update(T t);
 
     /**
-     * 按照指定条件更新
-     * @param param
-     * @return
-     */
-    int updateSelective(DBParam param);
-
-    /**
-     * 根据条件查找一条数据
-     * @param param
-     * @return
-     */
-    T findSelective(DBParam param);
-
-    /**
      * 根据主键查找记录
      * @param primary
      * @return
      */
     T findByPrimary(ID primary);
-
-    /**
-     * 根据条件查询相关列表
-     * @param param
-     * @return
-     */
-    List<T> listSelective(DBParam param);
-
-    /**
-     * 获取分页
-     * @param t
-     * @return
-     */
-    Page<T> page(T t);
 
     /**
      * 获取查询列表
@@ -75,4 +47,11 @@ public interface BaseMapper<T,ID extends Serializable> {
      * @return
      */
     T getByCondition(T t);
+
+    /**
+     * 根据指定条件更新
+     * @param param
+     * @return
+     */
+    int updateByCondition(DBParam param);
 }
