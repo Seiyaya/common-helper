@@ -15,6 +15,10 @@ public class KingPicInfo {
     private Integer id;
     private String inputTime;
     private String productName;
+    /**
+     * 用来标记下次更新的起点
+     */
+    private Integer productId;
     private List<KingPicInfo> kingPicInfoList;
 
     public void setInputTime(String inputTime) {

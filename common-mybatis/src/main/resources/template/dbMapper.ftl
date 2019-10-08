@@ -39,12 +39,12 @@
     </sql>
     
     
-    <insert id="insert" parameterType="${packageName}.${moduleName}.domain.${ClassName}">
+    <insert id="insert" parameterType="${packageName}.${moduleName}.bean.${ClassName}">
         insert into ${tableName}(<#list list as column><#if column.columnName == "id"><#else>${column.typeName}<#if column_index+1 != listSize>,<#else></#if></#if></#list>)values(<#list list as column><#if column.columnName == "id"><#else >#${leftBraces}${column.columnName}${rightBraces}<#if column_index+1 != listSize>,<#else></#if></#if ></#list>)
     </insert>
 
     
-    <update id="update" parameterType="${packageName}.${moduleName}.domain.${ClassName}">
+    <update id="update" parameterType="${packageName}.${moduleName}.bean.${ClassName}">
         update ${tableName} set 
          <#list list as column>
             <#if column.columnName == "id">
