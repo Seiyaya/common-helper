@@ -1,4 +1,4 @@
-package xyz.seiyaya.pvp.helper;
+package xyz.seiyaya.common.helper;
 
 import lombok.extern.slf4j.Slf4j;
 
