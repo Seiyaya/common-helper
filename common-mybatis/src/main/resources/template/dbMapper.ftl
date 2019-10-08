@@ -5,9 +5,9 @@
     <resultMap id="BaseResultMap" type="${packageName}.${moduleName}.bean.${ClassName}">
     <#list list as column>
     <#if column.columnName == "id">
-        <id column="${column.typeName}" property="${column.columnName}" jdbcType="${column.jdbcType}" />
+        <id column="${column.typeName}" property="${column.columnName}"/>
     <#else >
-        <result column="${column.typeName}" property="${column.columnName}" jdbcType="${column.jdbcType}" />
+        <result column="${column.typeName}" property="${column.columnName}" />
     </#if>
     </#list>
     </resultMap>
@@ -23,15 +23,15 @@
         <#list list as column>
             <#if column.columnName == "id">
             <if test=" id != null and id != '' ">
-                id  = #${leftBraces}id,jdbcType=${column.jdbcType}${rightBraces}
+                id  = #${leftBraces}id${rightBraces}
             </if>
             <#elseif column.dataType == "Date">
             <if test="${column.columnName} != null">
-                and ${column.typeName} = #${leftBraces}${column.columnName},jdbcType=${column.jdbcType}${rightBraces}
+                and ${column.typeName} = #${leftBraces}${column.columnName}${rightBraces}
             </if>
             <#else >
             <if test="${column.columnName} != null and ${column.columnName} != '' ">
-                and ${column.typeName} = #${leftBraces}${column.columnName},jdbcType=${column.jdbcType}${rightBraces}
+                and ${column.typeName} = #${leftBraces}${column.columnName}${rightBraces}
             </if>
         </#if >
     </#list>
@@ -40,7 +40,7 @@
     
     
     <insert id="insert" parameterType="${packageName}.${moduleName}.domain.${ClassName}">
-        insert into ${tableName}(<#list list as column><#if column.columnName == "id"><#else>${column.typeName}<#if column_index+1 != listSize>,<#else></#if></#if></#list>)values(<#list list as column><#if column.columnName == "id"><#else >#${leftBraces}${column.columnName},jdbcType=${column.jdbcType}${rightBraces}<#if column_index+1 != listSize>,<#else></#if></#if ></#list>)
+        insert into ${tableName}(<#list list as column><#if column.columnName == "id"><#else>${column.typeName}<#if column_index+1 != listSize>,<#else></#if></#if></#list>)values(<#list list as column><#if column.columnName == "id"><#else >#${leftBraces}${column.columnName}${rightBraces}<#if column_index+1 != listSize>,<#else></#if></#if ></#list>)
     </insert>
 
     
@@ -49,7 +49,7 @@
          <#list list as column>
             <#if column.columnName == "id">
             <#else >
-            ${column.typeName} = #${leftBraces}${column.columnName},jdbcType=${column.jdbcType}${rightBraces}<#if column_index+1 != listSize>,<#else></#if>
+            ${column.typeName} = #${leftBraces}${column.columnName}${rightBraces}<#if column_index+1 != listSize>,<#else></#if>
 
             </#if >
         </#list>
@@ -64,12 +64,12 @@
             <#if column.columnName == "id">
             <#elseif column.dataType == "Date">
             <if test="${column.columnName} != null">
-                ${column.typeName} = #${leftBraces}${column.columnName},jdbcType=${column.jdbcType}${rightBraces}<#if column_index+1 != listSize>,<#else></#if>
+                ${column.typeName} = #${leftBraces}${column.columnName}${rightBraces}<#if column_index+1 != listSize>,<#else></#if>
                 
             </if>
             <#else >
             <if test="${column.columnName} != null and ${column.columnName} != '' ">        
-                ${column.typeName} = #${leftBraces}${column.columnName},jdbcType=${column.jdbcType}${rightBraces}<#if column_index+1 != listSize>,<#else></#if>
+                ${column.typeName} = #${leftBraces}${column.columnName}${rightBraces}<#if column_index+1 != listSize>,<#else></#if>
                 
             </if>
             </#if >

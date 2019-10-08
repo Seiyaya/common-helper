@@ -16,42 +16,40 @@ import java.util.List;
  */
 public abstract class BaseServiceImpl<T, ID extends Serializable> implements BaseService<T, ID> {
 
-    private BaseMapper<T,ID> mapper;
-
     @Override
     public int insert(T t) {
-        return mapper.insert(t);
+        return getMapper().insert(t);
     }
 
     @Override
     public T getById(ID id) {
-        return mapper.findByPrimary(id);
+        return getMapper().findByPrimary(id);
     }
 
     @Override
     public int updateById(T t) {
-        return mapper.update(t);
+        return getMapper().update(t);
     }
 
     @Override
     public Page<T> page(T t, Integer currentPage, Integer pageSize) {
         PageHelper.startPage(currentPage,pageSize);
-        return (Page<T>)mapper.getList(t);
+        return (Page<T>)getMapper().getList(t);
     }
 
     @Override
     public List<T> getList(T t) {
-        return mapper.getList(t);
+        return getMapper().getList(t);
     }
 
     @Override
     public T getByCondition(T t) {
-        return mapper.getByCondition(t);
+        return getMapper().getByCondition(t);
     }
 
     @Override
     public int updateByCondition(DBParam param) {
-        return mapper.updateByCondition(param);
+        return getMapper().updateByCondition(param);
     }
 
     /**
