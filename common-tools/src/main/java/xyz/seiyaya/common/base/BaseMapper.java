@@ -1,6 +1,7 @@
 package xyz.seiyaya.common.base;
 
 import com.github.pagehelper.Page;
+import org.apache.ibatis.annotations.Param;
 import xyz.seiyaya.common.helper.DBParam;
 
 import java.io.Serializable;
@@ -54,4 +55,16 @@ public interface BaseMapper<T,ID extends Serializable> {
      * @return
      */
     int updateByCondition(DBParam param);
+
+    /**
+     * 批量插入
+     * @param list
+     */
+    void batchInsert(@Param("list") List<T> list);
+
+    /**
+     * 根据id进行批量更新
+     * @param list
+     */
+    void batchUpdateById(@Param("update") List<T> list);
 }

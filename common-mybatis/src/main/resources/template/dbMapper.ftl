@@ -99,5 +99,8 @@
         from ${tableName}
         <include refid="searchBy"/>
     </select>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+    </insert>
     
 </mapper>

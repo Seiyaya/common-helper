@@ -2,7 +2,7 @@ package ${packageName}.${moduleName}.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import xyz.seiyaya.common.base.BaseMapper;
-import ${packageName}.${moduleName}.domain.${ClassName};
+import ${packageName}.${moduleName}.bean.${ClassName};
 
 /**
  * ${functionName}Dao
