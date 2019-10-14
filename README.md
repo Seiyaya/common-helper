@@ -18,8 +18,17 @@
 ## common-tools
 + 常用的工具类以及代码片段
 
-## common-activiti
-+ 工作流的简单处理
+## common-deploy
+### 目标
+> 制作简易版“jenkins”,通过shell脚本来达到jenkins相关功能  
+
+### 适用场景
+>   1. 个人站点不想引入jenkins这种重量级软件  
+>   2. spring boot项目避免上传整个jar包  
+
+### 原理
+> 在服务端维护一份git代码的副本，通过一系列的脚本来进行打包、重启等功能  
+> 后面可以通过写文件的方式来记录历史jar包和历史git提交等信息
 
 ## common-tester
 + 主要是做一些源码的测试类，或者一些不明白、不太清楚的地方的Tester

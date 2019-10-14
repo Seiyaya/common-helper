@@ -10,6 +10,7 @@
     <module>common-tools</module>
     <module>common-manager</module>
     <module>common-tester</module>
+    <module>common-deploy</module>
   </modules>
 
   <parent>
