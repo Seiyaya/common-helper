@@ -1,6 +1,7 @@
 package xyz.seiyaya.common.bean;
 
 import lombok.Data;
+import xyz.seiyaya.common.constant.ResultConstant;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -44,51 +45,33 @@ public class ResultBean implements Serializable {
     }
 
     /**
-     * code常量
+     * 设置返回code和msg
+     * @param resultConstant
+     * @return
      */
-    public enum ResultConstant{
+    public ResultBean setCodeAndMsg(ResultConstant resultConstant){
+        this.code = resultConstant.getCode();
+        this.msg = resultConstant.getMsg();
+        return this;
+    }
 
-        /**
-         * 成功
-         */
-        CODE_SUCCESS(200, "成功"),
+    /**
+     * 设置错误信息，因为比较常用，所以单独提出来
+     * @return
+     */
+    public ResultBean setError(){
+        this.code = ResultConstant.CODE_ERROR.getCode();
+        this.msg = ResultConstant.CODE_ERROR.getMsg();
+        return this;
+    }
 
-        /**
-         * 失败
-         */
-        CODE_ERROR(500, "失败");
-
-        private int code;
-        private String msg;
-
-        ResultConstant(int key,String value){
-            this.code = key;
-            this.msg = value;
-        }
-
-        public int getCode() {
-            return code;
-        }
-
-        public void setCode(int code) {
-            this.code = code;
-        }
-
-        public String getMsg() {
-            return msg;
-        }
-
-        public void setMsg(String msg) {
-            this.msg = msg;
-        }
-
-        public static ResultConstant getValueByKey(int key) {
-            for (ResultConstant errorType : ResultConstant.values()) {
-                if (key == errorType.getCode()) {
-                    return errorType;
-                }
-            }
-            return null;
-        }
+    /**
+     * 设置错误信息，因为比较常用，所以单独提出来
+     * @return
+     */
+    public ResultBean setError(String msg){
+        this.code = ResultConstant.CODE_ERROR.getCode();
+        this.msg = msg;
+        return this;
     }
 }
