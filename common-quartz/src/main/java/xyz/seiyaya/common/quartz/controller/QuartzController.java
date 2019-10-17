@@ -70,10 +70,10 @@ public class QuartzController extends BaseController {
     public ResultBean update(@RequestBody QuartzInfoDto quartzInfoDto)throws Exception{
         QuartzInfo quartzInfo = quartzInfoService.getById(quartzInfoDto.getId());
         if (quartzInfo == null) {
-            return new ResultBean("定时任务不存在",ResultBean.ResultConstant.CODE_ERROR.getCode());
+            return new ResultBean().setError("定时任务不存在");
         }
         if(quartzInfo.getState().equals(quartzInfo.getState())){
-            return new ResultBean("参数错误",ResultBean.ResultConstant.CODE_ERROR.getCode());
+            return new ResultBean().setError("参数错误");
         }
 
         if(ConstantBean.NUMBER_ZERO.equals(quartzInfo.getState())){
@@ -98,7 +98,7 @@ public class QuartzController extends BaseController {
         QuartzInfo quartzInfo = quartzInfoService.getById(quartzInfoDto.getId());
 
         if (quartzInfo == null || ConstantBean.NUMBER_ZERO.equals(quartzInfo.getState())) {
-            return new ResultBean("定时任务不存在或者已经停止",ResultBean.ResultConstant.CODE_ERROR.getCode());
+            return new ResultBean().setError("定时任务不存在或者已经停止");
         }
 
         QuartzHelper.startJob(quartzInfo.getCode());

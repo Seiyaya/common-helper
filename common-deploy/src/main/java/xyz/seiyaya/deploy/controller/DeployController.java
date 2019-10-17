@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RestController;
 import xyz.seiyaya.common.base.BaseController;
 import xyz.seiyaya.common.bean.ResultBean;
 
+import java.io.File;
+
 /**
  * @author seiyaya
  * @date 2019/10/15 0:43
@@ -22,12 +24,12 @@ public class DeployController extends BaseController {
     @RequestMapping("/package")
     public ResultBean packageJar(){
         try {
-            Process exec = Runtime.getRuntime().exec("/data/project/ && ./build.sh");
+            Process exec = Runtime.getRuntime().exec( "./build.sh",null,new File("/data/project/"));
             int status  = exec.waitFor();
 
             if(status != 0){
                 log.error("调用shell命令失败:{}",status);
-                return new ResultBean("调用shell命令失败",ResultBean.ResultConstant.CODE_ERROR.getCode());
+                return new ResultBean().setError("调用shell命令失败");
             }
         } catch (Exception e) {
             log.error("更新git出现异常:",e);

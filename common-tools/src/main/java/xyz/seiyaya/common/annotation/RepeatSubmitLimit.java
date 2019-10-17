@@ -25,4 +25,11 @@ public @interface RepeatSubmitLimit {
      */
     int time() default 60;
 
+    /**
+     * 表达式，请求参数中提取对应的表达式
+     * 最后转换为key
+     * userId+"_"+customerId
+     * @return
+     */
+    String[] expression() default {};
 }

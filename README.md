@@ -17,6 +17,8 @@
 
 ## common-tools
 + 常用的工具类以及代码片段
+> RepeatSubmitLimit防止重复提交的注解
+>> 可以通过expression来配置需要作为锁定的key，会在第一个参数中通过ognl查找对应的key的组成部分
 
 ## common-deploy
 ### 目标
