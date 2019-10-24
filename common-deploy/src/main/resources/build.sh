@@ -1,3 +1,5 @@
+## 首先更新base-common,如果有更新则安装jar到本地
+sh /data/code/tools/common-helper/common-tools/build.sh
 git pull
 jar_dir="/data/code/jars"
 mvn clean install -DskipTests -Ppdt
@@ -11,6 +13,6 @@ result_jar="../jars/${jar_name}"
 now_time=$(date +"%Y%m%d_%H%M%S")
 if [ -f ${result_jar} ]; then
     rename "${jar_name}" "online-website-${now_time}.jar" "../jars/${jar_name}"
-fi
-
+fi        
+         
 cp "./target/${jar_name}" ${result_jar}

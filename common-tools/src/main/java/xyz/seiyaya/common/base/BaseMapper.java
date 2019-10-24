@@ -66,5 +66,5 @@ public interface BaseMapper<T,ID extends Serializable> {
      * 根据id进行批量更新
      * @param list
      */
-    void batchUpdateById(@Param("update") List<T> list);
+    void batchUpdateById(@Param("list") List<T> list);
 }

@@ -13,7 +13,7 @@ public class User {
 
     private String userId;
 
-    @CrawlAttribute("username")
+    @CrawlAttribute("fengshen")
     private String username;
     private Address address;
 }
