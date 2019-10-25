@@ -1,10 +1,8 @@
 package ${packageName}.${moduleName}.service;
 
 import xyz.seiyaya.common.base.BaseService;
-import com.github.pagehelper.Page;
 
-import java.util.List;
-import java.util.Map;
+import ${packageName}.${moduleName}.bean.${ClassName};
 
 /**
  * ${functionName}Service

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import ${commonName}.mapper.BaseMapper;
 import ${commonName}.service.impl.BaseServiceImpl;
 import ${packageName}.${moduleName}.mapper.${ClassName}Mapper;
-import ${packageName}.${moduleName}.${ClassName};
+import ${packageName}.${moduleName}.bean.${ClassName};
 import ${packageName}.${moduleName}.service.${ClassName}Service;
 
 import java.util.List;

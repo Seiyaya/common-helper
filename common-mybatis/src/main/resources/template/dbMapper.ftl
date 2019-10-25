@@ -30,7 +30,7 @@
                 and ${column.typeName} = #${leftBraces}${column.columnName}${rightBraces}
             </if>
             <#else >
-            <if test="${column.columnName} != null and ${column.columnName} != '' ">
+            <if test="${column.columnName} != null  ">
                 and ${column.typeName} = #${leftBraces}${column.columnName}${rightBraces}
             </if>
         </#if >
@@ -50,7 +50,6 @@
             <#if column.columnName == "id">
             <#else >
             ${column.typeName} = #${leftBraces}${column.columnName}${rightBraces}<#if column_index+1 != listSize>,<#else></#if>
-
             </#if >
         </#list>
         where id = #${leftBraces}id ,jdbcType=INTEGER${rightBraces}
@@ -65,12 +64,10 @@
             <#elseif column.dataType == "Date">
             <if test="${column.columnName} != null">
                 ${column.typeName} = #${leftBraces}${column.columnName}${rightBraces}<#if column_index+1 != listSize>,<#else></#if>
-                
             </if>
             <#else >
-            <if test="${column.columnName} != null and ${column.columnName} != '' ">        
+            <if test="${column.columnName} != null  ">        
                 ${column.typeName} = #${leftBraces}${column.columnName}${rightBraces}<#if column_index+1 != listSize>,<#else></#if>
-                
             </if>
             </#if >
             </#list>
@@ -101,6 +98,32 @@
     </select>
 
     <insert id="batchInsert" parameterType="java.util.List">
+        insert into ${tableName}(<#list list as column><#if column.columnName == "id"><#else>${column.typeName}<#if column_index+1 != listSize>,<#else></#if></#if></#list>)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (<#list list as column><#if column.columnName == "id"><#else >#${leftBraces}item.${column.columnName}${rightBraces}<#if column_index+1 != listSize>,<#else></#if></#if ></#list>)
+        </foreach>
     </insert>
+
+    <update id="batchUpdateById" parameterType="java.util.List">
+        <foreach collection="list" item="item" separator=";">
+            update ${tableName}
+            <set>
+                <#list list as column>
+                    <#if column.columnName == "id">
+                    <#elseif column.dataType == "Date">
+                        <if test="${column.columnName} != null">
+                            ${column.typeName} = #${leftBraces}${column.columnName}${rightBraces}<#if column_index+1 != listSize>,<#else></#if>
+                        </if>
+                    <#else >
+                        <if test="${column.columnName} != null">
+                            ${column.typeName} = #${leftBraces}item.${column.columnName}${rightBraces}<#if column_index+1 != listSize>,<#else></#if>
+                        </if>
+                    </#if >
+                </#list>
+            </set>
+            where id = #${leftBraces}item.id${rightBraces}
+        </foreach>
+    </update>
     
 </mapper>

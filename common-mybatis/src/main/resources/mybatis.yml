@@ -4,17 +4,17 @@ db:
   url: jdbc:mysql://127.0.0.1:3306/${databaseName}?characterEncoding=utf8
   user: root
   password: 123456
-  tableName: t_upload_pic
+  tableName: t_request_log
   dbClass: com.mysql.jdbc.Driver
 
 # 类的信息配置
 class:
   author: seiyaya
-  function: 图片上传
+  function: 请求日志
   # 主要包含BaseDao BaseService
   commonName: xyz.seiyaya.common.base
-  packageName: xyz.seiyaya.mybatis.generate
-  moduleName: quartz
+  packageName: xyz.seiyaya
+  moduleName: common
   mybatisDir: config/mappers
   dbType: mysql
   classNamePrefix: ${tableName}

@@ -13,6 +13,7 @@ import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.LayeredConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -22,12 +23,14 @@ import org.apache.http.util.EntityUtils;
 import org.assertj.core.util.Lists;
 
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
 import java.net.URI;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.List;
-import java.util.Map;
 
 /**
  * http相关工具类
@@ -38,9 +41,17 @@ public class HttpHelper {
 
     private PoolingHttpClientConnectionManager cm = null;
 
-    private static HttpHelper httpUtils = new HttpHelper();
+    private static HttpHelper httpUtils;
 
-    private HttpHelper() {
+    static {
+        try {
+            httpUtils = new HttpHelper();
+        } catch (Exception e) {
+            log.error("初始化异常",e);
+        }
+    }
+
+    private HttpHelper() throws Exception {
         init();
     }
 
@@ -48,14 +59,26 @@ public class HttpHelper {
         return httpUtils;
     }
 
-    public void init() {
+    public void init() throws Exception {
         log.info("初始化httpUtils");
-        LayeredConnectionSocketFactory sslsf = null;
-        try {
-            sslsf = new SSLConnectionSocketFactory(SSLContext.getDefault());
-        } catch (NoSuchAlgorithmException e) {
-            log.error("", e);
-        }
+        SSLContext sslContext = SSLContext.getInstance("SSL");
+        sslContext.init(null, new TrustManager[]{new X509TrustManager() {
+                    @Override
+                    public void checkClientTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+
+                    }
+
+                    @Override
+                    public void checkServerTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+
+                    }
+
+                    @Override
+                    public X509Certificate[] getAcceptedIssuers() {
+                        return new X509Certificate[0];
+                    }
+                }}, new SecureRandom());
+        LayeredConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE);
 
         Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
                 .register("https", sslsf).register("http", new PlainConnectionSocketFactory()).build();
@@ -90,16 +113,23 @@ public class HttpHelper {
             log.error("发送get请求失败", e);
             throw new RuntimeException(e);
         } finally {
-            httpGet.releaseConnection();
-            if(response!=null) {
-                try {
-                    response.close();
-                } catch (IOException e) {
-                    log.error("",e);
-                }
-            }
+            release(response);
         }
         return null;
+    }
+
+    /**
+     * 释放连接
+     * @param response
+     */
+    private void release(CloseableHttpResponse response) {
+        if (response != null) {
+            try {
+                response.close();
+            } catch (IOException e) {
+                log.error("", e);
+            }
+        }
     }
 
     public String sendGet(String url) {
@@ -137,14 +167,7 @@ public class HttpHelper {
             log.error("发送get请求失败", e);
             throw new RuntimeException(e);
         } finally {
-            httpGet.releaseConnection();
-            if(response!=null) {
-                try {
-                    response.close();
-                } catch (IOException e) {
-                    log.error("",e);
-                }
-            }
+            release(response);
         }
         return resultJson;
     }
@@ -169,11 +192,10 @@ public class HttpHelper {
                 urlParams.add(new BasicNameValuePair(k, v.toString()));
             });
             UrlEncodedFormEntity formEntity = new UrlEncodedFormEntity(urlParams, "utf-8");
-            formEntity.setContentType("Content-Type:application/json");
 
             HttpPost finalHttpPost = httpPost;
             headers.forEach((k, v)->{
-                finalHttpPost.setHeader(k,v.toString());
+                finalHttpPost.addHeader(k,v.toString());
             });
 
             httpPost.setEntity(formEntity);
@@ -188,16 +210,7 @@ public class HttpHelper {
             log.error("",e);
             throw new RuntimeException(e);
         }finally {
-            if(httpPost != null){
-                httpPost.releaseConnection();
-            }
-            if(response!=null) {
-                try {
-                    response.close();
-                } catch (IOException e) {
-                    log.error("",e);
-                }
-            }
+            release(response);
         }
         return resultJson;
     }
