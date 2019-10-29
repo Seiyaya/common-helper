@@ -1,7 +1,9 @@
 package xyz.seiyaya;
 
+import org.apache.ibatis.scripting.xmltags.ExpressionEvaluator;
 import org.assertj.core.util.Lists;
 import org.junit.Test;
+import xyz.seiyaya.mybatis.bean.UserBean;
 
 import java.util.ArrayList;
 
@@ -25,5 +27,15 @@ public class AppTest {
 
 
         System.out.println(String.format("sumResult:%s  scoreResult:%s", sum / 100 , scoreResult));
+    }
+
+    @Test
+    public void testIf(){
+        UserBean userBean = new UserBean();
+        userBean.setId(0);
+        ExpressionEvaluator expressionEvaluator = new ExpressionEvaluator();
+
+        boolean b = expressionEvaluator.evaluateBoolean("id != null and id != ''", userBean);
+        System.out.println(b);
     }
 }

@@ -1,5 +1,10 @@
 package xyz.seiyaya.mybatis.tester;
 
+import org.junit.Test;
+import xyz.seiyaya.common.helper.DateHelper;
+
+import java.util.Calendar;
+
 /**
  * @author wangjia
  * @version 1.0
@@ -11,4 +16,12 @@ public class DataSourceTester {
      * @see org.apache.ibatis.datasource.unpooled.UnpooledDataSource
      * @see org.apache.ibatis.datasource.pooled.PooledDataSource
      */
+
+    @Test
+    public void testDate(){
+        Calendar ca = Calendar.getInstance();
+        ca.add(12, 15);
+
+        System.out.println(DateHelper.formatDate(ca.getTime()));
+    }
 }
