@@ -16,7 +16,7 @@ public class AppTest {
      */
     @Test
     public void testPerformance() {
-        ArrayList<Integer> score = Lists.newArrayList(75, 90, 90, 85, 90, 90, 90, 90);
+        ArrayList<Integer> score = Lists.newArrayList(80, 90, 85, 80, 85, 90, 80, 80);
         ArrayList<Integer> percents = Lists.newArrayList(65, 5, 5, 5, 5, 5, 5, 5);
         double sum = 0;
         double scoreResult = 0;

@@ -1,6 +1,7 @@
 package xyz.seiyaya.mybatis.mapper;
 
 import org.apache.ibatis.annotations.Param;
+import xyz.seiyaya.common.helper.DBParam;
 import xyz.seiyaya.mybatis.bean.UserBean;
 
 /**
@@ -11,6 +12,8 @@ import xyz.seiyaya.mybatis.bean.UserBean;
 public interface UserBeanMapper {
 
     UserBean findUser(@Param("id") Integer id);
+
+    UserBean findUserByCondition(DBParam param,@Param("name") String name);
 
     void updateUserById(UserBean userBean);
 }

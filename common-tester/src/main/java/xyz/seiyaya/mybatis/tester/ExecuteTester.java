@@ -13,10 +13,7 @@ import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.scripting.xmltags.*;
-import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.apache.ibatis.session.*;
 import org.apache.ibatis.session.defaults.DefaultSqlSession;
 import org.junit.Before;
 import org.junit.Test;
@@ -99,6 +96,13 @@ public class ExecuteTester {
          *  4. 调用StaticSqlSource的getBoundSql()和BoundSql()
          *  5. 将DynamicContext的contextMap拷贝到BoundSql中
          */
+    }
+
+    @Test
+    public void testSqlExecuteWithMapParams(){
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        UserBeanMapper mapper = sqlSession.getMapper(UserBeanMapper.class);
+        mapper.findUserByCondition(new DBParam().set("id",1).set("name","zhangsan"),"lisi");
     }
 
     /**

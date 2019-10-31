@@ -25,6 +25,12 @@
             <if test="id != null">and id = #{id,javaType=int,jdbcType=INTEGER}</if>
         </where>
     </select>
+    <select id="findUserByCondition" resultType="xyz.seiyaya.mybatis.bean.UserBean">
+        select * from t_test_user
+        <where>
+            <if test="param1.id != null"> and id = ${param1.id}</if>
+        </where>
+    </select>
 
     <update id="updateUserById">
         update t_test_user
