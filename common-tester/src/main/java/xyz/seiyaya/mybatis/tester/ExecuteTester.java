@@ -17,6 +17,7 @@ import org.apache.ibatis.session.*;
 import org.apache.ibatis.session.defaults.DefaultSqlSession;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.boot.test.context.TestComponent;
 import xyz.seiyaya.common.helper.DBParam;
 import xyz.seiyaya.mybatis.bean.UserBean;
 import xyz.seiyaya.mybatis.mapper.UserBeanMapper;
@@ -25,6 +26,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 执行sql的过程
@@ -194,5 +198,25 @@ public class ExecuteTester {
          * 处理结果集参数映射
          * @see DefaultResultSetHandler#handleResultSets(java.sql.Statement)
          */
+    }
+
+    /**
+     * 测试执行的mapper是否是同一个实例
+     * 按照之前的分析应该不是，是每次都是重新产生一个代理对象
+     */
+    @Test
+    public void testSqlExecuteWithThread() throws InterruptedException {
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(5,10,1, TimeUnit.SECONDS,new LinkedBlockingQueue<>());
+
+        for(int i=0;i<10;i++){
+            threadPoolExecutor.execute(()->{
+                SqlSession sqlSession = sqlSessionFactory.openSession();
+                UserBeanMapper mapper = sqlSession.getMapper(UserBeanMapper.class);
+                UserBean user = mapper.findUser(1);
+                System.out.println(mapper+"-->"+user);
+            });
+        }
+
+        Thread.currentThread().join();
     }
 }
