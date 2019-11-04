@@ -16,4 +16,6 @@ public interface UserBeanMapper {
     UserBean findUserByCondition(DBParam param,@Param("name") String name);
 
     void updateUserById(UserBean userBean);
+
+    UserBean findExUser(@Param("id") Integer id);
 }

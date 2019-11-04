@@ -102,6 +102,17 @@ public class ExecuteTester {
          */
     }
 
+    /**
+     * 一个mapper对应多个xml只需在同一个命名空间即可
+     */
+    @Test
+    public void testSqlExecuteExt(){
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        UserBeanMapper mapper = sqlSession.getMapper(UserBeanMapper.class);
+        UserBean user = mapper.findExUser(1);
+        System.out.println(user);
+    }
+
     @Test
     public void testSqlExecuteWithMapParams(){
         SqlSession sqlSession = sqlSessionFactory.openSession();

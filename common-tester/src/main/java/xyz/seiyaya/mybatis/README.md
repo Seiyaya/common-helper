@@ -136,4 +136,9 @@ BaseExecutor#update:它又会去先清空一级缓存,然后调用默认实现Si
 SimpleExecutor#doUpdate: 产生StatementHandler对象，主要是和jdbc的statement进行交互,所以重点分析的还是StatementHandler#update方法  
 StatementHandler#update: 这是一个抽象类，一般我们使用的是`PreparedStatement`,所以实现也选择`PreparedStatementHandler`  
 PreparedStatementHandler#update: 这里的重点主要是sql执行完之后，主键的获取，sql执行完之后获取主键KeyGenerator#processAfter  
-KeyGenerator#processAfter: 这是一个接口，主要的实现是`Jdbc3KeyGenerator`、`SelectKeyGenerator`、`NoKeyGenerator`
+KeyGenerator#processAfter: 这是一个接口，主要的实现是`Jdbc3KeyGenerator`、`SelectKeyGenerator`、`NoKeyGenerator`  
+
+### 7.Spring如何整合Mybatis
+> 详见工厂类:org.mybatis.spring.SqlSessionFactoryBean#afterPropertiesSet,获取它的实例的时候调用getObject方法   
+MapperFactoryBean获取mapper,这里主要是封装了sqlSession获取mapper的方法  
+MapperScannerConfigurer

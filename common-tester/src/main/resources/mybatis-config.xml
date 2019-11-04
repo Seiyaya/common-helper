@@ -50,6 +50,7 @@
 
     <mappers>
         <mapper resource="mapper/UserBeanMapper.xml"/>
+        <mapper resource="mapper/UserBeanExtMapper.xml"/>
     </mappers>
 
 </configuration>
