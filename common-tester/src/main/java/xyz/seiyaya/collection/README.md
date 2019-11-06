@@ -27,8 +27,16 @@ threshold: 最大的可以存储的元素数量,数组的大小*loadFactor，数
 > 红黑树的拆分，再进行扩容的时候需要对红黑树拆分重新进行映射
 
 ## ArrayList
+> 1.构造方法:没什么特别的，一个可以指定大小，或者默认大小为一个空数组    
+2.add: 默认初始化数组大小为10,在索引为size处添加元素   
+3.remove: 移除元素会将后面的部分整体copyOf到前方,然后将最后一个赋值为null等待gc  
+4.grow:扩容方法，这里很多地方都用到了Arrays.copyOf(elementData, newCapacity)这个方法来进行复制  
+其实它并不是进行for循环的进行赋值，而是调用底层native方法进行内存复制，所以相对高效.扩容的大小是3/2   
 
 ## LinkedList
+> 总体上采用双向链表的结构，构造函数也不需要大小的声明。  
+1.add:添加元素都追加到尾部结点的后继结点上  
+2.remove  
 
 ## LinkedHashMap
 

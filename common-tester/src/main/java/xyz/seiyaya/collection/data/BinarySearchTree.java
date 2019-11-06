@@ -47,6 +47,24 @@ public class BinarySearchTree<T extends Comparable<? super T>> {
 
     }
 
+    public void delete(T key){
+        BSTNode<T> search = search(root, key);
+        if(search!=null){
+            delete(search);
+        }
+        search = null;
+    }
+
+    /**
+     * 删除节点
+     * @param search
+     */
+    private void delete(BSTNode<T> search) {
+        if(search.left != null && search.right != null){
+
+        }
+    }
+
     public BSTNode<T> search(BSTNode<T> x,T key){
         if(x == null){
             return null;

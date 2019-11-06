@@ -27,4 +27,10 @@ public class ClassTester {
         double evaluate = standardDeviation.evaluate(new double[]{1, 1, 1, 1});
         System.out.println(evaluate);
     }
+
+    @Test
+    public void testInteger(){
+        Integer i = Integer.valueOf("25");
+        System.out.println( i == 25);
+    }
 }
