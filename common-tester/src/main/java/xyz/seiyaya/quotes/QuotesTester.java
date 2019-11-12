@@ -17,6 +17,8 @@ import java.util.regex.Pattern;
  */
 public class QuotesTester {
 
+    private int count = 0;
+
     String[] array = {"002207","320007","000478","001480","161725","161724","004753","006098","000961"};
 
     @Test
@@ -54,5 +56,17 @@ public class QuotesTester {
         }
 
         System.out.println(param);
+    }
+
+    @Test
+    public void testStack(){
+        fun();
+    }
+
+    public void fun(){
+        count++;
+        if(count < 100000){
+            fun();
+        }
     }
 }

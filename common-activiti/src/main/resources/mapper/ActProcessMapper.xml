@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.seiyaya.activiti.mapper.ActProcessMapper">
+    <select id="getAuditProcessList" resultType="xyz.seiyaya.activiti.bean.ActProcess">
+        SELECT
+            RES.`ACT_NAME_` AS 'currentAuditNode',
+            res.`END_TIME_` AS 'auditDate',
+            hc.`FULL_MSG_` AS 'fullMessageBytes',
+            res.`ACT_ID_` AS 'actNodeId',
+            res.`PROC_DEF_ID_` AS 'procDefId',
+            res.`ACT_TYPE_` AS 'actNodeType',
+            res.`ASSIGNEE_` AS 'assignee',
+            res.`TASK_ID_` AS 'taskId',
+            (CASE WHEN res.`ACT_TYPE_`='startEvent' THEN hp.`START_USER_ID_` ELSE '' END) AS 'starName'
+        FROM `ACT_HI_ACTINST` RES
+                 LEFT JOIN act_hi_procinst hp ON res.`PROC_INST_ID_` = hp.`PROC_INST_ID_`
+                 LEFT JOIN act_hi_comment hc ON res.`TASK_ID_` = hc.`TASK_ID_` AND hc.`TYPE_` = 'comment'
+        WHERE RES.PROC_INST_ID_ = #{procInstId}
+        ORDER BY RES.END_TIME_ IS NULL ASC,
+                 RES.START_TIME_ ASC,
+                 RES.END_TIME_ ASC,
+                 RES.task_id_ ASC,
+                 (CASE RES.ACT_TYPE_
+                      WHEN 'serviceTask' THEN 2
+                      WHEN 'endEvent' THEN 3
+                      ELSE 1 END) ASC
+    </select>
+</mapper>
