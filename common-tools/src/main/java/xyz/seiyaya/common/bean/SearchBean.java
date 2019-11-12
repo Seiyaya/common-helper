@@ -21,9 +21,17 @@ public class SearchBean {
     private Integer pageSize;
     
     public void validate(){
-        ifNull(startDate, DateHelper.getNDate(-30));
-        ifNull(endDate, new Date());
+        validateDate();
+        validatePage();
+    }
+
+    public void validatePage(){
         ifNull(currentPage,1);
         ifNull(pageSize,10);
+    }
+
+    public void validateDate(){
+        ifNull(startDate, DateHelper.getNDate(-30));
+        ifNull(endDate, new Date());
     }
 }

@@ -1,7 +1,10 @@
 package xyz.seiyaya.fund.mapper;
 
+import org.apache.ibatis.annotations.Param;
 import tk.mybatis.mapper.common.Mapper;
 import xyz.seiyaya.fund.bean.HistFundInfo;
+
+import java.util.List;
 
 /**
  * @author wangjia
@@ -10,4 +13,11 @@ import xyz.seiyaya.fund.bean.HistFundInfo;
  */
 @org.apache.ibatis.annotations.Mapper
 public interface HistFundInfoMapper extends Mapper<HistFundInfo> {
+
+    /**
+     * 历史净值查询
+     * @param code
+     * @return
+     */
+    List<HistFundInfo> findHistFundInfo(@Param("code") String code);
 }

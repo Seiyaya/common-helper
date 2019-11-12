@@ -1,10 +1,10 @@
 package xyz.seiyaya.fund.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import xyz.seiyaya.fund.bean.FundAccount;
 import xyz.seiyaya.fund.mapper.FundAccountMapper;
-import xyz.seiyaya.fund.service.AccountService;
+import xyz.seiyaya.fund.service.FundAccountService;
 
 import javax.annotation.Resource;
 
@@ -14,7 +14,8 @@ import javax.annotation.Resource;
  * @date 2019/11/12 13:53
  */
 @Service
-public class AccountServiceImpl implements AccountService {
+@Transactional
+public class FundAccountServiceImpl implements FundAccountService {
 
     @Resource
     private FundAccountMapper fundAccountMapper;

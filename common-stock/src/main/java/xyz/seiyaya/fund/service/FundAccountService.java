@@ -9,7 +9,7 @@ import java.util.List;
  * @version 1.0
  * @date 2019/11/12 13:53
  */
-public interface AccountService {
+public interface FundAccountService {
     /**
      * 查询账户信息
      * @param accountId

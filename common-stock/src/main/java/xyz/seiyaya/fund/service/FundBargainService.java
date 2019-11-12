@@ -10,7 +10,7 @@ import java.util.List;
  * @version 1.0
  * @date 2019/11/12 14:00
  */
-public interface BargainService {
+public interface FundBargainService {
 
     /**
      * 查找成交记录
@@ -19,4 +19,10 @@ public interface BargainService {
      * @return
      */
     List<FundBargain> findBargain(Integer accountId, SearchBean searchBean);
+
+    /**
+     * 录入成交
+     * @param fundBargain
+     */
+    void addBargain(FundBargain fundBargain);
 }

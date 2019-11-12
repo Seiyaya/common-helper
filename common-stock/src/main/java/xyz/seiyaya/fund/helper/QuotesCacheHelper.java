@@ -2,12 +2,14 @@ package xyz.seiyaya.fund.helper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import xyz.seiyaya.fund.bean.FundFollow;
 import xyz.seiyaya.fund.bean.FundInfo;
+import xyz.seiyaya.fund.mapper.FundFollowMapper;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import javax.annotation.Resource;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * @author wangjia
@@ -20,11 +22,33 @@ public class QuotesCacheHelper {
     @Autowired
     private QuotesHelper quotesHelper;
 
+    @Resource
+    private FundFollowMapper fundFollowMapper;
+
     private List<FundInfo> fundInfoList = new ArrayList<>();
 
     private Map<String,FundInfo> fundInfoMap = new ConcurrentHashMap<>();
 
+    private Set<String> codeList = ConcurrentHashMap.newKeySet();
+
     private long lastTime = 0;
+
+    /**
+     * 获取需要查询的列表
+     * 后面把这个重构成redis队列来进行添加关注基金之后加入需要查询行情的模式
+     * @return
+     */
+    public List<String> getCodeList(){
+        return new ArrayList<>(codeList);
+    }
+
+    /**
+     * 重置需要查询的列表
+     */
+    public void resetCodeList(){
+        codeList = fundFollowMapper.selectAll().stream().map(FundFollow::getCode).collect(Collectors.toSet());
+    }
+
 
     public List<FundInfo> getFundInfoList(List<String> codeList){
         long result = (System.currentTimeMillis() - lastTime) / 1000;
@@ -57,4 +81,12 @@ public class QuotesCacheHelper {
     }
 
 
+    /**
+     * 获取金信息
+     * @param code
+     * @return
+     */
+    public FundInfo getFundCodeInfo(String code) {
+        return fundInfoMap.get(code);
+    }
 }

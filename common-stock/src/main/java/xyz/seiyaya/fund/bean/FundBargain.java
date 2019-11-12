@@ -24,7 +24,7 @@ public class FundBargain {
      */
     private BigDecimal num;
     /**
-     * 交易金额
+     * 交易净值
      */
     private BigDecimal price;
     /**
@@ -50,4 +50,8 @@ public class FundBargain {
     private Integer status;
 
     private Date createDate;
+
+    public boolean isBuy(){
+        return Integer.valueOf(0).equals(tradeType);
+    }
 }

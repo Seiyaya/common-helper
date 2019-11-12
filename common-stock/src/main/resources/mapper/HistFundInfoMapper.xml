@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.seiyaya.fund.mapper.HistFundInfoMapper">
+
+    <select id="findHistFundInfo" resultType="xyz.seiyaya.fund.bean.HistFundInfo">
+        select * from t_hist_fund_info t
+        <where>
+            <if test="code != null"> t.code = #{code}</if>
+        </where>
+        order by t.create_date desc
+    </select>
+</mapper>

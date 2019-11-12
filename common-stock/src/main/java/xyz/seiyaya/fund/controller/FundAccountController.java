@@ -7,9 +7,11 @@ import xyz.seiyaya.common.bean.ResultBean;
 import xyz.seiyaya.common.bean.SearchBean;
 import xyz.seiyaya.fund.bean.FundAccount;
 import xyz.seiyaya.fund.bean.FundBargain;
+import xyz.seiyaya.fund.bean.FundFollow;
 import xyz.seiyaya.fund.bean.vo.FundHoldVo;
-import xyz.seiyaya.fund.service.AccountService;
-import xyz.seiyaya.fund.service.BargainService;
+import xyz.seiyaya.fund.service.FundAccountService;
+import xyz.seiyaya.fund.service.FundBargainService;
+import xyz.seiyaya.fund.service.FundFollowService;
 import xyz.seiyaya.fund.service.FundHoldService;
 
 import java.util.List;
@@ -24,37 +26,13 @@ import java.util.List;
 public class FundAccountController extends BaseController {
 
     @Autowired
-    private FundHoldService fundHoldService;
-
-    @Autowired
-    private AccountService accountService;
-
-    @Autowired
-    private BargainService bargainService;
-
-    @PostMapping("/hold/{accountId}")
-    public ResultBean getHold(@PathVariable("accountId")Integer accountId){
-        ResultBean resultBean = new ResultBean();
-        List<FundHoldVo> list = fundHoldService.findHoldWithQuotes(accountId);
-        resultBean.setData(list);
-        return resultBean;
-    }
+    private FundAccountService fundAccountService;
 
     @PostMapping("/info/{accountId}")
     public ResultBean getAccountInfo(@PathVariable("accountId") Integer accountId){
         ResultBean resultBean = new ResultBean();
-        FundAccount fundAccount = accountService.findAccount(accountId);
+        FundAccount fundAccount = fundAccountService.findAccount(accountId);
         resultBean.setData(fundAccount);
-        return resultBean;
-    }
-
-    @PostMapping("/bargain/{accountId}")
-    public ResultBean getBargain(@RequestBody SearchBean searchBean, @PathVariable("accountId") Integer accountId){
-        ResultBean resultBean = new ResultBean();
-        searchBean.validate();
-
-        List<FundBargain> bargainList = bargainService.findBargain(accountId,searchBean);
-        resultBean.setData(bargainList);
         return resultBean;
     }
 }

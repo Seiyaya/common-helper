@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.seiyaya.fund.mapper.FundBargainMapper">
+
+    <select id="findFundBargain" resultType="xyz.seiyaya.fund.bean.dto.FundBargainDto">
+        select * from t_fund_bargain t
+        <where>
+            <if test="accountId != null"> t.account_id = #{accountId}</if>
+            <if test="startDate != null"> t.create_date &gt;= #{createDate} </if>
+            <if test="endDate != null"> t.create_date &lt;= #{endDate} </if>
+        </where>
+        order by t.create_date desc
+    </select>
+</mapper>

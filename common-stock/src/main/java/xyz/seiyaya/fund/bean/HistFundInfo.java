@@ -17,6 +17,10 @@ public class HistFundInfo extends FundInfo{
 
     private Integer backupDate;
 
+    public HistFundInfo(){
+
+    }
+
     public HistFundInfo(Integer backupDate,BigDecimal price,BigDecimal sumPrice){
         this.backupDate = backupDate;
         setPrice(price);

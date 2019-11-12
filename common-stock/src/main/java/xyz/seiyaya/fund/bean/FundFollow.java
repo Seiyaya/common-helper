@@ -16,6 +16,7 @@ public class FundFollow {
 
     private Integer id;
     private String code;
+    private Integer accountId;
     /**
      * 0有效1无效
      */

@@ -12,6 +12,11 @@ public enum ResultConstant {
     CODE_SUCCESS(200, "成功"),
 
     /**
+     * 参数不符合规范
+     */
+    CODE_PARAM_ERROR(151,"参数错误"),
+
+    /**
      * 失败
      */
     CODE_ERROR(500, "系统错误"),

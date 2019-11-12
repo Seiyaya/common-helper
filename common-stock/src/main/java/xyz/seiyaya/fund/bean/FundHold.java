@@ -22,4 +22,21 @@ public class FundHold {
     private BigDecimal costPrice;
     private Date createDate;
     private Date updateDate;
+
+    public FundHold(){
+
+    }
+
+    public FundHold(FundBargain fundBargain){
+        this.accountId = fundBargain.getAccountId();
+        this.code = fundBargain.getCode();
+        this.num = fundBargain.getNum();
+        this.costPrice = fundBargain.getPrice();
+        this.createDate = this.updateDate = new Date();
+    }
+
+    public FundHold(Integer id,BigDecimal num){
+        this.id = id;
+        this.num = num;
+    }
 }
