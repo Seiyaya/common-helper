@@ -1,6 +1,7 @@
 package xyz.seiyaya.activiti.bean;
 
 import lombok.Data;
+import org.activiti.bpmn.model.ActivitiListener;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.ProcessEngines;
 import org.activiti.engine.TaskService;
@@ -146,4 +147,6 @@ public class ActProcess {
      * 转交文案
      */
     private String transportContent;
+
+    private List<ActivitiListener> activitiListenerList;
 }

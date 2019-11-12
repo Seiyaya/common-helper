@@ -1,16 +1,21 @@
 package xyz.seiyaya.activiti.test;
 
 import lombok.extern.slf4j.Slf4j;
+import org.activiti.bpmn.model.*;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.ProcessEngines;
+import org.activiti.engine.RepositoryService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.impl.cmd.AbstractCustomSqlExecution;
 import org.activiti.engine.task.Task;
+import org.assertj.core.util.Lists;
 import org.junit.Test;
 import xyz.seiyaya.activiti.bean.ActProcess;
 import xyz.seiyaya.activiti.mapper.ActProcessMapper;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 公司流程框架的一些测试
@@ -25,9 +30,12 @@ public class CompanyProcessTester {
 
     private static TaskService taskService;
 
+    private static RepositoryService repositoryService;
+
     static{
         processEngine = ProcessEngines.getDefaultProcessEngine();
         taskService = processEngine.getTaskService();
+        repositoryService = processEngine.getRepositoryService();
     }
 
     /**
@@ -60,7 +68,7 @@ public class CompanyProcessTester {
         if(actProcesses.isEmpty()){
            log.error("没有对应的流程结点信息");
         }
-        String processDefId =actProcesses.get(0).getProcDefId();
+        String processDefId = actProcesses.get(0).getProcDefId();
         log.info("流程定义信息:{}",processDefId);
         StringBuilder nodeListStr = new StringBuilder("\n");
         for(ActProcess actProcess : actProcesses){
@@ -78,6 +86,46 @@ public class CompanyProcessTester {
             }else if("serviceTask".equals(actProcess.getActNodeType())){
 
             }
+        }
+
+        actProcesses = actProcesses.stream().filter(model ->
+            "userTask".equals(model.getActNodeType()) || "endEvent".equals(model.getActNodeType()) || "startEvent".equals(model.getActNodeType())
+                ).collect(Collectors.toList());
+
+        BpmnModel bpmnModel = repositoryService.getBpmnModel(processDefId);
+        Collection<FlowElement> flowElements = bpmnModel.getMainProcess().getFlowElements();
+        //用来判断是否达到了正在执行的那一步
+        boolean flag = false;
+        ActProcess lastProcessNode = actProcesses.get(actProcesses.size() - 1);
+        for(FlowElement flowElement : flowElements){
+            String actNodeType = flowElement.getClass().getSimpleName();
+            if("UserTask".equals(actNodeType) || "EndEvent".equals(actNodeType)){
+                if(flag){
+                    ActProcess actProcess = new ActProcess();
+                    actProcess.setCurrentAuditNode(flowElement.getName());
+                    actProcess.setActNodeId(flowElement.getId());
+                    actProcess.setActNodeType(actNodeType);
+                    if(flowElement instanceof UserTask){
+                        List<ActivitiListener> taskListeners = ((UserTask) flowElement).getTaskListeners();
+                        actProcess.setActivitiListenerList(taskListeners);
+                    }
+                    actProcesses.add(actProcess);
+                    if("EndEvent".equals(actNodeType)){
+                        break;
+                    }
+                }
+
+                //先找到流程图在上面流程执行到了哪一步
+                if(flowElement.getId().equals(lastProcessNode.getActNodeId())){
+                    flag = true;
+                }
+            }
+        }
+
+
+        for(ActProcess actProcess : actProcesses){
+            System.out.println(String.format("currentAuditNode:%s --> actNodeType:%s -->  actNodeId:%s --> listener:%s",
+                    actProcess.getCurrentAuditNode(),actProcess.getActNodeType(),actProcess.getActNodeId(),actProcess.getActivitiListenerList()));
         }
     }
 }

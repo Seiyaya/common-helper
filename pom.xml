@@ -12,6 +12,7 @@
     <module>common-tester</module>
     <module>common-deploy</module>
     <module>common-activiti</module>
+    <module>common-stock</module>
   </modules>
 
   <parent>
