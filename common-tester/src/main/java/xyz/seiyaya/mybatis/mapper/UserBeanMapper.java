@@ -18,4 +18,6 @@ public interface UserBeanMapper {
     void updateUserById(UserBean userBean);
 
     UserBean findExUser(@Param("id") Integer id);
+
+    UserBean sqlExecuteWithMapParamsAndForeach(DBParam list);
 }

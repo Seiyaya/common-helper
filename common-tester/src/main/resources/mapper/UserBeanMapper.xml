@@ -39,4 +39,18 @@
         </set>
         where id = #{id}
     </update>
+
+    <select id="sqlExecuteWithMapParamsAndForeach" resultType="xyz.seiyaya.mybatis.bean.UserBean">
+        select * from t_test_user
+        <where>
+            <if test="list == null or list.size() == 0">
+                and 1 != 1
+            </if>
+            <if test="list != null and list.size() > 0">
+                <foreach collection="list" item="item" separator="," open=" and t.user_id in(" close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
 </mapper>

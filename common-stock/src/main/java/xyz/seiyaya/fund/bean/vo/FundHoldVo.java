@@ -35,6 +35,11 @@ public class FundHoldVo extends FundHold {
      */
     private BigDecimal dayGain;
 
+    /**
+     * 持仓市值
+     */
+    private BigDecimal marketPrice;
+
     private String fundName;
 
     public BigDecimal calcTotalEarn(){
@@ -47,5 +52,9 @@ public class FundHoldVo extends FundHold {
 
     public BigDecimal calcDayGain(){
         return nowPrice.subtract(yesterdayPrice).divide(yesterdayPrice,4,BigDecimal.ROUND_HALF_EVEN);
+    }
+
+    public BigDecimal calcMarketPrice(){
+        return nowPrice.multiply(getNum());
     }
 }

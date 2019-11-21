@@ -1,20 +1,14 @@
 package xyz.seiyaya.fund.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import xyz.seiyaya.common.base.BaseController;
 import xyz.seiyaya.common.bean.ResultBean;
-import xyz.seiyaya.common.bean.SearchBean;
 import xyz.seiyaya.fund.bean.FundAccount;
-import xyz.seiyaya.fund.bean.FundBargain;
-import xyz.seiyaya.fund.bean.FundFollow;
-import xyz.seiyaya.fund.bean.vo.FundHoldVo;
 import xyz.seiyaya.fund.service.FundAccountService;
-import xyz.seiyaya.fund.service.FundBargainService;
-import xyz.seiyaya.fund.service.FundFollowService;
-import xyz.seiyaya.fund.service.FundHoldService;
-
-import java.util.List;
 
 /**
  * @author wangjia

@@ -24,6 +24,7 @@ import xyz.seiyaya.mybatis.mapper.UserBeanMapper;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -118,6 +119,34 @@ public class ExecuteTester {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         UserBeanMapper mapper = sqlSession.getMapper(UserBeanMapper.class);
         mapper.findUserByCondition(new DBParam().set("id",1).set("name","zhangsan"),"lisi");
+    }
+
+    @Test
+    public void testSqlExecuteWithMapParamsAndForeach(){
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        UserBeanMapper mapper = sqlSession.getMapper(UserBeanMapper.class);
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        mapper.sqlExecuteWithMapParamsAndForeach(new DBParam().set("list",list));
+    }
+
+    @Test
+    public void testForeachSqlNode(){
+        StaticTextSqlNode staticTextSqlNode = new StaticTextSqlNode("#{item}");
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        Configuration configuration = new Configuration();
+        ForEachSqlNode forEachSqlNode = new ForEachSqlNode(configuration,staticTextSqlNode,"list",null,"item","and t.user_id in(",")",",");
+        DynamicContext context = new DynamicContext(configuration, null);
+        context.bind("list",list);
+        forEachSqlNode.apply(context);
+
+        String sql = context.getSql();
+        System.out.println(sql);
     }
 
     /**
