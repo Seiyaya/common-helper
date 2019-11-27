@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.common.Mapper;
 import xyz.seiyaya.common.base.BaseMapper;
 import xyz.seiyaya.common.base.BaseService;
 import xyz.seiyaya.common.base.impl.BaseServiceImpl;
@@ -28,7 +29,7 @@ public class QuartzLogServiceImpl extends BaseServiceImpl<QuartzLog,Long> implem
     private QuartzLogMapper quartzLogMapper;
 
     @Override
-    public BaseMapper<QuartzLog, Long> getMapper() {
+    public Mapper<QuartzLog> getMapper() {
         return quartzLogMapper;
     }
 }

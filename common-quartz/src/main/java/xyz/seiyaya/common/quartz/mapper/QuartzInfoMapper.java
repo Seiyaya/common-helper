@@ -1,7 +1,9 @@
 package xyz.seiyaya.common.quartz.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
-import xyz.seiyaya.common.base.BaseMapper;
+import xyz.seiyaya.common.quartz.bean.QuartzInfo;
+
+import java.util.List;
 
 /**
  * @author wangjia
@@ -9,5 +11,8 @@ import xyz.seiyaya.common.base.BaseMapper;
  * @date: 2019/9/6 15:44
  */
 @Mapper
-public interface QuartzInfoMapper extends BaseMapper {
+public interface QuartzInfoMapper extends tk.mybatis.mapper.common.Mapper<QuartzInfo> {
+
+
+    List<QuartzInfo> getRealList(QuartzInfo quartzInfo);
 }

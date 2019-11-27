@@ -3,12 +3,14 @@ package xyz.seiyaya.common.helper;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Component;
 
 /**
  * @author wangjia
  * @version 1.0
  * @date 2019/9/30 15:34
  */
+@Component
 public class SpringHelper implements ApplicationContextAware {
 
     private static ApplicationContext context;

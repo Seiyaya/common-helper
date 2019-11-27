@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.common.Mapper;
 import xyz.seiyaya.common.base.BaseMapper;
 import xyz.seiyaya.common.base.BaseService;
 import xyz.seiyaya.common.base.impl.BaseServiceImpl;
@@ -14,6 +15,7 @@ import xyz.seiyaya.common.quartz.mapper.QuartzInfoMapper;
 import xyz.seiyaya.common.quartz.service.QuartzInfoService;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author wangjia
@@ -28,7 +30,12 @@ public class QuartzInfoServiceImpl extends BaseServiceImpl<QuartzInfo,Long> impl
     private QuartzInfoMapper quartzInfoMapper;
 
     @Override
-    public BaseMapper<QuartzInfo, Long> getMapper() {
+    public Mapper<QuartzInfo> getMapper() {
         return quartzInfoMapper;
+    }
+
+    @Override
+    public List<QuartzInfo> getRealList(QuartzInfo quartzInfo) {
+        return quartzInfoMapper.getRealList(quartzInfo);
     }
 }

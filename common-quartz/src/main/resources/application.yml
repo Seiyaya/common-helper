@@ -1,2 +1,21 @@
+spring:
+  profiles:
+    active: local
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/website?useUnicode=true&characterEncoding=utf8&autoReconnect=true&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+
+pagehelper:
+  reasonable: true
+  helperDialect: mysql
+  supportMethodsArguments: true
+  params: count
+
 mybatis:
   mapper-locations: classpath*:mapper/*.xml
+
+repeat:
+  submit:
+    flag: false

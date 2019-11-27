@@ -56,11 +56,4 @@ public interface BaseService<T,ID extends Serializable> {
      * @return
      */
     T getByCondition(T t);
-
-    /**
-     * 根据指定条件更新
-     * @param param
-     * @return
-     */
-    int updateByCondition(DBParam param);
 }

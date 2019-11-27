@@ -1,6 +1,7 @@
 package xyz.seiyaya.common.service.impl;
 
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.common.Mapper;
 import xyz.seiyaya.common.base.BaseMapper;
 import xyz.seiyaya.common.base.impl.BaseServiceImpl;
 import xyz.seiyaya.common.bean.RequestLog;
@@ -23,7 +24,7 @@ public class RequestLogServiceImpl extends BaseServiceImpl<RequestLog, Integer> 
     private RequestLogMapper requestLogMapper;
 
     @Override
-    public BaseMapper<RequestLog, Integer> getMapper() {
+    public Mapper<RequestLog> getMapper() {
         return requestLogMapper;
     }
 }

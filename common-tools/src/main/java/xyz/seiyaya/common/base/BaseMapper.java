@@ -12,6 +12,8 @@ import java.util.List;
  * @version 1.0
  * @date: 2019/9/6 15:44
  */
+//后面统一使用TKMybatis的Mapper
+@Deprecated
 public interface BaseMapper<T,ID extends Serializable> {
 
     /**

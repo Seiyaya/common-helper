@@ -11,6 +11,6 @@ import xyz.seiyaya.common.bean.RequestLog;
  * @date 2019-10-25
  */
 @Mapper
-public interface RequestLogMapper extends BaseMapper<RequestLog, Integer> {
+public interface RequestLogMapper extends tk.mybatis.mapper.common.Mapper<RequestLog> {
 
 }

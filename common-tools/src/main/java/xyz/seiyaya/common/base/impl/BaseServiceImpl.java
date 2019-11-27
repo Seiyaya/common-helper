@@ -2,9 +2,8 @@ package xyz.seiyaya.common.base.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import xyz.seiyaya.common.base.BaseMapper;
+import tk.mybatis.mapper.common.Mapper;
 import xyz.seiyaya.common.base.BaseService;
-import xyz.seiyaya.common.helper.DBParam;
 
 import java.io.Serializable;
 import java.util.List;
@@ -18,43 +17,38 @@ public abstract class BaseServiceImpl<T, ID extends Serializable> implements Bas
 
     @Override
     public int insert(T t) {
-        return getMapper().insert(t);
+        return getMapper().insertSelective(t);
     }
 
     @Override
     public T getById(ID id) {
-        return getMapper().findByPrimary(id);
+        return getMapper().selectByPrimaryKey(id);
     }
 
     @Override
     public int updateById(T t) {
-        return getMapper().update(t);
+        return getMapper().updateByPrimaryKeySelective(t);
     }
 
     @Override
     public Page<T> page(T t, Integer currentPage, Integer pageSize) {
         PageHelper.startPage(currentPage,pageSize);
-        return (Page<T>)getMapper().getList(t);
+        return (Page<T>)getMapper().select(t);
     }
 
     @Override
     public List<T> getList(T t) {
-        return getMapper().getList(t);
+        return getMapper().select(t);
     }
 
     @Override
     public T getByCondition(T t) {
-        return getMapper().getByCondition(t);
-    }
-
-    @Override
-    public int updateByCondition(DBParam param) {
-        return getMapper().updateByCondition(param);
+        return getMapper().selectOne(t);
     }
 
     /**
      * 子类需要实现的，直接调用mapper操作公用方法
      * @return
      */
-    public abstract BaseMapper<T, ID> getMapper();
+    public abstract Mapper<T> getMapper();
 }

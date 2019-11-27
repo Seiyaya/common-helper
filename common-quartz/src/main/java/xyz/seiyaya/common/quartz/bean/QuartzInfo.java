@@ -2,6 +2,8 @@ package xyz.seiyaya.common.quartz.bean;
 
 import lombok.Data;
 
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 
 /**
@@ -11,11 +13,13 @@ import java.util.Date;
  * @date: 2019/9/6 14:56
  */
 @Data
+@Table(name = "t_quartz_info")
 public class QuartzInfo {
 
     /**
      * 主键id
      */
+    @Id
     private Long id;
     /**
      * 定时任务的名称

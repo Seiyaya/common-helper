@@ -2,6 +2,8 @@ package xyz.seiyaya.common.quartz.bean;
 
 import lombok.Data;
 
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 
 /**
@@ -11,11 +13,13 @@ import java.util.Date;
  * @date: 2019/9/6 14:57
  */
 @Data
+@Table(name = "t_quartz_log")
 public class QuartzLog {
 
     /**
      * 日志id
      */
+    @Id
     private Long id;
     /**
      * 定时任务id
