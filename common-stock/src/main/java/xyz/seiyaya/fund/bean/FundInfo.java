@@ -21,6 +21,10 @@ public class FundInfo {
     private BigDecimal price;
     private BigDecimal yesterdayPrice;
     /**
+     * 日涨幅
+     */
+    private BigDecimal dayGain;
+    /**
      * 累计净值，不含包派息所减少的部分
      */
     private BigDecimal sumPrice;
