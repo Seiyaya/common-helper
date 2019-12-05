@@ -3,6 +3,7 @@ package xyz.seiyaya;
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 import org.apache.commons.math3.util.MathArrays;
 import org.junit.Test;
+import org.springframework.beans.BeanUtils;
 import xyz.seiyaya.common.helper.DBParam;
 
 import java.util.HashMap;
@@ -32,5 +33,14 @@ public class ClassTester {
     public void testInteger(){
         Integer i = Integer.valueOf("25");
         System.out.println( i == 25);
+    }
+
+    @Test
+    public void testCopyBean(){
+        Parent parent = new Son("myName",12,"001");
+        Son son = new Son();
+        BeanUtils.copyProperties(parent,son);
+
+        System.out.println(son.getName() + "-->" + son.getStudentNo());
     }
 }

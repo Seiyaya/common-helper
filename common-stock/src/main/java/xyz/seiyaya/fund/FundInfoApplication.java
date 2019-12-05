@@ -1,13 +1,17 @@
 package xyz.seiyaya.fund;
 
+import com.github.pagehelper.PageHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Mapper;
-import org.mybatis.spring.annotation.MapperScan;
+import org.apache.ibatis.plugin.Interceptor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertySource;
+import tk.mybatis.spring.annotation.MapperScan;
+import xyz.seiyaya.fund.bean.FundAccount;
+import xyz.seiyaya.fund.mapper.FundAccountMapper;
 
 import java.util.Iterator;
 
@@ -33,6 +37,13 @@ public class FundInfoApplication {
             System.out.println(name1 + "-->" + next );
         }
         System.out.println(name);
+
+        PageHelper.startPage(3,10);
+        FundAccountMapper bean = run.getBean(FundAccountMapper.class);
+        FundAccount fundAccount = bean.selectByPrimaryKey(1);
+        log.info("第一次查询:{}",fundAccount);
+        fundAccount = bean.selectByPrimaryKey(1);
+        log.info("第二次查询:{}",fundAccount);
 
         run.close();
     }

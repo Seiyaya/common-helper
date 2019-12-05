@@ -78,7 +78,13 @@ public class ExecuteTester {
          *          @see BaseExecutor#queryFromDatabase(org.apache.ibatis.mapping.MappedStatement, java.lang.Object, org.apache.ibatis.session.RowBounds, org.apache.ibatis.session.ResultHandler, org.apache.ibatis.cache.CacheKey, org.apache.ibatis.mapping.BoundSql)
          *
          */
+        System.out.println("第一次查询");
         UserBean user = mapper.findUser(1);
+        log.info("{}",user);
+
+        //第二次查询使用了缓存
+        System.out.println("第二次查询");
+        user = mapper.findUser(1);
 
         log.info("{}",user);
 

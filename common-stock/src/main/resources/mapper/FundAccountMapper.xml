@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.seiyaya.fund.mapper.FundAccountMapper">
+
+    <select id="findFundAccount" resultType="xyz.seiyaya.fund.bean.FundAccount">
+        select id,current_balance currentBalance,total_balance totalBalance,total_market totalMarket,create_date createDate from t_fund_account
+            where id = #{param1}
+    </select>
+</mapper>

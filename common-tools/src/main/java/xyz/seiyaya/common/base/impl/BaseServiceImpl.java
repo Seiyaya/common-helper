@@ -2,6 +2,7 @@ package xyz.seiyaya.common.base.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import tk.mybatis.mapper.common.Mapper;
 import xyz.seiyaya.common.base.BaseService;
 
@@ -31,9 +32,11 @@ public abstract class BaseServiceImpl<T, ID extends Serializable> implements Bas
     }
 
     @Override
-    public Page<T> page(T t, Integer currentPage, Integer pageSize) {
+    public PageInfo<T> page(T t, Integer currentPage, Integer pageSize) {
         PageHelper.startPage(currentPage,pageSize);
-        return (Page<T>)getMapper().select(t);
+        List<T> result = getMapper().select(t);
+        PageInfo<T> pageInfo = new PageInfo<>(result);
+        return pageInfo;
     }
 
     @Override

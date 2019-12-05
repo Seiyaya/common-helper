@@ -1,7 +1,6 @@
 package xyz.seiyaya.common.base;
 
-import com.github.pagehelper.Page;
-import xyz.seiyaya.common.helper.DBParam;
+import com.github.pagehelper.PageInfo;
 
 import java.io.Serializable;
 import java.util.List;
@@ -41,7 +40,7 @@ public interface BaseService<T,ID extends Serializable> {
      * @param pageSize
      * @return
      */
-    Page<T> page(T t,Integer currentPage,Integer pageSize);
+    PageInfo<T> page(T t, Integer currentPage, Integer pageSize);
 
     /**
      * 根据指定条件获取列表

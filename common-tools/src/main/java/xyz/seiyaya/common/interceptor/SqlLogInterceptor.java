@@ -1,7 +1,8 @@
-package xyz.seiyaya.mybatis.interceptor;
+package xyz.seiyaya.common.interceptor;
 
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.cache.CacheKey;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -25,6 +26,8 @@ import java.util.Properties;
 @Intercepts({
         @Signature(type = Executor.class, method = "update", args = {
                 MappedStatement.class, Object.class }),
+        @Signature(method = "query", type = Executor.class,
+                args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class, CacheKey.class, BoundSql.class}),
         @Signature(type = Executor.class, method = "query", args = {
                 MappedStatement.class, Object.class, RowBounds.class,
                 ResultHandler.class }) })
@@ -49,14 +52,28 @@ public class SqlLogInterceptor implements Interceptor {
             result = Integer.parseInt(returnVal.toString());
         }
         //获取sql语句
+        String methodName = getMethodName(mappedStatement);
         String sql = getSql(configuration, boundSql);
-        log.info("[result={}]sql-->:{}",result,sql);
+        log.info("[method={}][result={}]sql-->:{}",methodName,result,sql);
         return returnVal;
+    }
+
+    /**
+     * 获取methodName
+     * @param mappedStatement
+     * @return
+     */
+    private String getMethodName(MappedStatement mappedStatement) {
+        String[] strArr = mappedStatement.getId().split("\\.");
+        return strArr[strArr.length - 2] + "." + strArr[strArr.length - 1];
     }
 
     @Override
     public Object plugin(Object target) {
-        return Plugin.wrap(target, this);
+        if( target instanceof  Executor){
+            return Plugin.wrap(target, this);
+        }
+        return target;
     }
 
     @Override

@@ -13,3 +13,5 @@ mybatis:
 repeat:
   submit:
     flag: true
+server:
+  port: 9999

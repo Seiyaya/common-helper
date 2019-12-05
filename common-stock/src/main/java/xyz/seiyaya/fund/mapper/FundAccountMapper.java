@@ -10,4 +10,6 @@ import xyz.seiyaya.fund.bean.FundAccount;
  */
 @org.apache.ibatis.annotations.Mapper
 public interface FundAccountMapper extends Mapper<FundAccount> {
+
+    FundAccount findFundAccount(Integer id);
 }

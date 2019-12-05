@@ -2,6 +2,7 @@ package xyz.seiyaya.fund.bean;
 
 import lombok.Data;
 
+import javax.persistence.Id;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -15,6 +16,7 @@ import java.util.Date;
 @Table(name = "t_fund_account")
 public class FundAccount {
 
+    @Id
     private Integer id;
     private BigDecimal currentBalance;
     private BigDecimal totalBalance;

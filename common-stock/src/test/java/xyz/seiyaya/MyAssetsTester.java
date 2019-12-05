@@ -68,7 +68,7 @@ public class MyAssetsTester {
     public void testCalcHistDayEarn(){
         Example example = new Example(HistFundInfo.class);
         example.createCriteria().andEqualTo("code","161725");
-        example.orderBy("backUpdate desc");
+        example.orderBy("backupDate").desc();
         List<HistFundInfo> histFundInfoList = histFundInfoMapper.selectByExample(example);
         for(int i=0;i<histFundInfoList.size()-1;i++){
             BigDecimal result = histFundInfoList.get(i).getPrice().divide(histFundInfoList.get(i+1).getPrice(),4, RoundingMode.HALF_UP).subtract(BigDecimal.ONE);
