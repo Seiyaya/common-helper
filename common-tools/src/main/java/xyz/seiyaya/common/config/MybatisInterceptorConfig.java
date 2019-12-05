@@ -27,8 +27,7 @@ public class MybatisInterceptorConfig {
         Properties properties = new Properties();
         properties.setProperty("offsetAsPageNum", "true");
         properties.setProperty("rowBoundsWithCount", "true");
-        // 参数合理化，也就是说如果查询页*页大小 >  总记录数，会查询最后一页的数据
-        // properties.setProperty("reasonable", "true");
+        // 属性reasonable 参数合理化，也就是说如果查询页*页大小 >  总记录数，会查询最后一页的数据
         properties.setProperty("dialect", "mysql");
         pageHelper.setProperties(properties);
         return pageHelper;

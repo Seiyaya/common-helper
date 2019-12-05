@@ -1,6 +1,8 @@
 package xyz.seiyaya.mybatis.mapper;
 
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import tk.mybatis.mapper.common.BaseMapper;
 import xyz.seiyaya.common.helper.DBParam;
 import xyz.seiyaya.mybatis.bean.UserBean;
 
@@ -9,7 +11,8 @@ import xyz.seiyaya.mybatis.bean.UserBean;
  * @version 1.0
  * @date 2019/9/26 15:32
  */
-public interface UserBeanMapper {
+@Mapper
+public interface UserBeanMapper extends tk.mybatis.mapper.common.Mapper<UserBean> {
 
     UserBean findUser(@Param("id") Integer id);
 
