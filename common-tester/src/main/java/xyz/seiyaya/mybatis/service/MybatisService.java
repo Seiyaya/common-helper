@@ -12,4 +12,14 @@ public interface MybatisService {
     UserBean findUserBeanById(Integer id);
 
     UserBean findUserBeanRepeatById(Integer id);
+
+    /**
+     * 父类插入，用来测试事务
+     */
+    void parentInsert();
+
+    /**
+     * 子类插入
+     */
+    void sonInsert();
 }

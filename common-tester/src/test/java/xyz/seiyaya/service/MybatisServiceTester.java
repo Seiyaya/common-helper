@@ -44,4 +44,9 @@ public class MybatisServiceTester {
         log.info("一级缓存信息:{} cacheEnable:{}",localCacheScope,configuration.isCacheEnabled());
         mybatisService.findUserBeanRepeatById(1);
     }
+
+    @Test
+    public void testSpringTransaction(){
+        mybatisService.parentInsert();
+    }
 }

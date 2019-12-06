@@ -23,6 +23,7 @@ public class QueryTester {
         queryUser();
     }
 
+    @SuppressWarnings("all")
     private static void queryUser() throws SQLException {
         String sql = "select * from t_test_user where id = ?";
         int id = 1;

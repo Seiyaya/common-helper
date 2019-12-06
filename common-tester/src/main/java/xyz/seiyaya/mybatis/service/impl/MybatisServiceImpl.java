@@ -4,11 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import xyz.seiyaya.common.helper.SpringHelper;
 import xyz.seiyaya.mybatis.bean.UserBean;
 import xyz.seiyaya.mybatis.mapper.UserBeanMapper;
 import xyz.seiyaya.mybatis.service.MybatisService;
 
 import javax.annotation.Resource;
+import java.util.Date;
 
 /**
  * @author wangjia
@@ -49,5 +51,28 @@ public class MybatisServiceImpl implements MybatisService {
         log.info("第二次查询出来的user-->{} hashCode:{}",user,user.hashCode());
 
         return user;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
+    @Override
+    public void parentInsert() {
+        UserBean userBean = new UserBean("seiyaya","123456",24,new Date());
+        userBeanMapper.insertSelective(userBean);
+
+        try {
+            MybatisService bean = SpringHelper.getBean(MybatisService.class);
+            bean.sonInsert();
+        }catch (Exception e){
+            log.error("子插入异常");
+        }
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW,rollbackFor = Exception.class)
+    @Override
+    public void sonInsert() {
+        UserBean userBean = new UserBean("seiyayaSon","123456",2,new Date());
+        userBeanMapper.insertSelective(userBean);
+        int result = 1/0;
+        log.info("{}",result);
     }
 }
