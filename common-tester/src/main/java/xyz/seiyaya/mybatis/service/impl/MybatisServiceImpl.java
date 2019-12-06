@@ -47,8 +47,10 @@ public class MybatisServiceImpl implements MybatisService {
         UserBean user = userBeanMapper.findUser(id);
         log.info("第一次查询出来的user-->{} hashCode:{}",user,user.hashCode());
 
-        user = userBeanMapper.findUser(id);
-        log.info("第二次查询出来的user-->{} hashCode:{}",user,user.hashCode());
+        UserBean user2 = userBeanMapper.findUser(id);
+        log.info("第二次查询出来的user-->{} hashCode:{}",user2,user2.hashCode());
+
+        log.info("{}",user == user2);
 
         return user;
     }

@@ -3,9 +3,18 @@ package xyz.seiyaya;
 import org.apache.ibatis.scripting.xmltags.ExpressionEvaluator;
 import org.assertj.core.util.Lists;
 import org.junit.Test;
+import org.springframework.expression.Expression;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.common.TemplateParserContext;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
 import xyz.seiyaya.mybatis.bean.UserBean;
+import xyz.seiyaya.mybatis.helper.MybatisSqlHelper;
 
+import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Properties;
+import java.util.Set;
 
 /**
  * Unit test for simple App.
@@ -37,5 +46,29 @@ public class AppTest {
 
         boolean b = expressionEvaluator.evaluateBoolean("id != null and id != ''", userBean);
         System.out.println(b);
+    }
+
+    @Test
+    public void testSpringExpression(){
+        ExpressionParser parser = new SpelExpressionParser();
+        UserBean userBean = new UserBean();
+        userBean.setName("zhangsan");
+        Expression expression = parser.parseExpression("name.concat('123')");
+        Object value = expression.getValue(userBean);
+        System.out.println(value);
+    }
+
+    @Test
+    public void testFilePath(){
+        Properties properties = System.getProperties();
+        Set<String> strings = properties.stringPropertyNames();
+        for(String key : strings){
+            String property = properties.getProperty(key);
+            System.out.println(key+"--"+property);
+        }
+
+        String filePath = AppTest.class.getClassLoader().getResource("mapper/UserBeanMapper.xml").getFile();
+        File file = new File(filePath);
+        System.out.println(file.exists());
     }
 }
