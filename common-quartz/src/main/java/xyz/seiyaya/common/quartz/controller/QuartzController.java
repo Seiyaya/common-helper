@@ -1,6 +1,7 @@
 package xyz.seiyaya.common.quartz.controller;
 
 import com.github.pagehelper.Page;
+import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,7 +46,7 @@ public class QuartzController extends BaseController {
     @RequestMapping("/page/{currentPage}/{pageSize}")
     public ResultBean pageList(@RequestBody QuartzInfoDto quartzInfoDto,
                                @PathVariable Integer currentPage,@PathVariable Integer pageSize){
-        Page<QuartzInfo> page = quartzInfoService.page(quartzInfoDto,currentPage,pageSize);
+        PageInfo<QuartzInfo> page = quartzInfoService.page(quartzInfoDto,currentPage,pageSize);
         return new ResultBean().setData(page);
     }
 
@@ -124,7 +125,7 @@ public class QuartzController extends BaseController {
     @RequestMapping("/log/page/{currentPage}/{pageSize}")
     public ResultBean logPage(@RequestBody QuartzLogDto quartzLogDto,
                               @PathVariable Integer currentPage,@PathVariable Integer pageSize){
-        Page<QuartzLog> page = quartzLogService.page(quartzLogDto, currentPage, pageSize);
+        PageInfo<QuartzLog> page = quartzLogService.page(quartzLogDto, currentPage, pageSize);
         return new ResultBean().setData(page);
     }
 }

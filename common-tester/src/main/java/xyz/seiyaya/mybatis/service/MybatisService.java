@@ -22,4 +22,15 @@ public interface MybatisService {
      * 子类插入
      */
     void sonInsert();
+
+    /**
+     * 通过id更新
+     * @param model
+     */
+    void updateUserById(Integer model);
+
+    /**
+     * 查找和更新通过stream
+     */
+    void findAndUpdateByStream();
 }

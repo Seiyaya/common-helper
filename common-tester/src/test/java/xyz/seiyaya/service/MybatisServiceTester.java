@@ -4,15 +4,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.LocalCacheScope;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.assertj.core.util.Lists;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import xyz.seiyaya.TesterApplication;
+import xyz.seiyaya.mybatis.bean.UserBean;
 import xyz.seiyaya.mybatis.service.MybatisService;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author wangjia
@@ -48,5 +53,10 @@ public class MybatisServiceTester {
     @Test
     public void testSpringTransaction(){
         mybatisService.parentInsert();
+    }
+
+    @Test
+    public void testStream(){
+        mybatisService.findAndUpdateByStream();
     }
 }

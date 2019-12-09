@@ -1,20 +1,15 @@
 package xyz.seiyaya.common.quartz.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.common.Mapper;
-import xyz.seiyaya.common.base.BaseMapper;
-import xyz.seiyaya.common.base.BaseService;
 import xyz.seiyaya.common.base.impl.BaseServiceImpl;
 import xyz.seiyaya.common.quartz.bean.QuartzLog;
-import xyz.seiyaya.common.quartz.bean.vo.QuartzLogVo;
 import xyz.seiyaya.common.quartz.mapper.QuartzLogMapper;
 import xyz.seiyaya.common.quartz.service.QuartzLogService;
 
 import javax.annotation.Resource;
-import java.io.Serializable;
 
 /**
  * @author wangjia

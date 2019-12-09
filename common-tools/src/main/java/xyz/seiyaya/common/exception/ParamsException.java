@@ -1,6 +1,7 @@
 package xyz.seiyaya.common.exception;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import xyz.seiyaya.common.constant.ResultConstant;
 
 /**
@@ -10,6 +11,7 @@ import xyz.seiyaya.common.constant.ResultConstant;
  * @date: 2019/9/6 18:30
  */
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class ParamsException extends RuntimeException {
 
 

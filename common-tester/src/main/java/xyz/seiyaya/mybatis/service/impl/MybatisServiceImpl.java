@@ -1,16 +1,19 @@
 package xyz.seiyaya.mybatis.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.util.Lists;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import xyz.seiyaya.common.helper.DBParam;
 import xyz.seiyaya.common.helper.SpringHelper;
 import xyz.seiyaya.mybatis.bean.UserBean;
 import xyz.seiyaya.mybatis.mapper.UserBeanMapper;
 import xyz.seiyaya.mybatis.service.MybatisService;
 
 import javax.annotation.Resource;
-import java.util.Date;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author wangjia
@@ -76,5 +79,29 @@ public class MybatisServiceImpl implements MybatisService {
         userBeanMapper.insertSelective(userBean);
         int result = 1/0;
         log.info("{}",result);
+    }
+
+    @Override
+    public void updateUserById(Integer model) {
+        UserBean userBean = new UserBean();
+        userBean.setId(model);
+        userBean.setBirthday(new Date());
+        userBeanMapper.updateByPrimaryKeySelective(userBean);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
+    public void findAndUpdateByStream() {
+        MybatisService proxyBean = SpringHelper.getBean(MybatisService.class);
+        ArrayList<UserBean> idList = Lists.newArrayList();
+        for(int i=0;i<20;i++){
+            UserBean userBean = new UserBean();
+            userBean.setId(i+1);
+            idList.add(userBean);
+        }
+
+        idList.parallelStream().forEach(model->{
+            proxyBean.updateUserById(model.getId());
+        });
     }
 }

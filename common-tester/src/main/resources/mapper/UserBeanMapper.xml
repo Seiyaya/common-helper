@@ -8,7 +8,6 @@
         <result property="password" column="password"/>
         <result property="age" column="age"/>
         <result property="birthday" column="birthday"/>
-        <association property="accountId" column="account_id" resultMap="accountMap"/>
     </resultMap>
 
     <resultMap id="accountMap" type="xyz.seiyaya.mybatis.bean.AccountBean">
