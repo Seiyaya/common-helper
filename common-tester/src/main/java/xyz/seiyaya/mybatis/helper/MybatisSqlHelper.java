@@ -49,17 +49,43 @@ public class MybatisSqlHelper {
         if(xNodeList != null && !xNodeList.isEmpty()){
             for(XNode xNode : xNodeList){
                 if(id.equals(xNode.getStringAttribute("id"))){
-                    Configuration configuration = new Configuration();
-                    XMLScriptBuilder builder = new XMLScriptBuilder(configuration, xNode);
-                    SqlSource sqlSource = builder.parseScriptNode();
-                    BoundSql boundSql = sqlSource.getBoundSql(param);
-                    sqlInfo = convertSqlInfo(boundSql);
-                    log.info("sqlSource:{}",sqlSource);
+                    sqlInfo = getSqlInfo(xNode,param);
                     break;
                 }
             }
         }
 
+        return sqlInfo;
+    }
+
+    /**
+     * 直接通过字符串来生成sql信息
+     * @param xmlPart
+     * @param param
+     * @return
+     */
+    public static SqlInfo getSqlInfoByString(String xmlPart , Map<String,Object> param){
+        if(xmlPart == null || xmlPart.isEmpty()){
+            return null;
+        }
+
+        XPathParser xPathParser = new XPathParser(xmlPart);
+        XNode xNode = xPathParser.evalNode("select|update|delete|insert");
+        return getSqlInfo(xNode,param);
+    }
+
+    /**
+     * 获取sqlInfo信息
+     * @param xNode
+     * @param param
+     * @return
+     */
+    public static SqlInfo getSqlInfo(XNode xNode, Map<String,Object> param){
+        Configuration configuration = new Configuration();
+        XMLScriptBuilder builder = new XMLScriptBuilder(configuration, xNode);
+        SqlSource sqlSource = builder.parseScriptNode();
+        BoundSql boundSql = sqlSource.getBoundSql(param);
+        SqlInfo sqlInfo = convertSqlInfo(boundSql);
         return sqlInfo;
     }
 
