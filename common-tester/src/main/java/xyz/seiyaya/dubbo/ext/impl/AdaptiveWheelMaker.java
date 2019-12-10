@@ -1,9 +1,9 @@
-package xyz.seiyaya.duboo.ext.impl;
+package xyz.seiyaya.dubbo.ext.impl;
 
 import com.alibaba.dubbo.common.URL;
 import com.alibaba.dubbo.common.extension.ExtensionLoader;
-import xyz.seiyaya.duboo.ext.WheelMaker;
-import xyz.seiyaya.duboo.ext.bean.Wheel;
+import xyz.seiyaya.dubbo.ext.WheelMaker;
+import xyz.seiyaya.dubbo.ext.bean.Wheel;
 
 /**
  * 增强类，在代理的方法之前查找具体的实现类

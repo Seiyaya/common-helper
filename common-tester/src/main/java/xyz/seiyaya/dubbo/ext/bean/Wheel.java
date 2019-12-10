@@ -1,4 +1,4 @@
-package xyz.seiyaya.duboo.ext.bean;
+package xyz.seiyaya.dubbo.ext.bean;
 
 /**
  * @author wangjia

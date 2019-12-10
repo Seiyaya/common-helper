@@ -37,10 +37,14 @@ import static xyz.seiyaya.mybatis.generate.constant.GenerateConstants.DB_MYSQL;
  * 利用freemarker生成
  * @author seiyaya
  * @date 2019/8/8 19:00
+ *
+ * 2019-12-10 08:55:11 后面全部使用tkMybatis不需要再生成代码
+ * 相比较生成代码字段变更、添加字段更方便
  */
 @Slf4j
 @SpringBootApplication
 @PropertySource(value = "classpath:mybatis.yml")
+@Deprecated
 public class MybatisStarter {
 
     @Value("${dbType}")

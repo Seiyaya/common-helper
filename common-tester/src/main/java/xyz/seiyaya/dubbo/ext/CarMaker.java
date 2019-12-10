@@ -1,7 +1,7 @@
-package xyz.seiyaya.duboo.ext;
+package xyz.seiyaya.dubbo.ext;
 
 import com.alibaba.dubbo.common.URL;
-import xyz.seiyaya.duboo.ext.bean.Car;
+import xyz.seiyaya.dubbo.ext.bean.Car;
 
 /**
  * @author wangjia

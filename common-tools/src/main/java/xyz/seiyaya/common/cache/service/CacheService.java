@@ -8,11 +8,11 @@ package xyz.seiyaya.common.cache.service;
  */
 public interface CacheService {
 
-    public static final String CACHE_SERVICE_REDIS = "redisCacheService";
+    String CACHE_SERVICE_REDIS = "redisCacheService";
 
-    public static final String CACHE_SERVICE_FILE = "fileCacheService";
+    String CACHE_SERVICE_FILE = "fileCacheService";
 
-    public static final String CACHE_SERVICE_LOCAL = "localCacheService";
+    String CACHE_SERVICE_LOCAL = "localCacheService";
 
     void set(String key,String value);
 

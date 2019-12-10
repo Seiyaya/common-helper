@@ -1,9 +1,9 @@
-package xyz.seiyaya.duboo.ext.impl;
+package xyz.seiyaya.dubbo.ext.impl;
 
 import com.alibaba.dubbo.common.URL;
-import xyz.seiyaya.duboo.ext.CarMaker;
-import xyz.seiyaya.duboo.ext.WheelMaker;
-import xyz.seiyaya.duboo.ext.bean.Car;
+import xyz.seiyaya.dubbo.ext.CarMaker;
+import xyz.seiyaya.dubbo.ext.WheelMaker;
+import xyz.seiyaya.dubbo.ext.bean.Car;
 
 /**
  * @author wangjia

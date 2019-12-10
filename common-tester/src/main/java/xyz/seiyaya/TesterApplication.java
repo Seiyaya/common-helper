@@ -25,6 +25,6 @@ public class TesterApplication {
         MybatisService bean = run.getBean(MybatisService.class);
         log.info("{}",bean);
 
-        run.close();
+//        run.close();
     }
 }
