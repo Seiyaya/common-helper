@@ -8,6 +8,8 @@
         <result property="password" column="password"/>
         <result property="age" column="age"/>
         <result property="birthday" column="birthday"/>
+        <result property="status" column="status" typeHandler="xyz.seiyaya.mybatis.handler.StringArrayTypeHandler"/>
+        <result property="sex" column="sex"/>
     </resultMap>
 
     <resultMap id="accountMap" type="xyz.seiyaya.mybatis.bean.AccountBean">
@@ -18,7 +20,7 @@
         <result property="initBalance" column="init_balance"/>
     </resultMap>
 
-    <select id="findUser" resultType="xyz.seiyaya.mybatis.bean.UserBean">
+    <select id="findUser" resultMap="userBeanMap">
         SELECT * FROM t_test_user
         <where>
             <if test="id != null">and id = #{id,javaType=int,jdbcType=INTEGER}</if>

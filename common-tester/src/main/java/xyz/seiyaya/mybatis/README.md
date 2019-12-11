@@ -31,6 +31,26 @@ Properties settings = settingsAsPropertiess(root.evalNode("settings"));
    PropertyTokenizer这个主要是用来判断复杂对象里面是否含有指定属性
 MetaClass metaConfig = MetaClass.forClass(Configuration.class, localReflectorFactory);
 ```
++ org.apache.ibatis.builder.xml.XMLConfigBuilder.settingsAsPropertiess 解析settings节点
+    - 检查settings节点下的每个属性在Configuration是否存在，不存在直接抛出异常
+    - 将得到的Properties设置到Configuration的各个属性上面
++ org.apache.ibatis.builder.xml.XMLConfigBuilder.propertiesElement 解析属性节点，主要是数据库连接信息
+    - 将解析后的属性存储到Configuration的variables的属性中
+    - 这里可以通过子节点、根结点的resource属性和url属性三种方式获取配置,从网络或者文件获取的配置会覆盖子节点的同名配置
++ org.apache.ibatis.builder.xml.XMLConfigBuilder.typeAliasesElement 解析别名配置
+    - 仅配置包名，让mybatis扫描包中的类型并根据类型得到别名，可以配合@Alias注解(直接指定别名)，第二种格式手动配置类的别名
+    - 别名信息存储在org.apache.ibatis.type.TypeAliasRegistry.TYPE_ALIASES,而TypeAliasRegistry的Configuration,这更加证明Configuration是一个贯穿全局的配置
++ org.apache.ibatis.builder.xml.XMLConfigBuilder.pluginElement 解析插件节点
+    - 将配置的拦截器实例化后存储到org.apache.ibatis.session.Configuration.interceptorChain中
++ org.apache.ibatis.builder.xml.XMLConfigBuilder.environmentsElement 解析环境结点
+    - 主要配置的是事务管理器和数据源
++ org.apache.ibatis.builder.xml.XMLConfigBuilder.typeHandlerElement 解析映射器，将数据库的类型转换为java的类型
+    - 实现接口TypeHandler即可自定义映射关系类型
+
+### SQL映射文件解析
+## 入口:org.apache.ibatis.builder.xml.XMLConfigBuilder.mapperElement
+
+
 
 ## SQL执行
 

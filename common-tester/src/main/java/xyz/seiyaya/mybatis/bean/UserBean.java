@@ -24,6 +24,11 @@ public class UserBean implements Serializable {
     private String name;
     private String password;
     private Integer age;
+    /**
+     * 性别0男1女
+     */
+    private String sex;
+    private String[] status;
     private Date birthday;
 
 
