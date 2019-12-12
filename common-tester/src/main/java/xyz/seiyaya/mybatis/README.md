@@ -49,6 +49,12 @@ MetaClass metaConfig = MetaClass.forClass(Configuration.class, localReflectorFac
 
 ### SQL映射文件解析
 ## 入口:org.apache.ibatis.builder.xml.XMLConfigBuilder.mapperElement
++ 解析xml文件的方法:org.apache.ibatis.builder.xml.XMLMapperBuilder.parse(),会解析里面的各个节点，解析完成后将资源(文件路径)添加到Configuration.loadedResources中表示已经解析过
+    - 先解析cache-ref、cache、/mapper/parameterMap、/mapper/resultMap、/mapper/sql、select|insert|update|delete节点信息
+    - 解析cache
+    - 解析cache-ref
+    - 解析resultMap将resultMap中的各个节点封装到`ResultMap`，不同的子节点的属性到不同的集合中
+    - 解析sql，直接将sql的字内容替换到使用了include语句的地方，详见`XMLMapperBuilder#sqlElement`
 
 
 

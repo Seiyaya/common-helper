@@ -4,14 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.binding.MapperProxy;
 import org.apache.ibatis.builder.SqlSourceBuilder;
+import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.executor.BaseExecutor;
 import org.apache.ibatis.executor.CachingExecutor;
 import org.apache.ibatis.executor.result.DefaultResultHandler;
 import org.apache.ibatis.executor.resultset.DefaultResultSetHandler;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.mapping.BoundSql;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.SqlSource;
+import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.scripting.xmltags.*;
 import org.apache.ibatis.session.*;
 import org.apache.ibatis.session.defaults.DefaultSqlSession;
@@ -107,6 +106,51 @@ public class ExecuteTester {
          *  4. 调用StaticSqlSource的getBoundSql()和BoundSql()
          *  5. 将DynamicContext的contextMap拷贝到BoundSql中
          */
+    }
+
+
+    @Test
+    public void printResultMapInfo() throws IOException {
+        Configuration configuration = new Configuration();
+        String resource = "mapper/UserBeanMapper.xml";
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        XMLMapperBuilder builder = new XMLMapperBuilder(inputStream, configuration, resource, configuration.getSqlFragments());
+
+        builder.parse();
+
+        ResultMap userBeanMapAll = configuration.getResultMap("userBeanMapAll");
+
+        //用于存储 <id>、<result>、<idArg>、<arg> 节点 column 属性
+        log.info("mappedColumn: -->  {}",userBeanMapAll.getMappedColumns());
+
+        System.out.println();
+        System.out.println();
+
+        //用于存储 <id> 和 <idArg> 节点对应的 ResultMapping 对象
+        userBeanMapAll.getIdResultMappings().forEach(rm -> System.out.println(simplify(rm)));
+
+        System.out.println();
+        System.out.println();
+
+        //用于存储 <id> 和 <result> 节点的 property 属性，或 <idArgs> 和 <arg>节点的 name 属性
+        userBeanMapAll.getPropertyResultMappings().forEach(rm -> System.out.println(simplify(rm)));
+
+        System.out.println();
+        System.out.println();
+
+        //用于存储 <idArgs> 和 <arg> 节点对应的 ResultMapping 对象
+        userBeanMapAll.getConstructorResultMappings().forEach(rm -> System.out.println(simplify(rm)));
+
+        System.out.println();
+        System.out.println();
+
+        userBeanMapAll.getResultMappings().forEach(rm -> System.out.println(simplify(rm)));
+    }
+
+    private String simplify(ResultMapping resultMapping) {
+        return String.format("ResultMapping{column='%s', property='%s', flags=%s, ...}",
+                resultMapping.getColumn(), resultMapping.getProperty(),
+                resultMapping.getFlags());
     }
 
     /**

@@ -12,6 +12,23 @@
         <result property="sex" column="sex"/>
     </resultMap>
 
+    <resultMap id="userBeanMapAll" type="xyz.seiyaya.mybatis.bean.UserBean">
+        <constructor>
+            <idArg column="id" />
+            <arg column="name" />
+            <arg column="password" />
+            <arg column="age"/>
+            <arg column="birthday"/>
+        </constructor>
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="password" column="password"/>
+        <result property="age" column="age"/>
+        <result property="birthday" column="birthday"/>
+        <result property="status" column="status" typeHandler="xyz.seiyaya.mybatis.handler.StringArrayTypeHandler"/>
+        <result property="sex" column="sex"/>
+    </resultMap>
+
     <resultMap id="accountMap" type="xyz.seiyaya.mybatis.bean.AccountBean">
         <result property="id" column="id"/>
         <result property="userId" column="user_id"/>

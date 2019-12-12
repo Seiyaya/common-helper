@@ -5,13 +5,10 @@ import org.assertj.core.util.Lists;
 import org.junit.Test;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
-import org.springframework.expression.common.TemplateParserContext;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import xyz.seiyaya.mybatis.bean.UserBean;
-import xyz.seiyaya.mybatis.helper.MybatisSqlHelper;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.Set;
