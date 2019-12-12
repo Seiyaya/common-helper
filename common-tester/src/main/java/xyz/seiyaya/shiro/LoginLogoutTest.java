@@ -6,10 +6,14 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.config.IniSecurityManagerFactory;
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.Factory;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.security.Security;
+import java.util.Iterator;
 
 /**
  * 用来测试登录和登出
@@ -47,6 +51,30 @@ public class LoginLogoutTest {
     public void testLoginByMyRealm() {
         Factory<SecurityManager> factory = new IniSecurityManagerFactory("classpath:shiro/shiro-realm.ini");
         commonLoginAndLogout(factory);
+    }
+
+    @Test
+    public void testJdbcRealm(){
+        Factory<SecurityManager> factory = new IniSecurityManagerFactory("classpath:shiro/shiro-jdbc-realm.ini");
+        commonLoginAndLogout(factory);
+    }
+
+    @Test
+    public void testMultiRealm(){
+        Factory<SecurityManager> factory = new IniSecurityManagerFactory("classpath:shiro/shiro-authenticator-all-success.ini");
+        SecurityManager securityManager = factory.getInstance();
+        SecurityUtils.setSecurityManager(securityManager);
+        Subject subject = SecurityUtils.getSubject();
+        UsernamePasswordToken token = new UsernamePasswordToken("zhang", "123");
+        subject.login(token);
+
+        PrincipalCollection principals = subject.getPrincipals();
+        Iterator iterator = principals.iterator();
+        while(iterator.hasNext()){
+            Object next = iterator.next();
+
+            System.out.println(next);
+        }
     }
 
     private void commonLoginAndLogout(Factory<SecurityManager> factory) {

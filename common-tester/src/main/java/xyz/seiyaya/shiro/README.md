@@ -41,4 +41,55 @@ shiro不会维护响应的权限、角色、用户之间的关系，这些需要
     - SecurityManager负责真正的身份逻辑校验，它又会给委托给Authenticator进行身份认证，它又可能委托给相应的AuthenticationStrategy进行多Realm认证
     - 默认情况下ModularRealmAuthenticator会调用AuthenticationStrategy进行多Realm身份认证
     - Authenticator会把相应的token传如Realm，从Realm获取认证信息
++ `Authenticator`与`AuthenticationStrategy`
+    - Authenticator负责验证用户帐号，是shiro的验证帐号的核心入口点,如果验证成功返回`AuthenticationInfo`信息，该类封装了身份信息和证明信息，失败抛出异常
+    - `SecurityManager`继承了Authenticator,其委托给多个Realm进行认证，校验的规则通过AuthenticationStrategy指定
+    - FirstSuccessfulStrategy 只要有一个realm验证通过即通过验证(只返回第一个验证的信息)
+    - AtLeastOneSuccessfulStrategy  同上，但是会返回所有的realm的验证信息
+    - AllSuccessfulStrategy  所有realm认证通过才会返回
+## 授权
+在应用中规定哪些Subject可以访问哪些资源
+### 角色
 
++ 主题(Subject): 访问的用户
++ 资源(Resources): 具体的操作功能(对应controller中的方法或者是一个图片文件等等)
++ 权限(permission): 决定用户是否有操作响应功能的权限
++ 角色(role): 权限的集合
+
+### 授权方式
++ 授权方式
+    1. 编程
+    ```java
+    Subject subject = SecurityUtils.getSubject();
+    if(subject.hasRole("admin")){
+        //有权限
+    }
+    ```
+    2. 注解: @RequiresRoles("admin")
++ 授权
+    1. 基于角色的访问控制(隐式角色   shiro-role.ini)
+        - 只规定了角色，并没有指定角色可以进行什么操作
+        - 使用hasRole()和hasAllRoles()等方法判断当前登录的subject是否有相应的角色
+    2. 基于角色的访问控制(显示角色   shiro-permission.ini)
+        - 指定了角色具有哪些权限
+        - isPermitted()和isPermittedAll()判断是否当前登录的subject有相应的权限
++ 授权流程
+    1. 首先调用 Subject.isPermitted*/hasRole*接口，将其委托为SecurityManager,最终委托给Authorizer
+    2. Authorizer 是真正的授权者，调用isPermitted("user:view")，其首先会通过PermissionResolver把字符串转换成相应的Permission实例
+    3. 在进行授权之前，其会调用相应的 Realm 获取 Subject 相应的角色/权限用于匹配传入的角色/权限
+    4. Authorizer 会判断 Realm 的角色/权限是否和传入的匹配，如果有多个 Realm，会委托给 ModularRealmAuthorizer 进行循环判断，如果匹配如 isPermitted*/hasRole*会返回 true，
+        否则返回 false 表示授权失败
+
++ Authorizer、PermissionResolver、RolePermissionResolver
+    - Authorizer的职责是进行授权(访问控制)，是授权的核心入口，需要设置权限解析器`PermissionResolver`,也可以设置相应的角色解析器`RolePermissionResolver`
+    - PermissionResolver 用于解析权限字符串成 Permission 实例
+    - RolePermissionResolver 用于根据角色解析相应的权限集合
+## ini文件配置
+shiro提供通过代码配置securityManager和通过ini文件配置，有点类似Spring的DI/IOC的功能
+
+## 编码/加密
+Shiro默认提供了base64和16进制字符串编码/解码的API支持
+### 散列算法
+一般是不可逆的，适用于密码的存储，主要的散列算法有MD5、SHA
+
+## Realm及其相关对象

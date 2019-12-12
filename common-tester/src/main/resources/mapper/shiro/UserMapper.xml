@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.seiyaya.shiro.mapper.UserMapper">
+    <select id="findRoles" resultType="java.lang.String">
+        select distinct t1.role
+        from sys_users_roles t
+                 join sys_roles t1 on t.role_id = t1.id and t.user_id = #{param1}
+    </select>
+    <select id="findPermissions" resultType="java.lang.String">
+        select  distinct t3.permission
+        from sys_users_roles t
+                 join sys_roles t1 on t.role_id = t1.id and t.user_id = #{param1}
+                 join sys_roles_permissions t2 on t1.id = t2.role_id
+                 join sys_permissions t3 on t2.permission_id = t3.permission
+    </select>
+</mapper>
