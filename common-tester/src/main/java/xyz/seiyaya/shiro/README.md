@@ -93,3 +93,9 @@ Shiro默认提供了base64和16进制字符串编码/解码的API支持
 一般是不可逆的，适用于密码的存储，主要的散列算法有MD5、SHA
 
 ## Realm及其相关对象
++ Realm: 通常会继承`AuthorizingRealm`,这个实现了`Authorizer`接口和`AuthenticatingRealm`接口，所以它具有授权和身份认真的功能
+    - `doGetAuthenticationInfo`方法获取身份认证相关信息，根据传递的用户名和密码判断是否匹配
+    - `doGetAuthorizationInfo`方法获取授权信息，`PrincipalCollection`是一个身份的集合，如果只有一个Realm的话直接调用 getPrimaryPrincipal 即可得到用户名
+    - `AuthenticationToken`用于收集用户提交的身份信息，主要是身份和凭证，remember me也是在这个基础上构建的,shiro默认提供了 UsernamePasswordToken
+    - `AuthenticationInfo`用于聚合授权信息，包含了角色字符串、权限字符串、权限字符串解析后的实例对象
+    - `Subject` 是shiro的核心所有的身份认证、授权都是通过Subject完成的
