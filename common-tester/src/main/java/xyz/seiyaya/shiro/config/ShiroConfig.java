@@ -23,13 +23,13 @@ public class ShiroConfig {
     @Bean
     public SessionManager sessionManager(){
         ShiroSessionManager sessionManager = new ShiroSessionManager();
-        sessionManager.setSessionDAO(systemSessionDAO);
+        return null;
     }
 
     @Bean
     public SecurityManager securityManager(MyRealm myRealm){
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setRealm(myRealm);
-        securityManager.setSessionManager();
+        return null;
     }
 }
