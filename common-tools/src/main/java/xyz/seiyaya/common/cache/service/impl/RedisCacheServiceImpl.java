@@ -1,5 +1,10 @@
 package xyz.seiyaya.common.cache.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import xyz.seiyaya.common.cache.service.CacheService;
 
@@ -11,7 +16,12 @@ import static xyz.seiyaya.common.cache.service.CacheService.CACHE_SERVICE_REDIS;
  * @date 2019/10/25 13:44
  */
 @Service(CACHE_SERVICE_REDIS)
+@Lazy
 public class RedisCacheServiceImpl implements CacheService {
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
     @Override
     public void set(String key, String value) {
 
@@ -45,5 +55,11 @@ public class RedisCacheServiceImpl implements CacheService {
     @Override
     public boolean exists(String key) {
         return false;
+    }
+
+    @Override
+    public <T> T getObject(String key, Class<T> clazz) {
+        String result = stringRedisTemplate.opsForValue().get(key);
+        return JSONObject.parseObject(result,clazz);
     }
 }

@@ -27,4 +27,6 @@ public interface CacheService {
     void remove(String key);
 
     boolean exists(String key);
+
+    <T>T getObject(String s, Class<T> clazz);
 }
