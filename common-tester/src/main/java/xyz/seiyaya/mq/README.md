@@ -47,3 +47,75 @@
 6. 关闭信道
 7. 关闭连接
 
+### AMQP协议
+RabbitMQ是遵循AMQP协议的，也就是说RabbitMQ是AMQP协议的Erlang实现
++ AMQP协议的层级
+    - Module Layer: 位于协议的最高层，主要定义了一些供给客户端操作的命令，客户端可以用这些命令实现自己的业务逻辑
+    - Session Layer: 位于中间层，主要负责将客户端的命令发送到服务器，再将服务端的应答返回给客户端，主要是为客户端和服务端之间提供可靠性的同步机制和错误处理
+    - Transport Layer: 位于最底层，主要传输二进制数据流，提供帧的处理、信道复用、错误检测和数据展示
+
++ AMQP生产者具体的调用过程
+```java
+/**
+这个方法会进一步封装成Protocol Header 0-9-1的报文发送给Broker,通知Broker采用对应的协议
+然后Broker回返回Connection.Start来建立连接，在连接过程中涉及
+Connection.Start    Start-OK   TUNE    TUNE-OK  OPEN    OPEN-OK
+ */
+Connection connection = connectionFactory.newConnection();
+/**
+客户端创建信道，其包装Channel.Open方法发送给Broker,等待Channel.Open-Ok命令
+ */
+Channel channel = connection.createChannel();
+/**
+客户端发送消息，调用对应的命令Basic.Publish,这个命令包含了Content Header和Content body 一个存储路由键信息，一个存储具体发送的数据
+*/
+channel.basicPublish(EXCHANGE_NAME, ROUTING_KEY, MessageProperties.PERSISTENT_TEXT_PLAIN, msg.getBytes());
+```
+
++ AMQP消费者具体的调用过程
+```java
+/**
+建立连接和生产者一致，同样也设计到六个命令
+如果channel.basicQos(64);方法设置最大未确认的消息，那么会涉及channel.basicQos和channel.Qos-Ok命令
+*/
+Connection connection = connectionFactory.newConnection(new Address[]{new Address(HOST_NAME,PORT)});
+channel.basicQos(64);
+/**
+消费者消费消息之前，消费者客户端需要向Broker发送Basic.Consume命令，将Channel设置为接收模式，之后Broker返回命令Basic.Consumer-OK
+紧接着Broker通过Basic.Deliver命令向消费者推送消息，同样也会携带header和body
+消费者接收到消息并正确消费之后，向Broker发送Basic.Ack确认消息
+在消费者停止消费的时候，主动关闭连接，和生产者那里一样
+*/
+channel.basicConsume(QUEUE_NAME,consumer);
+```
+
+## 客户端开发
+### 连接RabbitMQ
+Connection可以创建多个Channel实例，但是Channel在多个线程之间不共享，应用程序应该为每一个线程开辟一个Channel,多线程共享Channel是线程不安全的  
+Channel和Connection都可以调用isOpen方法来判断通道或者连接是否开启,但是不推荐使用该方法，因为它依赖`shutdownCause`属性，该属性获取的时候添加了synchronized代码块  
+如果判断isOpen方法会导致在一个应用上处理消息是串行化的进行
+
+### 使用交换机和队列
+使用之前需要先声明对应的组件，声明已有的组件需要方法的参数全部想用才不会抛出异常
++ exchangeDeclare参数列表
+    - exchange: 交换机的名称
+    - type: 交换机的类型，如fanout、direct、topic
+    - durable: 是否进行持久化，持久化可以将交换机存盘，服务器重启的时候不会丢失相关消息
+    - autoDelete: 设置是否自动删除，自动删除的条件是: 没有队列绑定到该交换机上(即以绑定队列后都进行了解绑操作)
+    - internal: 设置是否是内置的，true表示是内置的交换机，客户端的无法直接将消息发送到对应的交换机，只能通过交换机路由
+    - argument: 其他一下结构化参数，如alternate-exchange
++ queueDeclare参数列表
+    - queue: 队列的名称
+    - durable: 设置持久化: 为true则设置队列为持久化，持久化队列会存盘，重启服务器不会丢失消息
+    - exclusive: 是否排他，该队列仅对首次声明它的连接可见，并在联机断开时自动删除，并在连接断开时自动删除，该队列不会被持久化
+    - autoDelete: 是否设置自动删除,至少有一个消费者连接到这个队列，然后这个消费者断开连接，队列被删除
+    - argument: x-message-ttl、x-expires、x-max-length、x-max-length-bytes、x-dead-letter-exchange
++ queueBind参数列表
+    - queue: 队列名称
+    - exchange: 交换机的名称
+    - routingKey: 用来绑定交换机和队列的路由键
+    - argument: 定义绑定的一些参数
+    - unBind方法就可以进行解绑操作
++ exchangeBind参数列表: 交换机与交换机进行绑定
++ 发送消息
++ 消费消息: 可以通用push模式(Basic.Consume)和pull模式(basic.get)

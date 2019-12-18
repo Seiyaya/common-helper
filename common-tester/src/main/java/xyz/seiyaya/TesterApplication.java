@@ -2,6 +2,7 @@ package xyz.seiyaya;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Mapper;
+import org.springframework.aop.support.AopUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -25,6 +26,18 @@ public class TesterApplication {
         MybatisService bean = run.getBean(MybatisService.class);
         log.info("{}",bean);
 
-//        run.close();
+        boolean aopProxy = AopUtils.isAopProxy(bean);
+        try {
+            Object o = TesterApplication.class.getClassLoader().loadClass("xyz.seiyaya.mybatis.bean.AccountBean").newInstance();
+            Class<?> targetClass = AopUtils.getTargetClass(bean);
+            log.info("targetClass:{}",targetClass);
+            boolean aopProxy1 = AopUtils.isAopProxy(o);
+
+            log.info("aopProxy1 :{}",aopProxy1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        log.info("aopProxy :{}",aopProxy);
+        run.close();
     }
 }

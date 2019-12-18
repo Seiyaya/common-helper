@@ -5,6 +5,7 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.MessageProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.aop.support.AopUtils;
 
 import static xyz.seiyaya.mq.config.SimpleRabbitConstant.*;
 
@@ -27,6 +28,7 @@ public class SimpleProducer {
         try {
             Connection connection = connectionFactory.newConnection();
             Channel channel = connection.createChannel();
+            log.info("connection.isOpen:{}   -->  channel.isOpen:{}",connection.isOpen(),channel.isOpen());
             // 创建一个 type = direct ,持久化的、非自动删除的交换机
             channel.exchangeDeclare(EXCHANGE_NAME, "direct", true, false, null);
             // 创建一个 持久化、非排他的、非自动删除的队列
