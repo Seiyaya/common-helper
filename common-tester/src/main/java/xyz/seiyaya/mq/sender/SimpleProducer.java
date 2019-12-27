@@ -1,11 +1,11 @@
 package xyz.seiyaya.mq.sender;
 
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.MessageProperties;
+import com.rabbitmq.client.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.support.AopUtils;
+import xyz.seiyaya.common.helper.DBParam;
+
+import java.io.IOException;
 
 import static xyz.seiyaya.mq.config.SimpleRabbitConstant.*;
 
@@ -19,6 +19,9 @@ import static xyz.seiyaya.mq.config.SimpleRabbitConstant.*;
 @Slf4j
 public class SimpleProducer {
 
+
+    private static String ALTERNATE_EXCHANGE_NAME = "alternate_exchange_name";
+
     public static void main(String[] args) {
         ConnectionFactory connectionFactory = new ConnectionFactory();
         connectionFactory.setHost(HOST_NAME);
@@ -29,15 +32,33 @@ public class SimpleProducer {
             Connection connection = connectionFactory.newConnection();
             Channel channel = connection.createChannel();
             log.info("connection.isOpen:{}   -->  channel.isOpen:{}",connection.isOpen(),channel.isOpen());
+            DBParam dbParam = new DBParam().set("alternate-exchange",ALTERNATE_EXCHANGE_NAME);
             // 创建一个 type = direct ,持久化的、非自动删除的交换机
-            channel.exchangeDeclare(EXCHANGE_NAME, "direct", true, false, null);
+            channel.exchangeDeclare(EXCHANGE_NAME, "direct", true, false, dbParam);
+            // 声明上面的备机
+            channel.exchangeDeclare(ALTERNATE_EXCHANGE_NAME,"fanout",true,false,null);
+
+
             // 创建一个 持久化、非排他的、非自动删除的队列
-            channel.queueDeclare(QUEUE_NAME, true, false, false, null);
+            // 设置消息6s过期
+            DBParam ttlParam = new DBParam().set("x-message-ttl",6000);
+            channel.queueDeclare(QUEUE_NAME, true, false, false, ttlParam);
             // 将队列绑定到交换机上
             channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, ROUTING_KEY);
 
+
+            // 生成消费路由到备机交换机的队列
+            channel.queueDeclare("unRoutedQueue",true,false,false,null);
+            channel.queueBind("unRoutedQueue",ALTERNATE_EXCHANGE_NAME,"");
+
             String msg = "hello";
-            channel.basicPublish(EXCHANGE_NAME, ROUTING_KEY, MessageProperties.PERSISTENT_TEXT_PLAIN, msg.getBytes());
+            channel.basicPublish(EXCHANGE_NAME, ROUTING_KEY,true,false, MessageProperties.PERSISTENT_TEXT_PLAIN, msg.getBytes());
+
+            // 当消息在对应的交换机找不到对应的队列，消息将会被退回
+            channel.addReturnListener((replyCode, replyText, exchange, routingKey, properties, body) -> {
+                String message = new String(body);
+                log.info("没有找到对应队列的消息:{}  exchange:{}  routingKey:{}",message,exchange,routingKey);
+            });
             channel.close();
             connection.close();
         } catch (Exception e) {
