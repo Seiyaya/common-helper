@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.seiyaya.common.helper.DBParam;
 import xyz.seiyaya.common.helper.SpringHelper;
+import xyz.seiyaya.mybatis.bean.PrintBean;
 import xyz.seiyaya.mybatis.bean.UserBean;
 import xyz.seiyaya.mybatis.mapper.UserBeanMapper;
 import xyz.seiyaya.mybatis.service.MybatisService;
@@ -103,5 +104,11 @@ public class MybatisServiceImpl implements MybatisService {
         idList.parallelStream().forEach(model->{
             proxyBean.updateUserById(model.getId());
         });
+    }
+
+    @Override
+    public void printBean() {
+        PrintBean printBean = new PrintBean();
+        printBean.print();
     }
 }

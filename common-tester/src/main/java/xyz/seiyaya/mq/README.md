@@ -119,3 +119,6 @@ Channel和Connection都可以调用isOpen方法来判断通道或者连接是否
 + exchangeBind参数列表: 交换机与交换机进行绑定
 + 发送消息
 + 消费消息: 可以通用push模式(Basic.Consume)和pull模式(basic.get)
++ 消费端的确认和拒绝
+    - 消息确认机制: messageAcknowledgement,消费者在订阅队列时，可以指定autoAck参数，false表示需要等待消费者显示的回复确认消息后才从内容中移除消息
+    - 拒绝消息: 

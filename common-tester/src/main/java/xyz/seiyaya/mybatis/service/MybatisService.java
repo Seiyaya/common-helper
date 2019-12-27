@@ -33,4 +33,7 @@ public interface MybatisService {
      * 查找和更新通过stream
      */
     void findAndUpdateByStream();
+
+
+    void printBean();
 }

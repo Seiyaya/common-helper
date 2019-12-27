@@ -5,7 +5,9 @@ import org.apache.commons.math3.util.MathArrays;
 import org.junit.Test;
 import org.springframework.beans.BeanUtils;
 import xyz.seiyaya.common.helper.DBParam;
+import xyz.seiyaya.service.ParentTwo;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 
 /**
@@ -42,5 +44,22 @@ public class ClassTester {
         BeanUtils.copyProperties(parent,son);
 
         System.out.println(son.getName() + "-->" + son.getStudentNo());
+    }
+    @Test
+    public void testCopyBean2(){
+        Parent parent = new Parent("myName",null);
+        ParentTwo parentTwo = new ParentTwo();
+        parentTwo.setAge(12);
+        BeanUtils.copyProperties(parent,parentTwo);
+
+        System.out.println(parentTwo);
+    }
+
+    @Test
+    public void testMath(){
+        BigDecimal a = new BigDecimal("8866128975287528").pow(3);
+        BigDecimal b = new BigDecimal("-8778405442862239").pow(3);
+        BigDecimal c = new BigDecimal("-2736111468807040").pow(3);
+        System.out.println(a.add(b).add(c));
     }
 }
