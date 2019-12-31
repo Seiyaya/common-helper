@@ -160,7 +160,38 @@ Channel和Connection都可以调用isOpen方法来判断通道或者连接是否
     - 发送确认机制(publisher confirm)
 + 事务机制: 与事务机制有关的方法有：channel.txSelect(设置事务模式)、channel.txCommit、channel.txRollback
     - 性能方面不是特别好
-+ 发送确认机制
++ 发送方确认机制
     - 生产者将channel设置为发送确认模式，所有在该信道上发布的消息都会被指派一个唯一的id(从1开始)，RabbitMQ收到消息就会Basic.ack给生产者(包含之前产生的id)
     - 持久化模式下，RabbitMQ会持久化后再进行消息的确认
     - 事务机制在生产者发送一条消息后会阻塞等待RabbitMQ的确认，而发送确认模式是异步的，只需要等待MQ回传编号即可
+
+
+### 消费者消费消息
++ 消息分发: 因为是平均派发消息，所以会导致某个机器执行很多个耗时操作
+    - 可以使用channel.basicQos()  设置最大的未确认的消息来解决(类似TCP/IP的滑动窗口)
+```java
+/**
+prefetchSize表示的是消费者未确认消息的总体大小，单位为B，设置为0表示没有上限
+prefetchCount表示的是消息未确认的最大数量
+global表示的是信道上的消费者按照何种策略来定义prefetchCount,false表示信道上新的消费者需要遵循，true表示信道上所有的消费者需要遵循
+推荐使用global = false的配置
+*/
+void basicQos(int prefetchSize,int prefetchCount,boolean global);
+```
+
++ 消息的顺序性
+    - 使用basic.Recover命令剞劂
+    - 自定义序列号实现
++ 消息传输保障: 最多一次、最少一次、恰好一次
+    - 需要借助的机制: 事务机制或者publisher confirm机制
+    - 生产者配合使用mandatory参数
+    - 消息和队列都需要持久化处理
+    - 消息和队列都需要设置autoAck为false,手动确认消息是否被正常消费
+
+## RabbitMQ管理
+
+### 用户权限
++ v host :  本质上每一个v host都是一个独立的RabbitMQ的服务器。拥有自己的队列、交换机、绑定关系，不同v host的是绝对的物理隔离
+    - 使用命令rabbitmqctl add_vhost {vhost} 来创建一个新的vhost
+    - rabbitmqctl delete_vhost {vhost}
+    - rabbitmqctl list_vhosts
