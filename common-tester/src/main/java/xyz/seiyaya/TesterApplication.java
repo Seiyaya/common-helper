@@ -26,7 +26,7 @@ import java.util.UUID;
  * @date 2019/12/5 13:56
  */
 @SpringBootApplication(scanBasePackages = "xyz.seiyaya")
-@MapperScan(value = "xyz.seiyaya.*.mapper", annotationClass = Mapper.class)
+@MapperScan(value = {"xyz.seiyaya.*.mapper","xyz.seiyaya.*.dao"}, annotationClass = Mapper.class)
 @EnableTransactionManagement
 @Slf4j
 public class TesterApplication {
@@ -92,6 +92,6 @@ public class TesterApplication {
         MDC.put("requestId", UUID.randomUUID().toString());
 
         log.info("print:{}",System.currentTimeMillis());
-        run.close();
+//        run.close();
     }
 }

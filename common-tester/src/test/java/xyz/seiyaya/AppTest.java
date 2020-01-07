@@ -68,4 +68,9 @@ public class AppTest {
         File file = new File(filePath);
         System.out.println(file.exists());
     }
+
+    @Test
+    public void testAddContent(){
+
+    }
 }

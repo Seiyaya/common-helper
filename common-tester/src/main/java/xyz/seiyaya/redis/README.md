@@ -356,8 +356,86 @@ redisCommand{
 ## 多机数据库的实现
 
 ### 复制
-### sentinel
+redis中可以通过`SLAVEOF`命令或者设置slaveof选项，让一个服务器复制领一个服务器，被复制的为主，复制的为从
++ redis V2.8之前的复制实现
+    - 主要功能有`同步`和`命令传播`两个操作
+    - 同步: 客户端想服务端发送`SLAVEOF`命令，要求从服务器复制主服务器，从服务器首先需要执行同步操作
+        - 1). 从服务器向主服务器发送SYNC命令
+        - 2). 收到SYNC命令的住服务器执行BGSAVE命令，并记录之后执行的命令到缓冲区,将生成的RDB文件发给从服务器，从而达到将主服务器的状态同步到从服务器
+        - 3). 再同步缓冲区中的命令
+    - 命令传播: 客户端发给主的命令也需要发给从来执行
+    - 旧版本复制的缺陷: 复制分为初次复制和断线后重复制(主要的问题就是断线后重复制)
+
++ 新版复制功能的实现
+    - redis2.8之后使用PSYNC命令代替SYNC命令执行同步操作，分为完整重同步和部分重同步，和前面的区别主要是部分重同步
+    - 部分重同步: 主服务器的复制偏移量和从服务器的复制偏移量，主服务器的复制积压缓冲区，服务器运行的id
+    - 复制偏移量: 主从都会维护一个复制偏移量，标记复制的地方    
+    - 复制积压缓冲区: 主维护的一个固定长度先进先出队列，默认为1M
+    - 服务器运行ID: 首次复制的时候从服务器会保存主服务器的id信息
+    
+### sentinel(哨兵)
+是redis高可用解决方案，由一个或多个Sentinel实例组成的Sentinel系统可以监视任意多个主服务器，主服务器下线后，从服务器会取代称为新的主服务器
+```
+// 启动一个Sentinel可以使用命令
+redis-sentincel sentinel.conf
+redis-server sentinel.conf --sentinel
+```
+#### 启动sentinel需要执行的步骤
++ 1. 初始化服务器： sentinel本质上只是一个运行在特殊模式下的redis服务器，初始化的虽然是redis服务器，但是初始化步骤不一样，比如不会载入RDB和AOF文件
+    - 1). 使用sentinel专用代码: 启动的时候是单独的端口号，也没有载入命令表等数据
+    - 2). 初始化sentinel状态: 
+    - 3). 初始化sentinel状态的master属性: 
+    - 4). 创建连向主服务器的网络连接: Sentinel向主从服务器发送命令，对于主会创建两个连接(一个是命令连接，一个是订阅连接)
++ 2. 获取主服务器信息: 默认以10/s一次的频率通过命令连接向被监视的主服务器发送INFO命令(同时也可以得到主下面的从服务器)
++ 3. 获取从服务器信息: 为从服务器也创建订阅连接和命令连接
++ 4. 向主服务器和从服务器发送信息: 默认情况下是2/s每次的频率，通过命令连接向所有被监视的主从服务器发送
++ 5. 接收来自主服务器和从服务器的频道信息
+    - 更新sentinels字典: 多个Sentinels会进行广播，如果是自己发送的丢弃接收到的消息，非己的则更新主服务器的实例结构
+    - 创建连向其他Sentinel的命令连接: 多个Sentinel会建立命令连接到其他的Sentinel，但是不会创建订阅连接
++ 6. 检查主观下线状态: 每秒ping命令连接，判断对应的实例是否在线(实例包含主从、sentinel)
++ 7. 检查客观下线状态: 修改为主观下线后判断是否真的下线，向监视器询问，他们的判定结果，然后指向故障转移的操作
+    - 发送sentinel is-master-down-by-addr命令，询问其他sentinel是否同意主服务器下线
+    - `sentinel is-master-down-by-addr {ip} {port} {current_epoch} {runid}`
+    - 接受`sentinel is-master-down-by-addr`命令，根据请求的内容判断对应主服务器是否下线，回复命令`sentinel is-master-down-by-addr`
++ 8. 选举领头Sentinel
++ 9. 故障转移
+    - 在已下线的从服务器选出一个主服务器
+    - 原有的从服务器复制这个新的主服务器
+    - 将原有的从服务器设置为这个新选出的主服务器的从服务器，原有的主服务器上线后还原以上操作
+```
+sentinelState{
+    uint64_t current_epoch;//当前纪元，用于实现故障转移
+    dict *masters;//保存了所有被这个sentinel监视的主服务器，key-->主服务器的名字，value-->指向sentinelRedisInstance结构的指针
+    
+    int tilt;// 是否进入了TILT模式
+    int running_scripts;// 正在执行脚本的数量
+    mstime_t title_start_time;// 进入TILT的时间
+    mstime_t previous_time;// 最后一次执行时间处理器的时间
+    list *scripts_queue;// 一个FIFO队列，包含了所有需要执行的用户脚本
+}
+sentinelRedisInstance{
+    int *flags;// 标识值，记录了实例的类型，以及该实例的当前状态
+    char *name;// 实例的名字，主服务器的名字由用户在配置文件中配置，从服务器由Sentinel配置
+    char *runid;// 实例运行的id
+    uint64_t config_epoch;// 配置纪元，用于实现故障转移
+    sentinelAddr *addr;// 实例的地址，存放的是ip和端****口信息
+
+    mstime_t down_after_period;// 实例无响应多少毫秒判定为主观下线
+    int quorum;// 判断当前实例客观下线所支持的票数
+    int parallel_syncs;// 在进行故障转移的时候，可以同时对新的主服务器进行同步的从服务器数量
+    mstime_t failover_timeout;// 刷新故障迁移状态的最大时限
+}
+```
 ### 集群
+集群通过分片的方式来进行数据共享，并提供复制和故障转移的功能  
+
+#### 节点
+#### 槽指派
+#### 命令执行
+#### 重新分片
+#### 转向
+#### 故障转移
+#### 消息
 
 ## 独立功能的实现
 
