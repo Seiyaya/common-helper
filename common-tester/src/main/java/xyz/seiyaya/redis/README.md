@@ -18,13 +18,32 @@ struct sds{
     - 发布与订阅
     - 慢查询
     - 监视器
+```
+listNode{
+    struct listNode *prev;//前驱节点
+    struct listNode *next;//后继节点
+    void *value;
+}
+
+// redis链表的特性: 双向、无环、带表头指针和表尾指针、带链表长度计数器、多态(可以保存多种不同类型的值)
+```
 + Redis中的字典结构 --> 对应java中的HashMap
     - 哈希键
+    - 因为使用的是渐进式的从ht[0]同步到ht[1]，所以这个过程发生的查询会在两个表上都进行查询
+```
+dictht{
+    dictEntry **table;
+    unsigned long size;
+    unsigned long sizemask;// 用来计算索引值 = size - 1
+    unsigned long used;  // hash表已使用的节点数量
+}
+```
 
 + Redis中的跳表
     - 通过每个节点维护多个指向其它节点的指针，从而达到快速访问的目的
     - 跳表平均O(log n)最坏的情况O(n),大多数情况下跳表和平衡树相媲美，且跳跃表比平衡树简单
     - 使用场景: 一个有序集合包含的元素数量比较多，集合中的元素是长度较长的字符串
+    - java实现详情见`xyz.seiyaya.collection.SkipList`
 ```
 // 跳跃表节点
 zSkipListNode{
@@ -100,6 +119,9 @@ redisServer{
 
     pid_t rdb_child_pid; // 执行BGSAVE命令的子进程id
     pid_t aof_child_pid; // 执行BGREWRITEAOF的子进程id
+
+    dict *pubsub_channels;// 保存频道的订阅关系
+    list *pubsub_patterns;// 保存所有模式订阅信息
 }
 ```
 
@@ -122,6 +144,8 @@ redisClient{
 redisDb{
     dict *dict;// 数据库空间，保存所有的键和值
     dict *expires;// 保存键的过期时间
+
+    dict *watched_keys;// 正在被watch监视的键
 }
 ```
 
@@ -430,7 +454,56 @@ sentinelRedisInstance{
 集群通过分片的方式来进行数据共享，并提供复制和故障转移的功能  
 
 #### 节点
+一个redis集群通常由多个节点组成，刚开始都是相互独立的，需要手动建立起连接   
++ `CLUSTER MEES {ip} {port}`    可以让node节点与ip和port所指定的节点握手，通过握手使得所有的应用加入到一个集群中
++ 启动节点: 通过配置属性`cluster-enabled`配置选项是否为yes来决定是否开启服务器集群模式
+    - 启动后的redis会继续使用单机模式下的组件，比如文件事件处理器处理命令请求和返回命令回复，继续执行serverCron函数(会调用集群特有的clusterCron进行心跳检测以及故障转移等)
+
++ 集群的数据结构: clusterNode保存了当前节点状态。比如节点的创建时间、节点的名字、节点的当前配置纪元、节点的ip地址等
++ cluster meet命令的实现
+    - 节点A会为节点B创建一个clusterNode结构，并将该结构添加到自己的clusterState.nodes字典里面
+    - 节点A根据CLUSTER MEET命令给定的IP地址和端口号，向节点B发送一条MEET消息
+    - 节点B收到节点A发送的MEET消息，节点B会为节点A创建一个clusterNode结构，并将结构添加到clusterState.nodes字典里面
+    - 节点B会响应pong消息
+    - 节点A将接收到节点B返回的PONG消息，通过这条PONG消息节点A知道节点B成功收到MEET消息
+    - 节点A想节点B返回一条PING消息
+    - 节点B接收来自A返回的PING消息，通过这条PING消息节点B可以知道A已经成功接收到了自己返回的PONG消息，握手完成
+    - 最后节点A会将节点B的信息通过Gossip协议传播给集群中的其他节点，让其他节点也与B握手
+```
+clusterNode{
+    mstime_t ctime;// 创建节点时间
+    char name[REDIS_CLUSTER_NAMELEN];
+    int flags;// 记录节点的角色
+    uint64_t configePoch;// 配置当前的配置纪元，用于实现故障转移
+    char ip[REDIS_IP_STR_LEN]; // ip地址
+    int port;
+    clusterLink *link;// 保存连接节点所需的有关属性
+
+    // 槽位相关
+    unsigned char slots[16384/8];
+    int numslots;
+}
+clusterLink{
+    mstime_t ctime;// 连接的创建时间
+    int fd;// TCP套接字描述符
+    sds sndbuf;// 输出缓冲区
+    sds rcvbuf;// 输入换从去，保存其他节点接收到的消息
+    struct clusterNode *node;
+}
+clusterState{
+    clusterNode *myself;
+    uint64_t currentEpoch;
+    int state; // 集群的当前状态，在线或者下线
+    int size;// 集群中至少处理着一个槽的节点数量
+}
+```
+
 #### 槽指派
+redis集群通过分片的方式保存数据库中的键值对，集群被划分为16384个槽(solt),集群中的每个节点都可以处理[0,16384]槽
++ 给指定节点分配槽位 `CLUSTER ADDSLOTS 0 1 2 3 4 ... 5000`
++ 记录节点的槽指派信息
+    - clusterNode的slots属性
+
 #### 命令执行
 #### 重新分片
 #### 转向
@@ -440,7 +513,47 @@ sentinelRedisInstance{
 ## 独立功能的实现
 
 ### 发布与订阅
+通过publish、subscribe、psubscribe命令实现发布订阅功能
++ 频道的订阅与退订
+    - 客户端执行`subscribe`命令订阅一个或多个频道的时候，客户端与被订阅频道之间就建立了一种订阅关系，key是订阅的频道，value是链表存储着订阅该频道的客户端
+    - 频道的退订: unsubscribe命令的行为与subscribe刚好相反，即删除对应的链表上的节点
+
++ 模式的订阅和退订(redisServer的属性 pubsub_patterns)
+    - 是一个链表结构，每个节点都包含pubsub Pattern结构，这个pattern记录了被订阅的模式，而client属性记录了订阅模式的客户端
+    - 模式订阅: 新建一个`pubsubPattern`结构，将pattern设置为被订阅的模式，client的属性设置为订阅模式的客户端
+       - 将pubsubPattern添加到pubsub_patterns的队尾
+    - 模式退订和频道退订操作差不多
+
++ 发送消息`publish {channel} {message}`
+    - 将message发送给频道的所有订阅者
+    - 模式匹配的客户端也会收到消息 
+```
+pubsubPattern{
+    redisClient *client; // 比如 client-9
+    robj *pattern;// 比如 news.*
+}
+
+pubsub channels // 用来返回当前服务器被订阅的频道
+pubsub numsub   // 用来返回服务器当前被订阅频道的订阅者数量
+pubsub numpat   // 用来返回服务器当前被订阅模式的数量，这个命令是通过pubsub_partterns链表的长度来实现
+```
+
 ### 事务
-### Lua脚本
-### 排序
+redis通过multi、exec、watch等命令来实现事务，执行该客户端的一系列命令中不会执行其他客户端的命令
+
++ 通过队列实现的事务
+    - 事务开始
+    - 命令入队
+    - 事务执行
+   
++ watch命令: 乐观锁的一种实现
+    - 可以监控一个键是否在提交前被修改过，在redisDB上属性watched_keys,key->监视的键，value->监视的客户端
+
 ### 二进制位数组
+redis提供了setbit 、 getbit 、 bitcount 、 bitop四个命令用于处理二进制位数组  
++ 数据结构: 使用字符串来存储二进制位数组
+
+
+### 慢查询日志 
+
+### 监视器
