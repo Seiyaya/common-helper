@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: alibaba-nacos-discovery-server
+  cloud:
+    nacos:
+      discovery:
+        server-addr: www.seiyaya.xyz:8848
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/website?useUnicode=true&characterEncoding=utf8&autoReconnect=true&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+mybatis:
+  mapper-locations: classpath*:/mapper/*.xml
+server:
+  port: 8002
