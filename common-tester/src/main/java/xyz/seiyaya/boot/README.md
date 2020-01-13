@@ -24,3 +24,10 @@
 2. @Value: 向bean种注入属性，其本质都是使用`SpelExpressionParser`来解析，类似于mybatis用来解析的OGNLCache
 
 
+
+## 遇到的问题
++ 调用两个数据源的mapper方法，正常情况下能否在一个出现异常后回滚另外一个
+    - 不可以，因为两个是不同的事务管理器，只能回滚同一个事务管理器下的事务(详情可以查看`org.springframework.transaction.support.TransactionTemplate#rollbackOnException`方法)
++ mybatis+spring为什么一级缓存会失效
+    - 在同一个service里面调用两次mapper的同一个查询方法，还是会查询两次，没有使用到session的一级缓存，是因为没有加上事务的情况下，每一次都是重新创建一个sqlSession
+    - 导致一级缓存失效，在添加事务处理后(加上@org.springframework.transaction.annotation.Transactional注解)，同一个方法内公用的同一个session

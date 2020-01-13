@@ -10,4 +10,11 @@ import xyz.seiyaya.boot.bean.Feedback;
  */
 @Mapper
 public interface FeedBackMapper extends tk.mybatis.mapper.common.Mapper<Feedback> {
+
+    /**
+     * 查找备注
+     * @param username
+     * @return
+     */
+    Feedback findByUserName(String username);
 }

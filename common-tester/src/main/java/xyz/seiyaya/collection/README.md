@@ -111,13 +111,63 @@ class AbstractQueuedSynchronizer{
 }
 ```
 
-+ 共享锁
++ 共享锁![aqs](https://www.seiyaya.xyz/images/notes/base/aqs_2.jpg "aqs") 
 ```
 public final void acquireShared(int arg) {
   // 尝试获取共享锁，小于0表示获取失败 , tryAcquireShared 主要是留给子类实现
   if (tryAcquireShared(arg) < 0)
     // 执行获取锁失败的逻辑
     doAcquireShared(arg);
+}
+// 采用自旋机制，在线程挂起之前不断尝试获取锁，不同于独占锁的是一旦获取共享锁之后，会调用 setHeadAndPropagate 方法同时唤醒后继节点，实现共享模式
+private void doAcquireShared(int arg) {
+  // 添加共享锁类型节点到队列中
+  final Node node = addWaiter(Node.SHARED);
+  boolean failed = true;
+  try {
+    boolean interrupted = false;
+    for (;;) {
+      final Node p = node.predecessor();
+      if (p == head) {
+        // 再次尝试获取共享锁
+        int r = tryAcquireShared(arg);
+        // 如果在这里成功获取共享锁，会进入共享锁唤醒逻辑
+        if (r >= 0) {
+          // 共享锁唤醒逻辑
+          setHeadAndPropagate(node, r);
+          p.next = null; // help GC
+          if (interrupted)
+            selfInterrupt();
+          failed = false;
+          return;
+        }
+      }
+      // 与独占锁相同的挂起逻辑
+      if (shouldParkAfterFailedAcquire(p, node) &&
+          parkAndCheckInterrupt())
+        interrupted = true;
+    }
+  } finally {
+    if (failed)
+      cancelAcquire(node);
+  }
+}
+
+private void setHeadAndPropagate(Node node, int propagate) {
+  // 头节点
+  Node h = head; 
+  // 设置当前节点为新的头节点
+  // 这里不需要加锁操作，因为获取共享锁后，会从FIFO队列中依次唤醒队列，并不会产生并发安全问题
+  setHead(node);
+  if (propagate > 0 || h == null || h.waitStatus < 0 ||
+      (h = head) == null || h.waitStatus < 0) {
+    // 后继节点
+    Node s = node.next;
+    // 如果后继节点为空或者后继节点为共享类型，则进行唤醒后继节点
+    // 这里后继节点为空意思是只剩下当前头节点了
+    if (s == null || s.isShared())
+      doReleaseShared();
+  }
 }
 ```
 
