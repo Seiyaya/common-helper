@@ -117,6 +117,9 @@ redisServer{
     redisClient *lua_client;// 执行lua命令的客户端
     int cronloops;// serverCron方法的执行次数
 
+    char *masterhost;// 主服务器的地址
+    int masterport;//主服务器的端口
+
     pid_t rdb_child_pid; // 执行BGSAVE命令的子进程id
     pid_t aof_child_pid; // 执行BGREWRITEAOF的子进程id
 
@@ -129,6 +132,9 @@ redisServer{
 ```
 redisClient{
     redisDb *db; // 记录客户端正在使用的db,指向redisServer中数组中的一个元素
+    
+    // 从服务器监听端口号
+    int slave_listening_port;
 }
 ```
 
@@ -390,12 +396,32 @@ redis中可以通过`SLAVEOF`命令或者设置slaveof选项，让一个服务�
     - 命令传播: 客户端发给主的命令也需要发给从来执行
     - 旧版本复制的缺陷: 复制分为初次复制和断线后重复制(主要的问题就是断线后重复制)
 
-+ 新版复制功能的实现
++ 新版复制功能的实现(`PSYNC`)
     - redis2.8之后使用PSYNC命令代替SYNC命令执行同步操作，分为完整重同步和部分重同步，和前面的区别主要是部分重同步
-    - 部分重同步: 主服务器的复制偏移量和从服务器的复制偏移量，主服务器的复制积压缓冲区，服务器运行的id
+    - 部分重同步: 主服务器的复制偏移量和从服务器的复制偏移量、主服务器的复制积压缓冲区、服务器运行的id三个部分组成
     - 复制偏移量: 主从都会维护一个复制偏移量，标记复制的地方    
-    - 复制积压缓冲区: 主维护的一个固定长度先进先出队列，默认为1M
-    - 服务器运行ID: 首次复制的时候从服务器会保存主服务器的id信息
+    - 复制积压缓冲区: 主维护的一个固定长度先进先出队列，默认为1M，保存的是复制过程中新增的命令，主要是用来断线重连后保持数据的完整性
+    - 服务器运行ID: 首次复制的时候从服务器会保存主服务器的id信息，用来决定格式完整的复制还是部分的复制
+
++ PSYNC命令的实现
+![psync](https://www.seiyaya.xyz/images/notes/redis/multi-database/PSYNC.png "psync") 
+    - 主服务器A和从服务器B，B第一次复制A，B向A发送`PSYNC ? -1`命令,请求A进行完整重同步操作
+    - A接收到完整同步的请求后，将在后台执行`BGSAVE`命令，并向B返回`+ FULLRESYNC {runid} {offset}`回复
+    - 在同步过程中网络断开，B再连上的时候发送命令`PSYNC {runid} {newOffset}`请求进行部分重同步
+    - A收到B发送的runid后和自身的runid进行比较来决定是全同步还是部分同步
+    
++ 复制的实现
+    - 1. 设置主服务器的地址和端口: redisServer中masterHost和masterPort属性
+    - 2. 建立套接字连接: 从服务器将为建立好的套接字专门用一个处理复制工作的文件事件处理器，这个处理器负责后序的复制工作(接受RDB文件以及后序的命令传播)
+    - 3. 发送PING命令: 从向主发送PING命令，主要是用来检测套接字是否能正常使用、检查主是否能正常处理命令请求，PING命令请求超时或者返回的不是PONG，则从进行断开重连
+    - 4. 身份验证: `masterauth`开启才进行验证
+    - 5. 发送端口信息: 发送从监听的端口`REPLCONF lisening-port {port-number}`,主接收到会记录到redisClient的 slave_listening_port 属性中
+    - 6. 同步
+    - 7. 命令传播
++ 心跳检测: 在命令传播阶段，从默认以间隔一秒的向主发送`REPLCONF ACK {replication_offset}`
+    - 检测主从服务器之间的网络连接状态
+    - 辅助实现min-slaves配置选项
+    - 检测命令丢失
     
 ### sentinel(哨兵)
 是redis高可用解决方案，由一个或多个Sentinel实例组成的Sentinel系统可以监视任意多个主服务器，主服务器下线后，从服务器会取代称为新的主服务器
@@ -499,7 +525,11 @@ clusterState{
 ```
 
 #### 槽指派
-redis集群通过分片的方式保存数据库中的键值对，集群被划分为16384个槽(solt),集群中的每个节点都可以处理[0,16384]槽
+redis集群通过分片的方式保存数据库中的键值对，集群被划分为16384个槽(solt),集群中的每个节点都可以处理[0,16384]槽  
+如果每个槽都是正常工作，则说明集群处于正常，主要有一个不正常，那集群表现为下线状态，`CLUSTER INFO`查看集群的状态，前提是开启了集群   
++ 开启集群需要注意的点
+    - 开启集群的应用需要关闭`SLAVEOF`属性，slaveof directive not allowed in cluster mode  
+    - 开启集群的应用需要设置`cluster-config-file`属性,否则启动不了
 + 给指定节点分配槽位 `CLUSTER ADDSLOTS 0 1 2 3 4 ... 5000`
 + 记录节点的槽指派信息
     - clusterNode的slots属性
