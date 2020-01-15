@@ -481,7 +481,7 @@ sentinelRedisInstance{
 
 #### 节点
 一个redis集群通常由多个节点组成，刚开始都是相互独立的，需要手动建立起连接   
-+ `CLUSTER MEES {ip} {port}`    可以让node节点与ip和port所指定的节点握手，通过握手使得所有的应用加入到一个集群中
++ `CLUSTER MEET {ip} {port}`    可以让node节点与ip和port所指定的节点握手，通过握手使得所有的应用加入到一个集群中
 + 启动节点: 通过配置属性`cluster-enabled`配置选项是否为yes来决定是否开启服务器集群模式
     - 启动后的redis会继续使用单机模式下的组件，比如文件事件处理器处理命令请求和返回命令回复，继续执行serverCron函数(会调用集群特有的clusterCron进行心跳检测以及故障转移等)
 
@@ -535,7 +535,14 @@ redis集群通过分片的方式保存数据库中的键值对，集群被划分
     - clusterNode的slots属性
 
 #### 命令执行
++ 计算键属于哪个槽,使用命令`cluster keyslot {key}`获取key是在哪一个槽中
++ 判断槽是否由当前节点负责
+    - clusterState.slots[i] = clusterState.myself,节点直接执行客户端发送的命令
+    - 否则根据clusterState.slots[i]指向的clusterNode结构所记录的IP和端口，向客户端发送MOVED错误
+    - MOVED错误 `MOVED {slot} {ip}:{port}`,集群下使用单机模式，接收到MOVED会直接打印错误
 #### 重新分片
+redis集群的重新分片操作可以将任意数量已经指派给某个节点(源节点)的槽改为指派到另外一个节点(目标节点)，槽的键值也会移到目标节点
+
 #### 转向
 #### 故障转移
 #### 消息
