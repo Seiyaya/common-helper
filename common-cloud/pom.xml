@@ -14,6 +14,7 @@
     <modules>
         <module>nacos-server-starter</module>
         <module>nacos-client-starter</module>
+        <module>nacos-server-api</module>
     </modules>
 
     <dependencies>
