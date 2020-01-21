@@ -8,8 +8,6 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import tk.mybatis.mapper.entity.Example;
-import tk.mybatis.mapper.provider.ExampleProvider;
-import xyz.seiyaya.fund.FundInfoApplication;
 import xyz.seiyaya.fund.bean.HistFundInfo;
 import xyz.seiyaya.fund.bean.vo.FundHoldVo;
 import xyz.seiyaya.fund.helper.QuotesHelper;
