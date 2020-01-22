@@ -1,6 +1,8 @@
 package xyz.seiyaya.stock.bean;
 
+import lombok.Builder;
 import lombok.Data;
+import xyz.seiyaya.fund.bean.HistFundAccount;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -11,12 +13,13 @@ import javax.persistence.Table;
  * @date 2020/1/21 10:44
  */
 @Data
-@Table(name = "t_stock_info")
-public class HistStockInfo {
+@Table(name = "t_hist_stock_info")
+@Builder
+public class HistStockInfo{
 
     @Id
     private Long id;
-    private String markerId;
+    private String marketId;
     private String stockCode;
     private Integer createDate;
     private Double open;
@@ -54,8 +57,8 @@ public class HistStockInfo {
     public HistStockInfo() {
     }
 
-    public HistStockInfo(String markerId, String stockCode, Integer createDate, Double open, Double close, Double high, Double low, Double increase, Double dayGain, Integer tradeQuantity, Double tradeMoney, Double ma5, Double ma10, Double ma20, Double ma60) {
-        this.markerId = markerId;
+    public HistStockInfo(String marketId, String stockCode, Integer createDate, Double open, Double close, Double high, Double low, Double increase, Double dayGain, Integer tradeQuantity, Double tradeMoney, Double ma5, Double ma10, Double ma20, Double ma60) {
+        this.marketId = marketId;
         this.stockCode = stockCode;
         this.createDate = createDate;
         this.open = open;
