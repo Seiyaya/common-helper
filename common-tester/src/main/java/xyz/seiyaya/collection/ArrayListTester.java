@@ -23,6 +23,7 @@ public class ArrayListTester {
         Integer i1 = new Integer(one);
         Integer i2 = 1;
         Integer i3 = 2-1;
+        Integer i4 = Integer.parseInt("3");
         System.out.println(i1 == i2);
         System.out.println(i2 == i3);
         System.out.println(i3 == i1);
@@ -47,5 +48,20 @@ public class ArrayListTester {
         }
 
         System.out.println("list size:"+list.size());
+    }
+
+    @Test
+    public void testStr(){
+        String str1 = "12";
+        String str2 = new String("12");
+        String str3 = "1"+new String("2");
+        String str4 = new StringBuilder("1").append("2").toString().intern();
+        System.out.println(str1 == str2);
+
+        System.out.println(str1 == str3);
+
+        System.out.println(str2 == str4);
+
+        System.out.println(str1 == str4);
     }
 }

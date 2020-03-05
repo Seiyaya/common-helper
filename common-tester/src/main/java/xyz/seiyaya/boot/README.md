@@ -31,3 +31,7 @@
 + mybatis+spring为什么一级缓存会失效
     - 在同一个service里面调用两次mapper的同一个查询方法，还是会查询两次，没有使用到session的一级缓存，是因为没有加上事务的情况下，每一次都是重新创建一个sqlSession
     - 导致一级缓存失效，在添加事务处理后(加上@org.springframework.transaction.annotation.Transactional注解)，同一个方法内公用的同一个session
++ synchronized+事务注解导致的锁失效
+    - 因为service方法是被代理过的，所以只能保证代理方法的执行的时候具备了加的锁，在AOP提交事务的时候锁已经被释放，另外一个线程已经可以操作该service方法
+    - 最终的结果也可能有线程安全问题
+    - 始终要记得调用service方法执行的是走的是代理类的逻辑，也就是在service里面调用A方法和service.A()方法不是同一个
