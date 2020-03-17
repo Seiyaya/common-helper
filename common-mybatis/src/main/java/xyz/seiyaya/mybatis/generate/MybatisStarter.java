@@ -1,7 +1,6 @@
 package xyz.seiyaya.mybatis.generate;
 
 import freemarker.template.Configuration;
-import freemarker.template.Template;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,14 +9,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.ui.Model;
 import xyz.seiyaya.common.helper.DateHelper;
 import xyz.seiyaya.common.helper.FileHelper;
-import xyz.seiyaya.common.helper.FreeMarkerHelper;
+import xyz.seiyaya.mybatis.generate.utils.FreeMarkerHelper;
 
 import java.io.File;
-import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;

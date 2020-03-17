@@ -1,9 +1,7 @@
-package xyz.seiyaya.common.helper;
+package xyz.seiyaya.mybatis.generate.utils;
 
 import freemarker.template.Template;
-import freemarker.template.TemplateException;
 
-import java.io.IOException;
 import java.io.StringWriter;
 
 /**

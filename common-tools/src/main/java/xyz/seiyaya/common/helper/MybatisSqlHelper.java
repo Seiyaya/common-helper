@@ -1,5 +1,6 @@
 package xyz.seiyaya.common.helper;
 
+import com.google.common.collect.Lists;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.builder.xml.XMLMapperEntityResolver;
@@ -10,7 +11,6 @@ import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.parsing.XPathParser;
 import org.apache.ibatis.scripting.xmltags.XMLScriptBuilder;
 import org.apache.ibatis.session.Configuration;
-import org.assertj.core.util.Lists;
 
 import java.io.FileInputStream;
 import java.io.InputStream;

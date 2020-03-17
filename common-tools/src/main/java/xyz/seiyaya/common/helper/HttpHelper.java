@@ -1,5 +1,6 @@
 package xyz.seiyaya.common.helper;
 
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
@@ -20,7 +21,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.assertj.core.util.Lists;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
