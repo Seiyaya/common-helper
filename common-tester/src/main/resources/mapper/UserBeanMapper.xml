@@ -47,6 +47,7 @@
         select * from t_test_user
         <where>
             <if test="param1.id != null"> and id = ${param1.id}</if>
+            <if test="param1.name != null"> and name like concat('%', #{param1.name},'%')</if>
         </where>
     </select>
 

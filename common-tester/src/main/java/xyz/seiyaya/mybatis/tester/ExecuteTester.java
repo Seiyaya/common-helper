@@ -7,16 +7,18 @@ import org.apache.ibatis.builder.SqlSourceBuilder;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.executor.BaseExecutor;
 import org.apache.ibatis.executor.CachingExecutor;
-import org.apache.ibatis.executor.result.DefaultResultHandler;
 import org.apache.ibatis.executor.resultset.DefaultResultSetHandler;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.scripting.xmltags.*;
-import org.apache.ibatis.session.*;
+import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.session.defaults.DefaultSqlSession;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.boot.test.context.TestComponent;
+import sun.misc.BASE64Decoder;
 import xyz.seiyaya.common.helper.DBParam;
 import xyz.seiyaya.mybatis.bean.UserBean;
 import xyz.seiyaya.mybatis.mapper.UserBeanMapper;
@@ -169,6 +171,15 @@ public class ExecuteTester {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         UserBeanMapper mapper = sqlSession.getMapper(UserBeanMapper.class);
         mapper.findUserByCondition(new DBParam().set("id",1).set("name","zhangsan"),"lisi");
+    }
+
+    @Test
+    public void getUserByLike() throws IOException {
+        DBParam dbParam = new DBParam().set("name","%zhang%");
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        UserBeanMapper mapper = sqlSession.getMapper(UserBeanMapper.class);
+        UserBean zhangsan = mapper.findUserByCondition(dbParam,null);
+        System.out.println(zhangsan);
     }
 
     @Test

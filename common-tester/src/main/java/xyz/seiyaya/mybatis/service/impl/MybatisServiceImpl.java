@@ -11,6 +11,7 @@ import xyz.seiyaya.mybatis.bean.PrintBean;
 import xyz.seiyaya.mybatis.bean.UserBean;
 import xyz.seiyaya.mybatis.mapper.UserBeanMapper;
 import xyz.seiyaya.mybatis.service.MybatisService;
+import xyz.seiyaya.shiro.bean.User;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -110,5 +111,11 @@ public class MybatisServiceImpl implements MybatisService {
     public void printBean() {
         PrintBean printBean = new PrintBean();
         printBean.print();
+    }
+
+    @Override
+    public UserBean getUserByLike(String name) {
+        DBParam dbParam = new DBParam().set("name","zhang");
+        return userBeanMapper.findUserByCondition(dbParam,null);
     }
 }

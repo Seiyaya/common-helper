@@ -1,6 +1,7 @@
 package xyz.seiyaya.mybatis.service;
 
 import xyz.seiyaya.mybatis.bean.UserBean;
+import xyz.seiyaya.shiro.bean.User;
 
 /**
  * @author wangjia
@@ -36,4 +37,6 @@ public interface MybatisService {
 
 
     void printBean();
+
+    UserBean getUserByLike(String name);
 }
