@@ -2,8 +2,8 @@ package xyz.seiyaya.fund.helper;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.util.Lists;
 import org.springframework.stereotype.Component;
 import xyz.seiyaya.common.helper.DBParam;
 import xyz.seiyaya.common.helper.DateHelper;
