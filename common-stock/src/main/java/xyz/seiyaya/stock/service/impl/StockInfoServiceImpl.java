@@ -30,7 +30,10 @@ public class StockInfoServiceImpl implements StockInfoService {
     @Override
     public void insertHistStockInfo(String marketId, String stockCode, int count) {
         // 校验历史行情信息是否存在
-        int countResult = histStockInfoMapper.selectCount(HistStockInfo.builder().marketId(marketId).stockCode(stockCode).build());
+        HistStockInfo queryParam = new HistStockInfo();
+        queryParam.setMarketId(marketId);
+        queryParam.setStockCode(stockCode);
+        int countResult = histStockInfoMapper.selectCount(queryParam);
         if(countResult > 0){
             log.info("{}:{} 历史行情信息已经存在:{}",marketId,stockCode,countResult);
             return ;

@@ -1,6 +1,5 @@
 package xyz.seiyaya.stock.bean;
 
-import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.Table;
@@ -12,6 +11,8 @@ import javax.persistence.Table;
  */
 @Data
 @Table(name = "t_hist_stock_hold")
-@Builder
-public class HistStockHold extends StockHold{
+public class HistStockHold {
+
+    @javax.persistence.Id
+    private Long Id;
 }

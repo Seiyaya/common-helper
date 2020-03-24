@@ -14,7 +14,7 @@ import tk.mybatis.spring.annotation.MapperScan;
  */
 @SpringBootApplication(scanBasePackages = "xyz.seiyaya")
 @Slf4j
-@MapperScan(value = "xyz.seiyaya.*.mapper", annotationClass = Mapper.class)
+@MapperScan(value = "xyz.seiyaya.stock.*.mapper", annotationClass = Mapper.class)
 @EnableScheduling
 public class StockApplication {
 

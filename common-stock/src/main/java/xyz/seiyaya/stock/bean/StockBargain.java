@@ -13,4 +13,6 @@ import javax.persistence.Table;
 @Table(name = "t_stock_bargain")
 @Builder
 public class StockBargain {
+    @javax.persistence.Id
+    private Long Id;
 }

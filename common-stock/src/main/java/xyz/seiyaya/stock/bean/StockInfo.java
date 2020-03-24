@@ -3,6 +3,7 @@ package xyz.seiyaya.stock.bean;
 import lombok.Builder;
 import lombok.Data;
 
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
@@ -15,6 +16,8 @@ import javax.persistence.Table;
 @Table(name = "t_stock_info")
 public class StockInfo {
 
+    @Id
+    private Long id;
     private String marketId;
     private String stockCode;
     private Double open;

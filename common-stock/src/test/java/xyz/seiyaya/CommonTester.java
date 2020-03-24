@@ -1,39 +1,38 @@
 package xyz.seiyaya;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.scripting.xmltags.ForEachSqlNode;
 import org.apache.ibatis.scripting.xmltags.OgnlCache;
 import org.junit.Test;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * @author wangjia
  * @version 1.0
  * @date 2019/11/21 9:54
  */
+@Slf4j
 public class CommonTester {
 
     public static void main(String[] args) {
-        Map<String,Object> maps = new HashMap<>();
+        Map<String, Object> maps = new HashMap<>();
         ArrayList<Object> list = new ArrayList<>();
-        maps.put("list",list);
+        maps.put("list", list);
         Object value = OgnlCache.getValue("list == null  or list.size() == 0", maps);
         System.out.println(value);
     }
 
     @Test
-    public void StringSplit(){
+    public void StringSplit() {
         String item = "代理费回款-易仲勇-2019-11-14-8000.00元;代理费回款-东莞市创新智慧港物业管理有限公司-2019-11-14-5600.00元;";
         String[] str = item.split(";");
         StringBuilder sb = new StringBuilder();
-        for(int i = 0; i<str.length; i++){
-            if(str.length-1 == i){
+        for (int i = 0; i < str.length; i++) {
+            if (str.length - 1 == i) {
                 sb.append(str[i]);
-            }else{
+            } else {
                 sb.append(str[i]);
                 sb.append("\n");
             }
@@ -49,7 +48,7 @@ public class CommonTester {
 
         System.out.println(prop.stringPropertyNames());
         int type = 3;
-        switch (type){
+        switch (type) {
             case 1:
             case 2:
                 System.out.println("22222");
@@ -59,5 +58,23 @@ public class CommonTester {
                 System.out.println("65666");
                 break;
         }
+    }
+
+    @Test
+    public void calcDifferenceList() {
+        List<String> list1 = new ArrayList<>();
+        List<String> list2 = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            list1.add(i + "");
+            if (i % 2 == 0) {
+                list2.add(i + "");
+            }
+        }
+
+
+        log.info("list1:{}",list1);
+        log.info("list2:{}",list2);
+        list1.removeAll(list2);
+        log.info("list diff:{}",list1);
     }
 }

@@ -39,7 +39,7 @@ public class StockTester {
         HttpHelper httpUtils = HttpHelper.getHttpUtils();
         String stockCode = "000001";
         String marketId = "SH";
-        int count = 1;
+        int count = 3;
         String result = httpUtils.sendGet(String.format("http://www.seiyaya.com:8887/market/json?funcno=20029&version=1&stock_code=%s&market=%s&type=day&count="+count, stockCode, marketId));
         JSONObject topObject = JSONObject.parseObject(result);
         JSONArray results = topObject.getJSONArray("results");

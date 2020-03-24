@@ -14,7 +14,6 @@ import javax.persistence.Table;
  */
 @Data
 @Table(name = "t_hist_stock_info")
-@Builder
 public class HistStockInfo{
 
     @Id
