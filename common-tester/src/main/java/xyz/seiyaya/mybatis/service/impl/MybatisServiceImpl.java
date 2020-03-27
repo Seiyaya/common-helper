@@ -1,7 +1,7 @@
 package xyz.seiyaya.mybatis.service.impl;
 
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.util.Lists;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,11 +11,10 @@ import xyz.seiyaya.mybatis.bean.PrintBean;
 import xyz.seiyaya.mybatis.bean.UserBean;
 import xyz.seiyaya.mybatis.mapper.UserBeanMapper;
 import xyz.seiyaya.mybatis.service.MybatisService;
-import xyz.seiyaya.shiro.bean.User;
 
 import javax.annotation.Resource;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * @author wangjia

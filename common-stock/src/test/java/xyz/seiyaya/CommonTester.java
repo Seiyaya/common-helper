@@ -71,10 +71,32 @@ public class CommonTester {
             }
         }
 
+        list1.add("11");
+
 
         log.info("list1:{}",list1);
         log.info("list2:{}",list2);
         list1.removeAll(list2);
         log.info("list diff:{}",list1);
+    }
+
+    @Test
+    public void retainAll(){
+        List<String> list1 = new ArrayList<>();
+        List<String> list2 = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            list1.add(i + "");
+            if (i % 2 == 0) {
+                list2.add(i + "");
+            }
+        }
+
+        list1.add("11");
+
+
+        log.info("list1:{}",list1);
+        log.info("list2:{}",list2);
+        list1.retainAll(list2);
+        log.info("list retain:{}",list1);
     }
 }
