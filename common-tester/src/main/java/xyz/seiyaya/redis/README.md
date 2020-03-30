@@ -1,7 +1,7 @@
 # Redis设计与实现
 ## 数据结构与对象
 Redis中每个键值对都是通过字符串`key`和对象`value`组成, 它可以是 字符串、 list 、 hash object 、 set object 、 sorted set object这五种对象中的一种  
-+ Redis使用了结构体来定义字符串(simple dynamic string)
+### SDS
 Redis只会使用C字符串作为字面量，其它的字符串统一使用SDS
 ```
 struct sds{
@@ -12,6 +12,15 @@ struct sds{
     char[] buf;
 }
 ```
++ strlen命令获取字符串长度
++ 相对于C语言的字符串，SDS具有的有点
+    - 常数复杂度获取字符串长度,内部维护了len属性，获取复杂度为O(1)
+    - 杜绝缓冲区溢出
+    - 减少修改字符串长度时所需的内存重分配次数
+    - 二进制安全
+    - 兼容部分C字符串函数
+
+### List
 
 + Redis中的链表结构应用场景 --> 对应java中的LinkList
     - 列表键
@@ -27,6 +36,7 @@ listNode{
 
 // redis链表的特性: 双向、无环、带表头指针和表尾指针、带链表长度计数器、多态(可以保存多种不同类型的值)
 ```
+### 字典
 + Redis中的字典结构 --> 对应java中的HashMap
     - 哈希键
     - 因为使用的是渐进式的从ht[0]同步到ht[1]，所以这个过程发生的查询会在两个表上都进行查询
@@ -37,13 +47,72 @@ dictht{
     unsigned long sizemask;// 用来计算索引值 = size - 1
     unsigned long used;  // hash表已使用的节点数量
 }
+dictEntry{
+    void *key;
+    union{
+        void *val;
+        uint64_tu64;
+        int64_ts64;
+    }v;
+    // 指向下个hash表的节点，形成链表(多个节点hash值相同的时候会形成，也就是解决哈希冲突的方式)
+    struct dictEntry *next;
+}
+dict{
+    // 类型特定函数，针对不同类型的键值对为创建多态字典而设置
+    // dictType保存了一簇用于操作特定类型键值对的函数，redis为不同类型的字典设置不同类型特定函数
+    dictType *type;
+    //私有数据，保存的是需要传给特定函数的可选参数
+    void *privadata;
+    // hash表，有两个hash表的原因是ht[1]会在rehash的时候使用
+    dictht ht[2];
+    // rehash索引，记录的是rehash的进度，当rehash不再进行时，值为-1
+    int reshshidx;
+}
+dictType{
+    // 计算hash值的函数
+    unsigned int(*hashFunction)(const void *key);
+    //复制键的函数
+    void *(*keyDup)(void *privdata, const void *key);
+    // 复制值的函数
+    void *(*valDup)(void *privdata, const void *obj);
+    // 对比键的函数
+    int (*keyCompare)(void *privdata, const void *key1, const void *key2);
+    // 销毁键的函数
+    void (*keyDestructor)(void *privdata, void *key);
+    // 销毁值的函数
+    void (*valDestructor)(void *privdata, void *obj);
+}
 ```
 
++ hash算法
+```
+// 计算hash值
+hash = dict -> type -> hashFunction(key);
+// 计算存储元素在hash表的位置
+index = hash & dict -> ht[x].sizemask;
+```
+
++ rehash
+当hashHt存储的元素过多的时候会进行rehash操作，避免hash冲突形成链表  
+    - 首先为ht[1]哈希表分配空间，hash表的大小取决于是进行扩展操作还是收缩操作
+    - 将ht[0]的元素都rehash到ht[1],将ht[1]设置为ht[0]
+程序自动开始扩展操作
+    - 服务器目前没有执行BGSAVE命令或者BGREWRITEAOF命令，并且hash表的负载因子>=1
+    - 正在执行上述两个命令，并且hash表的负载因子>=5
+    - hash_factor = ht[0].used / ht[0].size
+    - hash_factor < 0.1时会进行收缩操作
++ 渐进式rehash
+    - rehash的过程都是分为多步完成的，避免rehash的数据量过大导致服务停止
+    - 原理是使用`reshshidx`来进行标记当前的rehash进度
+    - 期间对于hash表的操作会变量ht数组操作
+
+### 跳跃表
 + Redis中的跳表
     - 通过每个节点维护多个指向其它节点的指针，从而达到快速访问的目的
     - 跳表平均O(log n)最坏的情况O(n),大多数情况下跳表和平衡树相媲美，且跳跃表比平衡树简单
     - 使用场景: 一个有序集合包含的元素数量比较多，集合中的元素是长度较长的字符串
     - java实现详情见`xyz.seiyaya.collection.SkipList`
+    - 应用到跳跃表的只有两个地方，一个是`有序键集合`和`集群节点中用作内部数据结构`
 ```
 // 跳跃表节点
 zSkipListNode{
@@ -60,8 +129,31 @@ zSkipListNode{
 zSkipList
 ```
 
-+ Redis中的整数集合
-+ Redis中的压缩列表
+### Redis中的整数集合(int set)
+```
+sadd numbers 1 3 5 7 9
+object encoding numbers 
+
+intset{
+    // 编码方式
+    uint32_t encoding;
+    // 集合包含的元素数量
+    uint32_t length;
+    // 保存元素的数组
+    int8_t contents[];
+}
+整数集合每个元素都是intset中的contents中的一项
+```
+
+### Redis中的压缩列表
+是列表键和hash键的底层实现之一，列表键只包含少量的列表项，并且每个列表项要么是小整数值，要么就是比较短的字符串，那么redis就会用压缩列表来实现
+```
+rpush list 1 3 5 100886 "hello" "world"
+object encoding list
+
+redis3.2 之后的版本打印的是quicklist
+```
+
 + Redis中的对象
 ```
 redisObject{
