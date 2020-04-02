@@ -40,6 +40,7 @@ listNode{
 + Redis中的字典结构 --> 对应java中的HashMap
     - 哈希键
     - 因为使用的是渐进式的从ht[0]同步到ht[1]，所以这个过程发生的查询会在两个表上都进行查询
+![psync](https://www.seiyaya.xyz/images/notes/redis/struct/hashStruct.png "psync") 
 ```
 dictht{
     dictEntry **table;
@@ -153,36 +154,49 @@ object encoding list
 
 redis3.2 之后的版本打印的是quicklist
 ```
-
+### 对象
+通过之前的数据结构结构创建的对象系统，包含字符串、列表、哈希、集合对象和有序集合  
++ 对象的类型和编码
+    - 创建一个键值对产生两个对象，键总是一个字符串对象
 + Redis中的对象
 ```
 redisObject{
-    unsigned type;// 对象类型：字符串、列表、哈希、集合
+    // 对象类型：字符串(REDIS_STRING)、列表(REDIS_LIST)、哈希(REDIS_HASH)、集合(REDIS_SET)、有序集合(REDIS_ZSET)
+    unsigned type;
+    // 对象使用的编码类型
     unsigned encoding;
     void *ptr;// 指向对象底层实现的数据结构,这些数据结构由encoding决定
     unsigned refCount;// 记录引用数
     unsigned lru;// 记录了对象最后一次被访问的时间
 }
 
-// 相关命令  type {key}
+// 相关命令,前者返回的是值对象的类型，后者是查看值对象的编码
+type {key}
 object encoding {key}
+// 普通的字符串对象  第一个打印的  string  第二个打印的embstr
 ```
 
 + 字符串对象
-字符串对象可以是int 、 raw 和 embstr , 其中int表示ptr类型是Long类型，raw表示字符串长度大于32，embstr表示字符串长度小于32  
-embstr对象是只读的，每次对它的操作都将先转换为raw类型，然后再进行相关操作  
+    - 字符串对象可以是int 、 raw 和 embstr , 其中int表示ptr类型是Long类型，raw表示字符串长度大于32，embstr表示字符串长度小于32  
+    - embstr对象是只读的，每次对它的操作都将先转换为raw类型，然后再进行相关操作  
+    - embstr对象是连续的
 
 + 列表对象
 列表对象可以是`ziplist`或者`linkedlist`
+    - ziplist: 每个压缩节点保存一个元素，所有的元素长度都小于64字节，保存的元素数量小于512个，否则采用的是linkedlist编码
+    - redis3.2之后使用的都是`quicklist`,这是一个双向链表
 
 + 哈希对象
 哈希对象可以是`ziplist`或者`hashtable`
+    - 添加的元素超过512个的时候会转换为hashtable,且每个元素的字节数小于64字节
 
 + 集合对象
 集合对象可以是`intset`或者`hashtable`
+    - 集合对象类型是`intset`的条件必须所有元素都是整数，且元素数量<=512(这个值可以被修改)
 
 + 有序集合对象
 有序集合对象可以是`ziplist`或者`skiplist`
+    - ziplist的使用条件，元素数量小于128个，且每个元素的长度小于64字节
 
 + 内存回收
 内部使用引用计数法进行内存的回收
@@ -245,11 +259,21 @@ redisDb{
 
     dict *watched_keys;// 正在被watch监视的键
 }
+
+object idletime {key} 查看key的空闲时间
 ```
 
 + 设置键的生存时间或过期时间
 通过`expire`命令或者`pexpire`命令，`setex`命令主要是设置字符串键的时候可以顺便设置对应的值，原理和前面两个命令一样  
-`ttl`命令和`pttl`会返回这个键被自动删除的剩余时间
+`ttl`命令和`pttl`会返回这个键被自动删除的剩余时间  
+```
+setex 可以设置一个字符串键的时候同时设置过期时间
+expire {key} {ttl}
+pexpire {key} {ttl}
+expireat {key} {timestamp}
+//上述命令都是通过下面这个命令实现的
+pexpireat {key} {timestamp}
+```
 
 
 + 过期键的删除策略

@@ -74,4 +74,23 @@ public class ResultBean implements Serializable {
         this.msg = msg;
         return this;
     }
+
+    /**
+     * 设置参数异常的返回结果集
+     * @return
+     */
+    public ResultBean setParamError(){
+        return this.setError(ResultConstant.CODE_PARAM_ERROR.getMsg());
+    }
+
+    /**
+     * 设置参数异常的返回结果集
+     * @param msg
+     * @return
+     */
+    public ResultBean setParamError(String msg){
+        this.code = ResultConstant.CODE_PARAM_ERROR.getCode();
+        this.msg = msg;
+        return this;
+    }
 }

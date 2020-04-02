@@ -1,8 +1,11 @@
 package xyz.seiyaya.collection;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -15,6 +18,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2019/11/4 17:29
  */
 @SuppressWarnings("all")
+@Slf4j
 public class ArrayListTester {
 
     public static void main(String[] args) {
@@ -63,5 +67,16 @@ public class ArrayListTester {
         System.out.println(str2 == str4);
 
         System.out.println(str1 == str4);
+    }
+
+    @Test
+    public void testArraySort(){
+        int[] array = new int[]{3,1,2};
+        Arrays.sort(array);
+        log.info("array sort result:{}",array);
+
+        List<Integer> intList = Arrays.asList(3, 2, 1);
+        Collections.sort(intList);
+        log.info("list:{}",intList);
     }
 }

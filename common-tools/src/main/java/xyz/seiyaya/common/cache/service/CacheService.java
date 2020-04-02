@@ -24,6 +24,8 @@ public interface CacheService {
 
     String get(String key);
 
+    String hget(String hashKey,String key);
+
     void remove(String key);
 
     boolean exists(String key);

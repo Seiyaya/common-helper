@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>websocket demo</title>
+</head>
+<body>
+<div style="text-align: center;">
+    <form action="">
+        <input onclick="send_message()" value="Send" type="button">
+        <textarea id="textID" rows="4" cols="50" name="message" >
+                </textarea>
+    </form>
+</div>
+<div id="output"></div>
+</body>
+</html>
+<script>
+    let wsUri = "ws://localhost:9999/webSocket";
+    let output;
+    let webSocket;
+    window.addEventListener("load",function(){
+        output = document.getElementById("output");
+    },false);
+
+    function send_message(){
+        webSocket = new WebSocket(wsUri);
+        webSocket.onopen = function(evt){
+            console.log("open websocket,connect to endpoint");
+            doSend(document.getElementById("textId").value);
+        };
+
+        webSocket.onmessage = function(evt){
+            console.log("receive msg:",evt.data);
+        };
+
+        webSocket.onerror = function(evt){
+            console.log("has a error : ",evt.data);
+        };
+    }
+
+    function doSend(msg){
+        console.log("client send msg ",msg);
+        webSocket.send(msg);
+    }
+</script>

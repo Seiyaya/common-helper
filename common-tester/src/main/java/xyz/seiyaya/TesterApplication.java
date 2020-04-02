@@ -18,6 +18,7 @@ import xyz.seiyaya.mybatis.service.MybatisService;
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 import java.io.File;
+import java.io.IOException;
 import java.util.UUID;
 
 /**
@@ -29,6 +30,7 @@ import java.util.UUID;
 @MapperScan(value = {"xyz.seiyaya.*.mapper","xyz.seiyaya.*.dao"}, annotationClass = Mapper.class)
 @EnableTransactionManagement
 @Slf4j
+@SuppressWarnings("all")
 public class TesterApplication {
 
     public static void main(String[] args) throws Exception {
@@ -36,6 +38,18 @@ public class TesterApplication {
         MybatisService bean = run.getBean(MybatisService.class);
         log.info("{}", bean);
 
+        if(false){
+            testGenerateClass(run, bean);
+        }
+
+        MDC.clear();
+        MDC.put("requestId", UUID.randomUUID().toString());
+
+        log.info("print:{}",System.currentTimeMillis());
+//        run.close();
+    }
+
+    private static void testGenerateClass(ConfigurableApplicationContext run, MybatisService bean) throws ClassNotFoundException, IOException {
         boolean aopProxy = AopUtils.isAopProxy(bean);
         try {
             Object o = TesterApplication.class.getClassLoader().loadClass("xyz.seiyaya.mybatis.bean.AccountBean").newInstance();
@@ -69,13 +83,12 @@ public class TesterApplication {
             beanDefinitionBuilder.addDependsOn("userBeanMapper");
             ((DefaultListableBeanFactory)run.getBeanFactory()).registerBeanDefinition("AutoCompilerServiceImpl",beanDefinitionBuilder.getRawBeanDefinition());
             Object autoCompilerService = run.getBean("AutoCompilerServiceImpl");
-            log.info("刷新后:{} --> {}",autoCompilerService,SpringHelper.getBean(MybatisService.class));
+            log.info("刷新后:{} --> {}",autoCompilerService, SpringHelper.getBean(MybatisService.class));
 
             autoCompilerService.getClass().getMethod("testInsert").invoke(autoCompilerService);
         }catch (Exception e){
             log.error("",e);
         }
-
 
         SpringHelper.getBean(MybatisService.class).printBean();
 
@@ -86,12 +99,5 @@ public class TesterApplication {
         log.info("{}", compilationResult);
         TesterApplication.class.getClassLoader().loadClass("xyz.seiyaya.mybatis.bean.PrintBean");
         SpringHelper.getBean(MybatisService.class).printBean();
-
-
-        MDC.clear();
-        MDC.put("requestId", UUID.randomUUID().toString());
-
-        log.info("print:{}",System.currentTimeMillis());
-//        run.close();
     }
 }

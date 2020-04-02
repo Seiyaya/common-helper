@@ -40,6 +40,11 @@ public class FileCacheServiceImpl implements CacheService {
     }
 
     @Override
+    public String hget(String hashKey, String key) {
+        return null;
+    }
+
+    @Override
     public void remove(String key) {
 
     }

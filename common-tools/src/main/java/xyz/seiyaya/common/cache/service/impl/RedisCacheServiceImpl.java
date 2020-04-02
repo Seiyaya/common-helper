@@ -3,7 +3,6 @@ package xyz.seiyaya.common.cache.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import xyz.seiyaya.common.cache.service.CacheService;
@@ -45,6 +44,11 @@ public class RedisCacheServiceImpl implements CacheService {
     @Override
     public String get(String key) {
         return null;
+    }
+
+    @Override
+    public String hget(String hashKey, String key) {
+        return stringRedisTemplate.opsForHash().get(hashKey,key).toString();
     }
 
     @Override

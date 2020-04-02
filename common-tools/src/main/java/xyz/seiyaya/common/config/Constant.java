@@ -25,4 +25,21 @@ public class Constant {
         public static final Integer INTEGER_9 = 9;
         public static final Integer INTEGER_10 = 10;
     }
+
+    /**
+     * 字节常量
+     */
+    public static class ByteConstant {
+        public static final Byte BYTE_0 = 0;
+        public static final Byte BYTE_1 = 1;
+        public static final Byte BYTE_2 = 2;
+        public static final Byte BYTE_3 = 3;
+        public static final Byte BYTE_4 = 4;
+        public static final Byte BYTE_5 = 5;
+        public static final Byte BYTE_6 = 6;
+        public static final Byte BYTE_7 = 7;
+        public static final Byte BYTE_8 = 8;
+        public static final Byte BYTE_9 = 9;
+        public static final Byte BYTE_10 = 10;
+    }
 }

@@ -39,7 +39,7 @@ public class StockTester {
         HttpHelper httpUtils = HttpHelper.getHttpUtils();
         String stockCode = "000001";
         String marketId = "SH";
-        int count = 3;
+        int count = 1;
         String result = httpUtils.sendGet(String.format("http://www.seiyaya.com:8887/market/json?funcno=20029&version=1&stock_code=%s&market=%s&type=day&count="+count, stockCode, marketId));
         JSONObject topObject = JSONObject.parseObject(result);
         JSONArray results = topObject.getJSONArray("results");
@@ -56,6 +56,8 @@ public class StockTester {
             stock.setLow(array.getBigDecimal(4).divide(scale, 2,BigDecimal.ROUND_HALF_UP));
             stock.setIncrease(array.getBigDecimal(5).multiply(scale));
             stock.setUpDown(array.getBigDecimal(6));
+            stock.setVolume(array.getBigDecimal(8).longValue());
+            stock.setTurnover(array.getBigDecimal(9).longValue());
 
             stock.setMa5(array.getBigDecimal(10).divide(scale , 2,BigDecimal.ROUND_HALF_UP));
             stock.setMa10(array.getBigDecimal(11).divide(scale , 2,BigDecimal.ROUND_HALF_UP));

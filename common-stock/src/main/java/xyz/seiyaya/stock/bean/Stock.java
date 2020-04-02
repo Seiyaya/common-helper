@@ -50,4 +50,14 @@ public class Stock implements Serializable {
     private BigDecimal ma20;
 
     private BigDecimal ma60;
+
+    /**
+     * 成交量
+     */
+    private Long volume;
+
+    /**
+     * 成交额
+     */
+    private Long turnover;
 }

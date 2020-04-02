@@ -1,19 +1,12 @@
 package xyz.seiyaya;
 
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
-import org.apache.commons.math3.util.MathArrays;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.junit.Test;
 import org.springframework.beans.BeanUtils;
 import xyz.seiyaya.common.helper.DBParam;
-import xyz.seiyaya.common.helper.HttpHelper;
 import xyz.seiyaya.service.ParentTwo;
 
 import java.math.BigDecimal;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 
 /**
@@ -67,12 +60,5 @@ public class ClassTester {
         BigDecimal b = new BigDecimal("-8778405442862239").pow(3);
         BigDecimal c = new BigDecimal("-2736111468807040").pow(3);
         System.out.println(a.add(b).add(c));
-    }
-
-    @Test
-    public void sendHttps() throws URISyntaxException {
-        String s = new HttpHelper().sendGet("https://www.jianshu.com/shakespeare/v2/notes/3d8fd2c29cb7/audio");
-
-        System.out.println(s);
     }
 }
