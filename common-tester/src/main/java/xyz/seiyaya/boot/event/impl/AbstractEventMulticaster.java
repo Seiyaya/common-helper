@@ -1,5 +1,6 @@
 package xyz.seiyaya.boot.event.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import xyz.seiyaya.boot.event.EventMulticaster;
 import xyz.seiyaya.boot.event.WeatherEvent;
 import xyz.seiyaya.boot.event.WeatherListener;
@@ -9,7 +10,8 @@ import java.util.List;
 
 public abstract class AbstractEventMulticaster implements EventMulticaster {
 
-    private List<WeatherListener> listenerList = new ArrayList<>();
+    @Autowired
+    private List<WeatherListener> listenerList;
 
 
     @Override
@@ -19,13 +21,22 @@ public abstract class AbstractEventMulticaster implements EventMulticaster {
         afterMulticast();
     }
 
+    /**
+     * 广播之后调用
+     */
     abstract void afterMulticast();
 
+    /**
+     * 广播之前调用
+     */
     abstract void beforeMulticast();
 
 
     @Override
     public void addListener(WeatherListener weatherListener) {
+        if (listenerList == null) {
+            listenerList = new ArrayList<>();
+        }
         listenerList.add(weatherListener);
     }
 
