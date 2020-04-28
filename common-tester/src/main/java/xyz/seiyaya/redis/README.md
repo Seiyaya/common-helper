@@ -219,6 +219,8 @@ redisServer{
     redisDb *db;//一个数组，用来保存服务器中的所有数据库
     int dbnum;// 决定创建多少个数据库，由服务器配置的database决定，默认为16
     saveparams *savaparams; // 保存RDB文件的配置，是一个数组
+    long dirty;// 距离上次执行SAVE或者BGSAVE命令，服务器对数据库进行了多少次修改
+    time lastsave;// 上一次成功执行SAVE命令或者BGSAVE的时间
     list *clients;// 保存客户端的状态
     redisClient *lua_client;// 执行lua命令的客户端
     int cronloops;// serverCron方法的执行次数
@@ -301,7 +303,7 @@ notify-keyspace-events K$ 服务器只发送所有的有关字符串键有关的
 notify-keyspace-events Elg 服务器只发送所有的有关列表键有关的基础命令通知
 ```
 ### RDB持久化
-+ 命令`SAVE`和`BGSAVE`，以个是同步保存，另外一个是新开一个子进程进行保存 ，载入命令是redis服务启动的时候自动载入的，没有命令支持
++ 命令`SAVE`和`BGSAVE`，一个是同步保存，另外一个是新开一个子进程进行保存 ，载入命令是redis服务启动的时候自动载入的，没有命令支持
     - AOF更新频率通常比RDB文件的更新频率高，所以开启了AOF功能，优先使用AOF来还原数据
     - 只有的AOF功能关闭的时候才使用RDB进行载入
     - SAVE命令的执行是同步的，期间redis服务不会接受其他的请求

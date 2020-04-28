@@ -1,7 +1,14 @@
 # 集合
 
 ## HashMap
-底层数据结构就是数组+链表实现(jdk1.8重构成红黑树,链表长度大于8)  
++ 多线程下的HashMap有什么问题
+```
+if ((p = tab[i = (n - 1) & hash]) == null)
+     tab[i] = newNode(hash, key, value, null);
+putVal方法中这个判断可能存在两个线程竞争的方法，会造成元素的覆盖，最终集合元素数量少于期望数量
+```
+
+底层数据结构就是数组+链表实现(jdk1.8重构成红黑树,链表长度大于8,tab长度大于64)  
 1. 构造函数:含有三个关键属性`loadFactor` 、`threshold` 、`initialCapacity`  
 loadFactor: 负载因子，主要的作用是决定是否扩容的一个参数，已存储元素数量/size > loadFactor则进行扩容,原因是尽量避免元素过多导致hash冲突  
 threshold: 最大的可以存储的元素数量,数组的大小*loadFactor，数组的大小再初始化的时候会得到大于该值的最大的2次幂，是为了&运算计算位置时都以hashCode为准
@@ -33,6 +40,119 @@ threshold: 最大的可以存储的元素数量,数组的大小*loadFactor，数
 重写了equals和hashcode方法的对象能作为key,否则即使属性一样也是不同的对象(默认比较的是内存地址值)  
 
 + 问题3: HashMap、ConcurrentHashMap、HashTable比较
+
+## ConcurrentHashMap
++ 1.7的`锁分段`
+```
+本质是将原有的tab数组划分成多个segment。整体上看是有segment数组，每个segment数组又是一个HashEntry数组
+类中的常量:
+// 默认初始容量
+static final int DEFAULT_INITIAL_CAPACITY = 16;
+// 默认的负载因子，决定扩容时机
+static final float DEFAULT_LOAD_FACTOR = 0.75f;
+// 理论的并发数量，即是Segment数组的大小
+static final int DEFAULT_CONCURRENCY_LEVEL = 16;
+// 最大容量
+static final int MAXIMUM_CAPACITY = 1 << 30;
+// 每个Segment中table数组的最小长度为2，且必须是2的n次幂。
+static final int MIN_SEGMENT_TABLE_CAPACITY = 2;
+// 用于限制Segment数量的最大值，必须是2的n次幂
+static final int MAX_SEGMENTS = 1 << 16;
+// 在size方法和containsValue方法，会优先采用乐观的方式不加锁，直到重试次数达到2，才会对所有Segment加锁
+// 这个值的设定，是为了避免无限次的重试。后边size方法会详讲怎么实现乐观机制的。
+static final int RETRIES_BEFORE_LOCK = 2;
+// segment掩码值，用于根据元素的hash值定位所在的 Segment 下标。
+final int segmentMask;
+// 和 segmentMask 配合使用来定位 Segment 的数组下标
+final int segmentShift;
+// Segment 组成的数组，每一个 Segment 都可以看做是一个特殊的 HashMap
+final Segment<K,V>[] segments;
+//Segment 对象，继承自 ReentrantLock 可重入锁，内部属性和方法和HashMap方法差不多
+static final class Segment<K,V> extends ReentrantLock implements Serializable {
+// 用于计算最大尝试次数
+static final int MAX_SCAN_RETRIES = Runtime.getRuntime().availableProcessors() > 1 ? 64 : 1;
+//用于表示每个Segment中的 table，是一个用HashEntry组成的数组
+transient volatile HashEntry<K,V>[] table;
+// Segment中元素的数量，每个Segment单独计数
+transient int count;
+// 修改时该变量会++
+transient int modCount;
+// 扩容阈值，和hashmap一样也是容器容量*负载因子
+transient int threshold;
+// 负载因子
+final float loadFactor;
+// segment中的元素类型，用于键值对的存储和维护单向链表
+static final class HashEntry<K,V> {
+```
+
++ 常用方法
+```
+构造函数: 主要是初始化内部的一些属性
+put方法:
+public V put(K key, V value){
+    Segment<K,V> s;
+    if ( value == null) throws NPE;
+    int hash = hash(key);
+    // 计算在segment数组的哪一个位置
+    int j = (hash >>> segmentShift) & segmentMask;
+    if ((s = (Segment<K,V>)UNSAFE.getObject(segments, (j << SSHIFT) + SBASE)) == null)
+        s = ensureSegment(j);
+    s.put(key, hash, value, false);
+}
+```
++ 1.8的`Synchronized + CAS`
+```
+void putVal(K k,V v,boolean onlyIfAbsent){
+    int hash = spread(key.hashCode());
+    //用来计算当前链表上的元素个数，树结构的话直接为2
+    int binCount = 0;
+    for (Node<K,V>[] tab = table;;) {
+        // f表示tab数组i位置的元素，n表示数组长度，fh表示节点的hash值
+        Node<K,V> f; int n, i, fh;
+        // tab数组没有初始化
+        if (tab == null || (n = tab.length) == 0)
+            tab = initTable();
+        // tab数组要插入的位置还没有元素
+        else if ((f = tabAt(tab, i = (n - 1) & hash)) == null) 
+            if (casTabAt(tab, i, null, new Node<K,V>(hash, key, value, null)))
+                break;
+        // 当前tab数组正在扩容
+        else if ((fh = f.hash) == MOVED)
+            tab = helpTransfer(tab, f);
+        // 要插入的位置有元素，需要判断是链表结构还是树结构，然后进行相应操作
+        else
+            // 校验tab数组的i位置的节点是否有变化
+            if (tabAt(tab, i) == f) {
+                if (fh >= 0) {
+                    //链表结构的操作，将f节点添加到链表的尾部
+                }else if(f instanceof TreeBin){
+                    // 树结构的操作，调用f.putTreeVal()
+                }
+            }
+            if (binCount >= TREEIFY_THRESHOLD)
+                // 判断是否需要将链表转换成红黑树
+                treeifyBin(tab, i);
+    }
+    // 元素个数+1(还可能触发扩容)
+    addCount(1L, binCount);
+}
+
+void initTable(){
+    // sizeCtl默认值为0，-1时表示其他线程在初始化表，初始化完成后会变成扩容后的阈值，小于-1时表示有几个线程在帮助扩容，上面的helpTransfer方法
+    while ((tab = table) == null || tab.length == 0) {
+        if ((sc = sizeCtl) < 0)
+            // 其他线程正在执行初始化方法，等待即可
+            Thread.yield();
+        else if (U.compareAndSwapInt(this, SIZECTL, sc, -1)) {
+            // 当前线程开始初始化tab
+            sc = n - (n >>> 2); // n - 0.25n = 0.75n
+        }
+}
+
+void addCount(long x, int check){
+    // map的元素数量+x,由于可能多个线程都会+x，采用分治思想
+}
+```
 
 ## ArrayList
 > 1.构造方法:没什么特别的，一个可以指定大小，或者默认大小为一个空数组    

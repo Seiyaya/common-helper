@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -78,6 +80,15 @@ public class StockTester {
         byCondition.forEach(model -> {
             log.info("{}",model);
         });
+    }
+
+    public static void methodA(){
+        Logger logger = LoggerFactory.getLogger(StockTester.class);
+        logger.info("213");
+    }
+
+    public void methodB(){
+        methodA();
     }
 
 }

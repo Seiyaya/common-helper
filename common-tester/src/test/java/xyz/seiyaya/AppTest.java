@@ -12,6 +12,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * Unit test for simple App.
@@ -71,6 +72,6 @@ public class AppTest {
 
     @Test
     public void testAddContent(){
-
+        Stream.of(1, 2, 3, 4).filter(model -> model == 5).findFirst().ifPresent(System.out::println);
     }
 }

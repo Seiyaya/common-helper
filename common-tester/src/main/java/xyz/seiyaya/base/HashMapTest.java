@@ -10,6 +10,7 @@ import java.util.Map;
  * @version 1.0
  * @date 2020/1/10 10:40
  */
+@SuppressWarnings("all")
 public class HashMapTest {
 
     @Test
@@ -22,5 +23,15 @@ public class HashMapTest {
 
         // 得到的是null  所以作为map对象的key必须要重写hashCode方法和equals方法
         System.out.println(map.get(person2));
+    }
+
+    @Test
+    public void testMax(){
+        int sum = 0;
+        for(int i=0;i<31;i++){
+            System.out.println(i*2);
+            sum += i*2;
+        }
+        System.out.println(sum/100);
     }
 }

@@ -1,11 +1,12 @@
 package xyz.seiyaya;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.scripting.xmltags.ForEachSqlNode;
 import org.apache.ibatis.scripting.xmltags.OgnlCache;
 import org.junit.Test;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.*;
 
 /**
@@ -98,5 +99,11 @@ public class CommonTester {
         log.info("list2:{}",list2);
         list1.retainAll(list2);
         log.info("list retain:{}",list1);
+    }
+
+    @Test
+    public void testGetNowPrice() throws InterruptedException {
+        StockTester test = new StockTester();
+        test.methodB();
     }
 }
