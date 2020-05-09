@@ -173,7 +173,31 @@ void addCount(long x, int check){
 ## ConcurrentHashMap
 
 ## AQS(AbstractQueuedSynchronizer)
-AQS解决的问题: 获取同步状态，FIFO队列同步、独占锁和共享锁的获取与释放。主要还是作为一个基础组件提供给上层的ReentrantLock、CountDownLatch等使用  
+AQS解决的问题: 获取同步状态，FIFO队列同步、独占锁和共享锁的获取与释放。主要还是作为一个基础组件提供给上层的ReentrantLock、CountDownLatch等使用    
+```
+AQS{
+    // 代表共享资源
+    volatile int state;
+    // 等待队列
+    Queue fifo;
+// get、setState
+// tryAcquire tryRelease
+/**
+假设有三个线程，线程A加锁成功
+    具体操作: cas加锁成功
+        compareAndSetState(0, acquires)  state 0 --> 1
+        exclusiveOwnerThread = thread;记录当前持有锁的线程
+        其余两个线程: 此时因为state=1，所以两个线程进入fifo队列,LockSupport.park(this);线程2和3被挂起
+        详情见: java.util.concurrent.locks.ReentrantLock.NonfairSync.lock
+线程A释放锁，线程B应该被唤醒，exclusiveOwnerThread=线程B，具体步骤
+    - state 1 --> 0
+    - 唤醒线程B，LockSupport。unpark()
+    - 线程B进行CAS修改state的值，然后线程B持有锁
+上述都是非公平锁的实现，具体的是java.util.concurrent.locks.ReentrantLock.NonfairSync
+公平锁也就是如果队列中仍然有数据，则将下一个想要持有锁的线程入队
+*/
+}
+```
 + AQS是建立在CAS的基础上的，提供了两种锁，分别是独占锁和共享锁
     - 独占锁: 操作是一种独占操作，具体的实现比如ReentrantLock,它实现了独占锁的方法
     - 共享锁: 非独占操作，比如CountDownLatch和Semaphore
