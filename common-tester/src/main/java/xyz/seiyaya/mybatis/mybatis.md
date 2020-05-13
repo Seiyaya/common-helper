@@ -168,3 +168,8 @@ KeyGenerator#processAfter: 这是一个接口，主要的实现是`Jdbc3KeyGener
 > 详见工厂类:org.mybatis.spring.SqlSessionFactoryBean#afterPropertiesSet,获取它的实例的时候调用getObject方法   
 MapperFactoryBean获取mapper,这里主要是封装了sqlSession获取mapper的方法  
 MapperScannerConfigurer
+
+
+
+## 可能存在的坑
++ xml中使用<collection>标签时最好指定id,否则可能会将所有的<result/>子条件作为唯一性的判断

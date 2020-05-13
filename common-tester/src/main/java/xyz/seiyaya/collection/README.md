@@ -215,7 +215,7 @@ AQS{
 + 独占锁: 如果有线程获取到锁，其他线程只能是获取锁失败，然后进入等待队列中等待唤醒
     - 具体的尝试获取锁流程  
     ![aqs](https://www.seiyaya.xyz/images/notes/base/aqs.jpg "aqs") 
-    - 具体的释放锁流程
+    - 具体的释放锁流程: 释放锁的流程比较简单，直接将state-release，如果为0表示释放了锁。优先释放队列中头节点的下一个节点，状态不是就绪状态直接从队尾开始搜索符合状态的
 ```
 // 重要的属性记录
 class AbstractQueuedSynchronizer{

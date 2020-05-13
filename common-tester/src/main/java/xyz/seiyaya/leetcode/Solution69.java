@@ -1,8 +1,8 @@
 package xyz.seiyaya.leetcode;
 
 /**
+ * 实现根号x
  * @author wangjia
- * @version v3.9.3
  * @date 2020/5/9 8:34
  */
 public class Solution69 {
