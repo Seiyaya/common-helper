@@ -12,11 +12,11 @@ public class AQSDemo {
     public static void main(String[] args) throws InterruptedException {
         ReentrantLock reentrantLock = new ReentrantLock();
         Object obj = new Object();
-        new Thread(()->{
+        new Thread(() -> {
 
             reentrantLock.lock();
             try {
-                synchronized (obj){
+                synchronized (obj) {
                     obj.wait();
                     System.out.println("obj唤醒后:");
                 }
@@ -29,18 +29,18 @@ public class AQSDemo {
 
         TimeUnit.SECONDS.sleep(3);
 
-        new Thread(()->{
+        new Thread(() -> {
             reentrantLock.lock();
             try {
                 System.out.println("线程B释放");
-            }finally {
+            } finally {
                 reentrantLock.unlock();
             }
         }).start();
 
         TimeUnit.SECONDS.sleep(10);
         System.out.println("10s后唤醒obj");
-        synchronized (obj){
+        synchronized (obj) {
             obj.notify();
         }
 
