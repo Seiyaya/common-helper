@@ -35,7 +35,7 @@ public class Solution572 {
         return s != null && t!=null && s.val == t.val && isSameTree(s.left, t.left) && isSameTree(s.right,t.right);
     }
 
-    static class TreeNode{
+    private static class TreeNode{
         int val;
         TreeNode left;
         TreeNode right;
