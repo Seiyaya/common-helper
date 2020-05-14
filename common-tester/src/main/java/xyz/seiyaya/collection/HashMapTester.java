@@ -1,6 +1,7 @@
 package xyz.seiyaya.collection;
 
 import org.junit.Test;
+import xyz.seiyaya.base.Person;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -56,5 +57,18 @@ public class HashMapTester {
             TimeUnit.SECONDS.sleep(1);
             System.out.println(maps);
         }
+    }
+
+
+    @Test
+    public void testKey(){
+        Map<Person,String> map = new HashMap<>(16);
+        Person person1 = new Person("abs");
+        Person person2 = new Person("abs");
+        map.put(person1,"lina");
+
+
+        // 得到的是null  所以作为map对象的key必须要重写hashCode方法和equals方法
+        System.out.println(map.get(person2));
     }
 }

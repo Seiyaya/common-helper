@@ -315,6 +315,29 @@ private void setHeadAndPropagate(Node node, int propagate) {
 }
 ```
 
+### AQS的应用
++ CountDownLatch
+```
+/* 
+本质是继承AQS的Sync进行的条件限制,其是共享锁的实现，调用await()方法会被放在AQS的队列中
+主要的方法: 
+countDown()  使AQS的state--，如果减少到0则唤醒队列中的节点
+await()      进入AQS的队列阻塞，等待state=0被唤醒
+*/
+```
+
++ CyclicBarrier
+```
+/* 
+本质是借助ReentrantLock和Condition实现功能
+CyclicBarrier和CountDownLatch的区别是: 前者是所有线程阻塞等待完成，后者是某一个线程等待其他线程完成
+但是前者可以调用reset命令重置计数器
+主要的方法: 
+await()      进入AQS的队列阻塞，等待state=0被唤醒
+*/
+```
+
+
 ## CLH
 
 ## MCS
