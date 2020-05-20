@@ -1,14 +1,10 @@
 package xyz.seiyaya.app;
 
-import com.xxl.job.core.biz.model.ReturnT;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import xyz.seiyaya.xxl.task.ConvertTimeTask;
 
 /**
  * @author wangjia
@@ -20,13 +16,4 @@ import xyz.seiyaya.xxl.task.ConvertTimeTask;
 @EnableAutoConfiguration
 @Slf4j
 public class ApplicationTester {
-
-    @Autowired
-    private ConvertTimeTask convertTimeTask;
-
-    @Test
-    public void testConvertTimeTask() throws Exception {
-        ReturnT<String> execute = convertTimeTask.execute("2019-12");
-        log.info("{}",execute);
-    }
 }
