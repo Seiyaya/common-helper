@@ -25,7 +25,7 @@ public class GloryKingsStarter {
 
     private static String BASE_DIR = "E:/images/";
 
-    public static final int LAST_END = 1506;
+    public static final int LAST_END = 1569;
 
     public static void main(String[] args) {
         String itemUrl = "http://apps.game.qq.com/cgi-bin/ams/module/ishow/V1.0/query/workList_inc.cgi?activityId=2735&sVerifyCode=ABCD&sDataType=JSON&iListNum=20&totalpage=0&iOrder=0&iSortNumClose=1&jsoncallback=jQuery17106357796163591201_1570099686332&iAMSActivityId=51991&_everyRead=true&iTypeId=2&iFlowId=267733&iActId=2735&iModuleId=2735&_=1570099763797&page=";
@@ -57,7 +57,7 @@ public class GloryKingsStarter {
                 kingPicInfo.setInputTime((picObject.getString("dtInputDT")));
                 kingPicInfo.setProductName(picObject.getString("sProdName"));
                 int iProdId = picObject.getIntValue("iProdId");
-                if(iProdId >= LAST_END){
+                if(iProdId < LAST_END){
                     return false;
                 }
                 String dir = BASE_DIR + File.separator + kingPicInfo.getProductName();
