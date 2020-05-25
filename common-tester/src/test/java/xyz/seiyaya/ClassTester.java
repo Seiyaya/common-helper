@@ -61,4 +61,9 @@ public class ClassTester {
         BigDecimal c = new BigDecimal("-2736111468807040").pow(3);
         System.out.println(a.add(b).add(c));
     }
+
+    @Test
+    public void testMaxInteger(){
+        System.out.println(Integer.MAX_VALUE);
+    }
 }
