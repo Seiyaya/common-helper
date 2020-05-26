@@ -2,6 +2,7 @@ package xyz.seiyaya.redis.struct.server;
 
 import lombok.Data;
 import xyz.seiyaya.redis.struct.client.RedisClient;
+import xyz.seiyaya.redis.struct.common.PubSubPattern;
 import xyz.seiyaya.redis.struct.common.RedisDb;
 import xyz.seiyaya.redis.struct.server.rdb.RDB;
 import xyz.seiyaya.redis.struct.server.rdb.SaveParam;
@@ -86,6 +87,12 @@ public class RedisServer {
 
     /*****************client用到的属性========start****************/
 
+
+    /**
+     * 保存所有模式订阅关系
+     */
+    private Dict<PubSubPattern> pubSubPatternDict;
+
     /**
      * 保存了毫秒级精度的系统时间戳，由serverCron进行更新
      * 只能用在对时间精度不高的功能上
@@ -104,6 +111,31 @@ public class RedisServer {
      * serverCron函数执行的次数
      */
     private int cronLoops;
+
+    /*****************多机数据库用到的属性========start****************/
+
+    /**
+     * 主机地址
+     * slaveof 127.0.0.1 6379
+     */
+    private String masterHost;
+
+    /**
+     * 主机端口
+     */
+    private int masterPort;
+
+    /*****************多机数据库用到的属性========end****************/
+
+
+    /*****************特有功能用到的属性========start****************/
+
+    /**
+     * 监听redisSever执行了哪些命令的监听器
+     */
+    private List<RedisClient> monitors;
+
+    /*****************特有功能用到的属性========end****************/
 
 
     public RedisServer(){
