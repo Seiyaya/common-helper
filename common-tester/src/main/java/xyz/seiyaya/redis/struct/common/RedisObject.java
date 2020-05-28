@@ -8,17 +8,18 @@ package xyz.seiyaya.redis.struct.common;
 public class RedisObject {
 
     /**
-     * 类型，记录的是对象的类型
+     * <pre>类型，记录的是对象的类型,可以通过 type {key} 查看
      * REDIS_STRING
      * REDIS_LIST
      * REDIS_HASH
      * REDIS_SET
      * REDIS_ZSET
+     * </pre>
      */
     private int type;
 
     /**
-     * 编码,主要有8中编码
+     * <pre>编码,主要有8中编码,可以通过命令 object encoding {key}查看
      * REDIS_STRING
      *      REDIS_ENCODING_INT      long类型
      *      REDIS_ENCODING_EMBSTR   小于等于44个字符(只适用于 > V3.2)
@@ -36,6 +37,7 @@ public class RedisObject {
      *      REDIS_ENCODING_ZIPLIST
      *      REDIS_ENCODING_SKIPLIST
      * 每个类型的对象都至少使用两种编码
+     * </pre>
      */
     private int encoding;
 

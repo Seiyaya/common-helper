@@ -1,7 +1,7 @@
 package xyz.seiyaya.redis.struct.common;
 
 import lombok.Data;
-import xyz.seiyaya.redis.struct.server.Dict;
+import xyz.seiyaya.redis.struct.common.data.Dict;
 
 /**
  * @author wangjia

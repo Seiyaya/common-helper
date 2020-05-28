@@ -1,4 +1,4 @@
-package xyz.seiyaya.redis.struct.server;
+package xyz.seiyaya.redis.struct.common.data;
 
 import lombok.Data;
 

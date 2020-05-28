@@ -4,6 +4,7 @@ import org.junit.Test;
 import xyz.seiyaya.base.Person;
 
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -70,5 +71,15 @@ public class HashMapTester {
 
         // 得到的是null  所以作为map对象的key必须要重写hashCode方法和equals方法
         System.out.println(map.get(person2));
+    }
+
+    /**
+     * HashTable采用的是用%取余数，而HashMap采用个是&取余数 <br/>
+     * 所以table可以要求初始化的大小不为2的次幂，而map必须要求初始化大小为2次幂
+     */
+    @Test
+    public void testHashTable(){
+        Hashtable<String,Object> table =  new Hashtable<>(10);
+        table.put("a","b");
     }
 }

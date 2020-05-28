@@ -14,7 +14,7 @@ public class RDBDataKeyValuePairs {
      */
     private long expireTime;
     /**
-     * 每个type表示一种编码， 根据不同的type决定读入的方式
+     * <pre>每个type表示一种编码， 根据不同的type决定读入的方式
      * REDIS_RDB_TYPE_STRING
      * REDIS_RDB_TYPE_LIST
      * REDIS_RDB_TYPE_SET
@@ -24,6 +24,7 @@ public class RDBDataKeyValuePairs {
      * REDIS_RDB_TYPE_SET_INTSET
      * REDIS_RDB_TYPE_ZSET_ZIPLIST
      * REDIS_RDB_TYPE_HASH_ZIPLIST
+     * </pre>
      */
     private byte type;
 

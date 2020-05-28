@@ -1,7 +1,7 @@
 package xyz.seiyaya.redis.struct.high.cluster;
 
 import lombok.Data;
-import xyz.seiyaya.redis.struct.server.Dict;
+import xyz.seiyaya.redis.struct.common.data.Dict;
 
 /**
  * 每个节点都有的集群状态

@@ -1,7 +1,7 @@
 package xyz.seiyaya.redis.struct.high.sentinel;
 
 import lombok.Data;
-import xyz.seiyaya.redis.struct.server.Dict;
+import xyz.seiyaya.redis.struct.common.data.Dict;
 
 import java.util.List;
 

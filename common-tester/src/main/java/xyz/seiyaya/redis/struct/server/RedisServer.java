@@ -4,6 +4,7 @@ import lombok.Data;
 import xyz.seiyaya.redis.struct.client.RedisClient;
 import xyz.seiyaya.redis.struct.common.PubSubPattern;
 import xyz.seiyaya.redis.struct.common.RedisDb;
+import xyz.seiyaya.redis.struct.common.data.Dict;
 import xyz.seiyaya.redis.struct.server.rdb.RDB;
 import xyz.seiyaya.redis.struct.server.rdb.SaveParam;
 
