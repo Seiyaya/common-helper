@@ -6,6 +6,8 @@ import xyz.seiyaya.base.Person;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -81,5 +83,29 @@ public class HashMapTester {
     public void testHashTable(){
         Hashtable<String,Object> table =  new Hashtable<>(10);
         table.put("a","b");
+    }
+
+    /**
+     * 执行resize方法的过程中进行put元素
+     */
+    @Test
+    @SuppressWarnings("all")
+    public void testResize(){
+        ExecutorService executorService = Executors.newFixedThreadPool(3);
+        HashMap<Integer,Integer> maps = new HashMap<>();
+        for(int i=0;i<=12;i++){
+            if(i == 12){
+                executorService.execute(()->{
+                    try {
+                        TimeUnit.SECONDS.sleep(10);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println("start add element 18");
+                    maps.put(18,18);
+                });
+            }
+            maps.put(i,i);
+        }
     }
 }
