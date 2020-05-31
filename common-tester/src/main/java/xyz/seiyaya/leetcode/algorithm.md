@@ -21,14 +21,17 @@
     - Solution5: 判断回文串
 + 树
     - Solution102: 树的层序遍历
+    - Solution101: 判断一个树是否是镜像对称
 + 二进制
     - Solution136: 异或的使用
 + 设计
     - Solution146: 实现lru缓存
++ 单调栈
+    - Solution84: 数组下标长度*其中最小的元素的最大值
 
 ## 动态规划
 动态规划的重点是找到平衡转移方程，本质上还是进行枚举出最优解，但是枚举的过程中可以简化已经做过的操作降低复杂度
-```java
+```
 // 凑硬币问题，coins数组硬币的面值凑出amount金额，使用的最小硬币数量
 // 1.直接使用递归，递归复杂度的计算 = 子问题个数*解决子问题需要的时间
 public static int coinChange(int[] coins, int amount){
