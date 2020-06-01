@@ -89,7 +89,7 @@ dictType{
 ```
 // 计算hash值
 hash = dict -> type -> hashFunction(key);
-// 计算存储元素在hash表的位置
+// 计算存储元素在hash表的位置,这里使用的是&进行取余，所以要求sizemask必须是2的幂次，即 hash % sizemask = hash & (2^n -1)
 index = hash & dict -> ht[x].sizemask;
 ```
 
@@ -112,7 +112,6 @@ index = hash & dict -> ht[x].sizemask;
     - 通过每个节点维护多个指向其它节点的指针，从而达到快速访问的目的
     - 跳表平均O(log n)最坏的情况O(n),大多数情况下跳表和平衡树相媲美，且跳跃表比平衡树简单
     - 使用场景: 一个有序集合包含的元素数量比较多，集合中的元素是长度较长的字符串
-    - java实现详情见`xyz.seiyaya.collection.SkipList`
     - 应用到跳跃表的只有两个地方，一个是`有序键集合`和`集群节点中用作内部数据结构`
 ```
 // 跳跃表节点
@@ -129,6 +128,9 @@ zSkipListNode{
 // 保存跳跃表节点的相关信息
 zSkipList
 ```
+
+### HyperLogLog
++ 提供的命令 `pfadd` 和 `pfcount`
 
 ### Redis中的整数集合(int set)
 ```
