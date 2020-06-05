@@ -9,7 +9,9 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import xyz.seiyaya.mybatis.bean.UserBean;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -73,5 +75,12 @@ public class AppTest {
     @Test
     public void testAddContent(){
         Stream.of(1, 2, 3, 4).filter(model -> model == 5).findFirst().ifPresent(System.out::println);
+    }
+
+    @Test
+    public void testOptional(){
+        BigDecimal bigDecimal = null;
+        BigDecimal bigDecimal1 = Optional.ofNullable(bigDecimal).orElse(BigDecimal.ONE);
+        System.out.println(bigDecimal1);
     }
 }
