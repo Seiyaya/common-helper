@@ -10,6 +10,7 @@ import xyz.seiyaya.mybatis.bean.UserBean;
 
 import java.io.File;
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Properties;
@@ -82,5 +83,14 @@ public class AppTest {
         BigDecimal bigDecimal = null;
         BigDecimal bigDecimal1 = Optional.ofNullable(bigDecimal).orElse(BigDecimal.ONE);
         System.out.println(bigDecimal1);
+    }
+
+    @Test
+    public void testBigDecimal(){
+        NumberFormat currency = NumberFormat.getNumberInstance();
+        currency.setMinimumFractionDigits(2);
+        BigDecimal bigDecimal = new BigDecimal("1000000");
+        String format = currency.format(bigDecimal);
+        System.out.println(format);
     }
 }
