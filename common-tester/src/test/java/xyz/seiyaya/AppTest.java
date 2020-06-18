@@ -93,4 +93,10 @@ public class AppTest {
         String format = currency.format(bigDecimal);
         System.out.println(format);
     }
+    
+    @Test
+    public void testSubString(){
+        String str = "23次";
+        System.out.println(str.substring(0,str.length()-1));
+    }
 }
