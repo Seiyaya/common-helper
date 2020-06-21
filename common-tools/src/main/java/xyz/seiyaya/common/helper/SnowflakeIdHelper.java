@@ -69,6 +69,9 @@ public class SnowflakeIdHelper {
      */
     private static long dataCenterIdShift = sequenceBits + workerIdBits;
 
+    public static String nextStringId(){
+        return String.valueOf(nextId());
+    }
 
     public synchronized static long nextId() {
         long timestamp = System.currentTimeMillis();

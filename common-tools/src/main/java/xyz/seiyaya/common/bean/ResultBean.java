@@ -93,4 +93,10 @@ public class ResultBean implements Serializable {
         this.msg = msg;
         return this;
     }
+
+    public ResultBean setParamError(String msg, Object... objs){
+        this.code = ResultConstant.CODE_PARAM_ERROR.getCode();
+        this.msg = String.format(msg,objs);
+        return this;
+    }
 }

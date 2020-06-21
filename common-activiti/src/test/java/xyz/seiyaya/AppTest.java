@@ -1,8 +1,8 @@
 package xyz.seiyaya;
 
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Test;
+
+import java.math.BigDecimal;
 
 /**
  * Unit test for simple App.
@@ -15,6 +15,7 @@ public class AppTest
     @Test
     public void shouldAnswerWithTrue()
     {
-        assertTrue( true );
+        int i = new BigDecimal("123.12").intValue();
+        System.out.println(i);
     }
 }

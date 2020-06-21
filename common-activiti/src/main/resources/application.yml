@@ -1,0 +1,17 @@
+spring:
+  activiti:
+    database-schema-update: true
+    check-process-definitions: false
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/activiti?useUnicode=true&characterEncoding=utf8&autoReconnect=true&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+  redis:
+    database: 0
+    host: redis.seiyaya.com
+    port: 6388
+    password:
+    timeout: 5000
+server:
+  port: 9998

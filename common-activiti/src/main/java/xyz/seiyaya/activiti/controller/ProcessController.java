@@ -11,6 +11,8 @@ import xyz.seiyaya.activiti.bean.DeployProcess;
 import xyz.seiyaya.activiti.service.ProcessService;
 import xyz.seiyaya.common.bean.ResultBean;
 
+import java.io.IOException;
+
 /**
  * @author wangjia
  * @version 1.0
@@ -25,14 +27,9 @@ public class ProcessController {
     private ProcessService processService;
 
     @PostMapping("/deploy")
-    public ResultBean deploy(MultipartFile xmlResource, MultipartFile pngResource,String name){
+    public ResultBean deploy(MultipartFile xmlResource, MultipartFile pngResource,String name) throws IOException {
         DeployProcess deployProcess = new DeployProcess(xmlResource,pngResource,name);
-        try {
-            processService.deployProcess(deployProcess);
-        }catch (Exception e){
-            log.error("部署流程信息失败",e);
-            return new ResultBean().setError("部署流程信息失败");
-        }
+        processService.deployProcess(deployProcess);
         return new ResultBean();
     }
 

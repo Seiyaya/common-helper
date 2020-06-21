@@ -2,6 +2,8 @@ package xyz.seiyaya.activiti.service;
 
 import xyz.seiyaya.activiti.bean.AuditProcess;
 import xyz.seiyaya.activiti.bean.DeployProcess;
+import xyz.seiyaya.activiti.bean.dto.StartProcessDTO;
+import xyz.seiyaya.common.bean.ResultBean;
 
 import java.io.IOException;
 
@@ -23,4 +25,11 @@ public interface ProcessService {
      * @param auditProcess
      */
     void auditProcess(AuditProcess auditProcess);
+
+    /**
+     * 发起流程
+     * @param startProcess
+     * @return
+     */
+    ResultBean startProcess(StartProcessDTO startProcess);
 }
