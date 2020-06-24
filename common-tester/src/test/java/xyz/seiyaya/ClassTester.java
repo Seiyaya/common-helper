@@ -7,7 +7,11 @@ import xyz.seiyaya.common.helper.DBParam;
 import xyz.seiyaya.service.ParentTwo;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
+import java.util.function.Function;
 
 /**
  * class相关方法测试
@@ -65,5 +69,19 @@ public class ClassTester {
     @Test
     public void testMaxInteger(){
         System.out.println(Integer.MAX_VALUE);
+    }
+    
+    
+    @Test
+    public void testStreamSort(){
+        List<Integer> integers = Arrays.asList(1, 2, 3);
+        integers.sort(Comparator.comparing(new Function<Integer, Integer>() {
+
+            @Override
+            public Integer apply(Integer integer) {
+                System.out.println(integer);
+                return integer;
+            }
+        }));
     }
 }

@@ -3,15 +3,19 @@ package xyz.seiyaya.activiti.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import xyz.seiyaya.activiti.bean.ActProcess;
 import xyz.seiyaya.activiti.bean.AuditProcess;
 import xyz.seiyaya.activiti.bean.DeployProcess;
+import xyz.seiyaya.activiti.bean.dto.ProcessSearchDTO;
 import xyz.seiyaya.activiti.service.ProcessService;
 import xyz.seiyaya.common.bean.ResultBean;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @author wangjia
@@ -44,9 +48,17 @@ public class ProcessController {
         return new ResultBean();
     }
 
+    /**
+     * 我的流程列表
+     * @param processSearchDTO
+     * @return
+     */
     @RequestMapping("/list")
-    public ResultBean list(){
-        return new ResultBean();
+    public ResultBean list(@RequestBody ProcessSearchDTO processSearchDTO){
+        ResultBean result = new ResultBean();
+        List<ActProcess> list = processService.getProcessList(processSearchDTO);
+        result.setData(list);
+        return result;
     }
 
     @RequestMapping("/todoList")

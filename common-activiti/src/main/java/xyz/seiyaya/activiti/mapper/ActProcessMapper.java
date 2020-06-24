@@ -1,5 +1,6 @@
 package xyz.seiyaya.activiti.mapper;
 
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import xyz.seiyaya.activiti.bean.ActProcess;
 
@@ -10,7 +11,8 @@ import java.util.List;
  * @version 1.0
  * @date 2019/11/11 16:18
  */
-public interface ActProcessMapper {
+@Mapper
+public interface ActProcessMapper extends tk.mybatis.mapper.common.Mapper<ActProcess> {
 
     /**
      * 获取审核的流程节点列表
