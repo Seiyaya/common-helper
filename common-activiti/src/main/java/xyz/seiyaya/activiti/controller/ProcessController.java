@@ -1,5 +1,6 @@
 package xyz.seiyaya.activiti.controller;
 
+import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,8 +12,12 @@ import xyz.seiyaya.activiti.bean.ActProcess;
 import xyz.seiyaya.activiti.bean.AuditProcess;
 import xyz.seiyaya.activiti.bean.DeployProcess;
 import xyz.seiyaya.activiti.bean.dto.ProcessSearchDTO;
+import xyz.seiyaya.activiti.bean.vo.ActProcessVO;
 import xyz.seiyaya.activiti.service.ProcessService;
+import xyz.seiyaya.common.annotation.LoginUser;
+import xyz.seiyaya.common.bean.LoginUserInfo;
 import xyz.seiyaya.common.bean.ResultBean;
+import xyz.seiyaya.common.config.Constant;
 
 import java.io.IOException;
 import java.util.List;
@@ -54,21 +59,32 @@ public class ProcessController {
      * @return
      */
     @RequestMapping("/list")
-    public ResultBean list(@RequestBody ProcessSearchDTO processSearchDTO){
+    public ResultBean list(@RequestBody ProcessSearchDTO processSearchDTO, @LoginUser LoginUserInfo loginUserInfo){
         ResultBean result = new ResultBean();
+        processSearchDTO.setUserId(loginUserInfo.getId());
         List<ActProcess> list = processService.getProcessList(processSearchDTO);
         result.setData(list);
         return result;
     }
 
     @RequestMapping("/todoList")
-    public ResultBean todoList(){
-        return new ResultBean();
+    public ResultBean todoList(@RequestBody ProcessSearchDTO processSearchDTO, @LoginUser LoginUserInfo loginUserInfo){
+        ResultBean resultBean = new ResultBean();
+        processSearchDTO.setComplete(Constant.ByteConstant.BYTE_0);
+        processSearchDTO.setUserId(loginUserInfo.getId());
+        PageInfo<ActProcessVO> page = processService.getTodoProcessList(processSearchDTO);
+        resultBean.setData(page);
+        return resultBean;
     }
 
     @RequestMapping("/doneList")
-    public ResultBean doneList(){
-        return new ResultBean();
+    public ResultBean doneList(@RequestBody ProcessSearchDTO processSearchDTO, @LoginUser LoginUserInfo loginUserInfo){
+        ResultBean resultBean = new ResultBean();
+        processSearchDTO.setComplete(Constant.ByteConstant.BYTE_1);
+        processSearchDTO.setUserId(loginUserInfo.getId());
+        PageInfo<ActProcessVO> page = processService.getDoneProcessList(processSearchDTO);
+        resultBean.setData(page);
+        return resultBean;
     }
 
     @RequestMapping("/copyMeList")

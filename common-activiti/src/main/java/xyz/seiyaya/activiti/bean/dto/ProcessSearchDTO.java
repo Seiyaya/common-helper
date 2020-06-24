@@ -13,4 +13,9 @@ import xyz.seiyaya.common.base.BasePageDTO;
 public class ProcessSearchDTO extends BasePageDTO {
 
     private Long userId;
+
+    /**
+     * 是否是已完成的流程0不是1是
+     */
+    private Byte complete;
 }

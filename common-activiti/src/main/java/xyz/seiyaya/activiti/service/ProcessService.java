@@ -1,10 +1,12 @@
 package xyz.seiyaya.activiti.service;
 
+import com.github.pagehelper.PageInfo;
 import xyz.seiyaya.activiti.bean.ActProcess;
 import xyz.seiyaya.activiti.bean.AuditProcess;
 import xyz.seiyaya.activiti.bean.DeployProcess;
 import xyz.seiyaya.activiti.bean.dto.ProcessSearchDTO;
 import xyz.seiyaya.activiti.bean.dto.StartProcessDTO;
+import xyz.seiyaya.activiti.bean.vo.ActProcessVO;
 import xyz.seiyaya.common.bean.ResultBean;
 
 import java.io.IOException;
@@ -43,4 +45,18 @@ public interface ProcessService {
      * @return
      */
     List<ActProcess> getProcessList(ProcessSearchDTO processSearchDTO);
+
+    /**
+     * 查找待办的流程信息
+     * @param processSearchDTO
+     * @return
+     */
+    PageInfo<ActProcessVO> getTodoProcessList(ProcessSearchDTO processSearchDTO);
+
+    /**
+     * 查找已办的流程信息
+     * @param processSearchDTO
+     * @return
+     */
+    PageInfo<ActProcessVO> getDoneProcessList(ProcessSearchDTO processSearchDTO);
 }
