@@ -31,4 +31,11 @@ public class HashA {
     public int hashCode() {
         return code;
     }
+
+    @Override
+    public String toString() {
+        return "HashA{" +
+                "code=" + code +
+                '}';
+    }
 }

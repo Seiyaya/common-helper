@@ -2,6 +2,7 @@ package xyz.seiyaya.activiti.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.RepositoryService;
@@ -17,6 +18,7 @@ import xyz.seiyaya.activiti.bean.AuditProcess;
 import xyz.seiyaya.activiti.bean.DeployProcess;
 import xyz.seiyaya.activiti.bean.dto.ProcessSearchDTO;
 import xyz.seiyaya.activiti.bean.dto.StartProcessDTO;
+import xyz.seiyaya.activiti.bean.vo.ActProcessVO;
 import xyz.seiyaya.activiti.mapper.ActProcessMapper;
 import xyz.seiyaya.activiti.service.ProcessService;
 import xyz.seiyaya.common.bean.ResultBean;
@@ -125,6 +127,16 @@ public class ProcessServiceImpl implements ProcessService {
     @Override
     public List<ActProcess> getProcessList(ProcessSearchDTO processSearchDTO) {
         PageHelper.startPage(processSearchDTO.getPageNum(),processSearchDTO.getPageSize());
+        return null;
+    }
+
+    @Override
+    public PageInfo<ActProcessVO> getTodoProcessList(ProcessSearchDTO processSearchDTO) {
+        return null;
+    }
+
+    @Override
+    public PageInfo<ActProcessVO> getDoneProcessList(ProcessSearchDTO processSearchDTO) {
         return null;
     }
 }
