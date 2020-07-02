@@ -3,6 +3,8 @@ package xyz.seiyaya.activiti.mapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import xyz.seiyaya.activiti.bean.ActProcess;
+import xyz.seiyaya.activiti.bean.dto.ProcessSearchDTO;
+import xyz.seiyaya.activiti.bean.vo.ActProcessVO;
 
 import java.util.List;
 
@@ -20,4 +22,11 @@ public interface ActProcessMapper extends tk.mybatis.mapper.common.Mapper<ActPro
      * @return
      */
     List<ActProcess> getAuditProcessList(@Param("procInstId") String procInsId);
+
+    /**
+     * 获取待审流程
+     * @param processSearchDTO
+     * @return
+     */
+    List<ActProcessVO> getTodoProcessList(ProcessSearchDTO processSearchDTO);
 }

@@ -11,10 +11,7 @@ import xyz.seiyaya.mybatis.bean.UserBean;
 import java.io.File;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
 /**
@@ -98,5 +95,21 @@ public class AppTest {
     public void testSubString(){
         String str = "23次";
         System.out.println(str.substring(0,str.length()-1));
+    }
+
+    @Test
+    public void testStream(){
+        List<String> v = new ArrayList<>();
+        v.add("1");
+        v.add("2");
+        v.add("3");
+        v.add("4");
+        v.add("5");
+        Map<String,String> companyOfficeMap = new HashMap<>();
+        companyOfficeMap.put("3","1");
+        companyOfficeMap.put("4","1");
+        companyOfficeMap.put("5","1");
+        long count = v.stream().map(companyOfficeMap::get).filter(Objects::nonNull).distinct().count();
+        System.out.println(count);
     }
 }

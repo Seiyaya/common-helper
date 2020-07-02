@@ -13,13 +13,6 @@
     </resultMap>
 
     <resultMap id="userBeanMapAll" type="xyz.seiyaya.mybatis.bean.UserBean">
-        <constructor>
-            <idArg column="id" />
-            <arg column="name" />
-            <arg column="password" />
-            <arg column="age"/>
-            <arg column="birthday"/>
-        </constructor>
         <id property="id" column="id"/>
         <result property="name" column="name"/>
         <result property="password" column="password"/>
@@ -72,5 +65,9 @@
                 </foreach>
             </if>
         </where>
+    </select>
+
+    <select id="findUserList" resultMap="userBeanMapAll">
+        select * from t_test_user
     </select>
 </mapper>

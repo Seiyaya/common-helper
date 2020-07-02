@@ -23,6 +23,11 @@ public class MybatisTester {
 
     private SqlSessionFactory sqlSessionFactory;
 
+
+    public SqlSessionFactory getSqlSessionFactory() {
+        return sqlSessionFactory;
+    }
+
     /**
      * 1.读取配置文件
      *  通过 XMLConfigBuilder

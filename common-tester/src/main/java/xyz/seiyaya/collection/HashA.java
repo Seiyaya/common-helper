@@ -35,7 +35,7 @@ public class HashA {
     @Override
     public String toString() {
         return "HashA{" +
-                "code=" + code +
+                "code=" + code + " -->  index:" + code%16 +
                 '}';
     }
 }

@@ -132,11 +132,17 @@ public class ProcessServiceImpl implements ProcessService {
 
     @Override
     public PageInfo<ActProcessVO> getTodoProcessList(ProcessSearchDTO processSearchDTO) {
-        return null;
+        PageHelper.startPage(processSearchDTO.getPageNum(),processSearchDTO.getPageSize());
+        List<ActProcessVO> list = actProcessMapper.getTodoProcessList(processSearchDTO);
+        PageInfo<ActProcessVO> page = new PageInfo<>(list);
+        return page;
     }
 
     @Override
     public PageInfo<ActProcessVO> getDoneProcessList(ProcessSearchDTO processSearchDTO) {
-        return null;
+        PageHelper.startPage(processSearchDTO.getPageNum(),processSearchDTO.getPageSize());
+        List<ActProcessVO> list = actProcessMapper.getTodoProcessList(processSearchDTO);
+        PageInfo<ActProcessVO> page = new PageInfo<>(list);
+        return page;
     }
 }

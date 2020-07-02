@@ -155,6 +155,24 @@ sql查询的执行过程
 > BoundSql:这是一个很重要的类，存储的是解析玩xml sql片段之后的内容  
 > StatementHandler：它的实现则是对应jdbc中statement的实现  
 
++ SqlNode: 用于解析各种各样的sql标签
+    - TrimSqlNode
+        - WhereSqlNode
+        - SetSqlNode
+    - MixedSqlNode: 
+    - TextSqlNode: 用来解析`$`和`#`符号
+    - IfSqlNode: 用来解析if标签
+    - StaticTextSqlNode: 用来存储静态文本，不需要解析逻辑直接调用方法`DynamicContext#appendSql`即可
+
++ StatementHandler: 用来和jdbc交互的处理器
+    - BaseStatementHandler
+        - SimpleStatementHandler
+        - CallableStatementHandler
+        - PreparedStatementHandler
+    - RoutingStatementHandler: 根据`MappedStatement.statementType`来决定产生什么样的实例
+
++ <bind/>标签，用来绑定OGNL表达式到上下文
+
 sql更新的执行过程  
 > sqlSession#update: sql更新语句执行包含insert、delete  
 CachingExecutor#update: 先情况二级缓存，然后调用被装饰的BaseExecutor的方法  

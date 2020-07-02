@@ -10,6 +10,7 @@ import org.apache.ibatis.executor.CachingExecutor;
 import org.apache.ibatis.executor.resultset.DefaultResultSetHandler;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.mapping.*;
+import org.apache.ibatis.reflection.ParamNameResolver;
 import org.apache.ibatis.scripting.xmltags.*;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
@@ -18,13 +19,14 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.session.defaults.DefaultSqlSession;
 import org.junit.Before;
 import org.junit.Test;
-import sun.misc.BASE64Decoder;
 import xyz.seiyaya.common.helper.DBParam;
 import xyz.seiyaya.mybatis.bean.UserBean;
 import xyz.seiyaya.mybatis.mapper.UserBeanMapper;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -319,5 +321,22 @@ public class ExecuteTester {
         }
 
         Thread.currentThread().join();
+    }
+
+    /**
+     * 测试org.apache.ibatis.reflection.ParamNameResolver的构造函数 <br/>
+     * 参数列表得到的是参数下标和参数名的映射关系 <br/>
+     * { 0=0, 1=name }
+     */
+    @Test
+    public void testParamNameResolver() throws Exception {
+        Configuration configuration = new Configuration();
+        configuration.setUseActualParamName(false);
+        Method method = UserBeanMapper.class.getMethod("findUserByCondition", DBParam.class, String.class);
+        ParamNameResolver paramNameResolver = new ParamNameResolver(configuration, method);
+        Field names = paramNameResolver.getClass().getDeclaredField("names");
+        names.setAccessible(true);
+        Object o = names.get(paramNameResolver);
+        System.out.println(o);
     }
 }

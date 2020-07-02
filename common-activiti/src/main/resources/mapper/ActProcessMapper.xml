@@ -25,4 +25,7 @@
                       WHEN 'endEvent' THEN 3
                       ELSE 1 END) ASC
     </select>
+    <select id="getTodoProcessList" resultType="xyz.seiyaya.activiti.bean.vo.ActProcessVO">
+        select * from
+    </select>
 </mapper>

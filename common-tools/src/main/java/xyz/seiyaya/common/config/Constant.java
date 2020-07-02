@@ -42,4 +42,8 @@ public class Constant {
         public static final Byte BYTE_9 = 9;
         public static final Byte BYTE_10 = 10;
     }
+
+    public static class UserConstant{
+        public static final String USER_KEY = "user:key";
+    }
 }

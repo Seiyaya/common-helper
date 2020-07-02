@@ -2,9 +2,10 @@ package xyz.seiyaya.mybatis.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import tk.mybatis.mapper.common.BaseMapper;
 import xyz.seiyaya.common.helper.DBParam;
 import xyz.seiyaya.mybatis.bean.UserBean;
+
+import java.util.List;
 
 /**
  * @author wangjia
@@ -23,4 +24,6 @@ public interface UserBeanMapper extends tk.mybatis.mapper.common.Mapper<UserBean
     UserBean findExUser(@Param("id") Integer id);
 
     UserBean sqlExecuteWithMapParamsAndForeach(DBParam list);
+
+    List<UserBean> findUserList();
 }
