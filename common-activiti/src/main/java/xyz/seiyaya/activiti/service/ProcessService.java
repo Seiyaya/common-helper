@@ -59,4 +59,6 @@ public interface ProcessService {
      * @return
      */
     PageInfo<ActProcessVO> getDoneProcessList(ProcessSearchDTO processSearchDTO);
+
+    void update(ActProcess actProcess);
 }

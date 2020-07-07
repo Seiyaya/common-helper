@@ -13,6 +13,7 @@ import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import xyz.seiyaya.activiti.bean.ActProcess;
 import xyz.seiyaya.activiti.bean.AuditProcess;
 import xyz.seiyaya.activiti.bean.DeployProcess;
@@ -41,6 +42,7 @@ import java.util.List;
  */
 @Service
 @Slf4j
+@Transactional(rollbackFor = Exception.class)
 public class ProcessServiceImpl implements ProcessService {
 
     @Resource
@@ -109,7 +111,7 @@ public class ProcessServiceImpl implements ProcessService {
                 .createDate(new Date())
                 .createUserId(startProcess.getUserId())
                 .auditStatus(Constant.ByteConstant.BYTE_0)
-                .procInsId(processInstance.getId())
+                .procInstId(processInstance.getId())
                 .type(startProcess.getProcessType())
                 .procDefId(processInstance.getProcessDefinitionId())
                 .build();
@@ -144,5 +146,18 @@ public class ProcessServiceImpl implements ProcessService {
         List<ActProcessVO> list = actProcessMapper.getTodoProcessList(processSearchDTO);
         PageInfo<ActProcessVO> page = new PageInfo<>(list);
         return page;
+    }
+
+    @Override
+    public void update(ActProcess actProcess) {
+        ActProcess dbProcess = actProcessMapper.selectByPrimaryKey(actProcess.getId());
+        log.info("first query :{}   name:{}",dbProcess,dbProcess.getProcessTitle());
+
+        dbProcess.setProcessTitle("0.0 = =");
+
+        ActProcess dbProcess1 = actProcessMapper.selectByPrimaryKey(actProcess.getId());
+        log.info("two query :{}   name:{}",dbProcess1,dbProcess1.getProcessTitle());
+
+        log.info("equals :{}", dbProcess == dbProcess1);
     }
 }

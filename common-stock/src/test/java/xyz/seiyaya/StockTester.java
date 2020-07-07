@@ -39,9 +39,9 @@ public class StockTester {
     @Test
     public void collectionHistoryData() {
         HttpHelper httpUtils = HttpHelper.getHttpUtils();
-        String stockCode = "399001";
+        String stockCode = "399975";
         String marketId = "SZ";
-        int count = 9999;
+        int count = 2000;
         String result = httpUtils.sendGet(String.format("http://www.seiyaya.com:8887/market/json?funcno=20029&version=1&stock_code=%s&market=%s&type=day&count="+count, stockCode, marketId));
         JSONObject topObject = JSONObject.parseObject(result);
         JSONArray results = topObject.getJSONArray("results");
@@ -77,9 +77,7 @@ public class StockTester {
         System.out.println(bean);
         List<Stock> byCondition = stockMapper.findByCondition(StockDto.builder().startDate(20200301).endDate(20200318).build());
 
-        byCondition.forEach(model -> {
-            log.info("{}",model);
-        });
+        byCondition.forEach(model -> log.info("{}",model));
     }
 
     public static void methodA(){

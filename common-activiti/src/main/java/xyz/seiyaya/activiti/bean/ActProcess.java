@@ -57,7 +57,7 @@ public class ActProcess {
     /**
      * 流程实例ID
      **/
-    private String procInsId;
+    private String procInstId;
 
     /**
      * 流程类型:
