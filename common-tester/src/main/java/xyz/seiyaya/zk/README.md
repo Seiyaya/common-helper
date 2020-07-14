@@ -158,3 +158,36 @@
 + watch
     - zk中引入watcher机制来实现发布订阅功能，能够让多个订阅者同时监听某一个主题对象
     - watcher设置后一旦触发一次就会失效，如果需要一直监听，就需要注册
++ 客户端watch注册流程
+    - 调用客户端api，传入watcher对象
+    - 标记request，封装watcher到watcherRegistration
+    - 向服务端发送request
+        - 响应成功: 将watcher注册到ZkWatchManager进行管理
+        - 响应失败: 请求返回(请求结束)
+     - request -->(processRequest) FinalRequestProcessor -->(getData)  ZKDatabase --> DataTree -->(addWatcher) WatchManager
+     - ServerCnxn类： 表示客户端与服务端的tcp连接，实现了watcher接口
+     - watchManager 类: zk服务端watcher的管理者，watchTable: 从数据节点的粒度来维护  watch2Paths从watch粒度来维护，负责watcher的触发
+     - DataTree 类： 维护节点目录树的数据结构
++ 客户端回调watcher步骤
+    - 反序列化将字节流转换成watcherEvent对象
+    - 处理chrootPath
+    - 还原watcherEvent: 把watcherEvent对象转换成watchedEvent
+    - 回调watcher: watchedEvent对象交给EventThread对象
++ EventThread: 从ZKWatcher中取出watcher，并放入waitingEvents队列中
+
+### ACL(access control list)
++ scheme:id:permission 比如 world:anyone:crdwa
++ scheme: 验证过程中使用的校验策略
+    - world: id固定是anyone表示任何人，world:anyone:crdwa表示任何人都具有crdwa权限
+    - auth: 给认证通过的所有用户设置acl权限，可以添加多个用户
+        - addauth digest {username}:{password}
+        - auth策略本质上是digest,addauth创建多组用户和密码，当使用setAcl修改权限时，所有的用户和密码的权限都会被修改
+        - 通过addauth新创建的用户和密码组需要重新调用setAcl才会加入到权限中
+   - digest: 指定密码访问，不是所有的
+   - ip： 指定ip访问
+   - super： 有权限操作任何节点
++ id：权限被赋予的对象，比如ip或者某个用户
++ permission: 权限，crdwa表示五个权限的组合
++ 通过setAcl命令设置节点的权限
++ 节点的acl不具有继承关系
++ getAcl可以查看节点的acl信息
