@@ -191,3 +191,108 @@
 + 通过setAcl命令设置节点的权限
 + 节点的acl不具有继承关系
 + getAcl可以查看节点的acl信息
+
+
+## Java客户端
+### create session
+```java
+/**
+ * 客户端和服务端会话的建立是一个异步的过程
+ *  完成客户端的会话就返回，但是此时连接还没有真正的建立起来
+ *  当真正连接建立起来的时候会在watcher会接收到一个通知
+ *  connectionString: 想要连接的机器，多个用逗号分开,也可以在ip后面直接跟上操作的目录
+ *  sessionTimeout: 会话超时时间，单位是毫秒，这个时间内没有收到心跳检测会话就会失效
+ *  watcher: 注册的watcher,不设置则使用默认的watcher
+ *  canBeReadOnly: 当前会话是否支持"read-only"模式 , 当zk集群中某个机器与过半以上机器断开后，此机器将不会再接受客户端的任何读请求，但是有时候希望继续接受读请求可以使用该参数
+ *  sessionId: 会话id
+ *  password: 可以通过sessionId和password实现会话复用
+ */
+```
+### create node
+```java
+/**
+ * 创建节点同步创建和异步创建，都不支持递归创建
+ *      当节点存在的时候抛出异常
+ *  path: 被创建的节点路径
+ *  data: 字节数组
+ *  acl: acl策略
+ *  createMode: 节点类型，主要包含： 持久、持久顺序、临时、临时顺序
+ *  cb: 异步回调函数，需要实现StringCallback接口，当服务器创建成功会自动调用它的 processResult 方法
+ *  ctx: 传递上下文信息或者添加自定义参数
+ */
+```
+
+### delete node
+```java
+/**
+ * 删除节点
+ * path: 被删除节点的路径
+ * version: 数据节点的版本，如果不是最新版本将会报错，类似乐观锁
+ * cb: 异步回调函数
+ * ctx: 传递上下文对象
+ * 异步删除的时候主线程不能提前结束 
+ */
+```
+
+### get child node
+```java
+/**
+ * 获取子节点 getChildren()
+ * path: 指定路径的子节点
+ * watch: 是否使用默认的watcher
+ * cb: 回调函数
+ * ctx: 上下文信息
+ * stat: 指定数据节点的状态信息
+ */
+```
+### get child node data
+```java
+/**
+ * getData
+ * path: 需要获取数据的路径
+ * watcher: 设置watcher后发生数据变化时会受到通知
+ * watch: 是否使用默认watcher
+ * stat: 指定数据节点状态信息
+ * cb: 回调函数
+ * ctx: 上下文信息
+ */
+```
+## zookeeper集群
++ 是一种对等集群，所有的节点的数据都一样
++ 集群之间依靠心跳来感知彼此的存在
++ 所有的写操作都在主节点，其他节点只能读，虽然可以接受写请求，但是会把写请求转发给主节点
++ 通过选举机制选出主节点，从而保证主节点的高可用
++ 至少三个节点，必须是奇数个节点
++ 当一半以上的节点数据写入成功后，则返回成功，是最终一致性策略
+### 数据一致性
++ 数据复制
+    - 单节点写入再复制到其他节点，zookeeper的实现方式
+    - 多节点同时写入，数据没有相关性  tomcat的实现方式
++ 集中存储
+    - redis
+## 开源客户端
++ 原生api的不足
+    - 连接的创建是异步的，需要编码人员自行编码实现等待
+    - 连接没有自动超时重连机制
+    - zk本身不提供序列化机制，需要开发人员自行指定，从而实现数据的序列化和反序列化
+    - watcher注册一次只会失效一次，需要不断的重复注册
+    - 不支持递归创建树形节点
++ zkClient
+    - 解决了超时重连、反复注册、简化开发api
++ curator
+    - 解决session会话超时重连
+    - watcher反复注册
+    - 简化开发api
+    - 遵循Fluent风格api
+    - 共享锁、master选举、分布式计数器
+```java
+/**
+ * connectionString: 连接字符串信息
+ * sessionTimeoutMs: 会话超时时间,默认6s
+ * connectionTimeoutMs: 创建连接超时时间 ，默认15s
+ * retryPolicy: 重试策略,官方实现有三种
+ *      RetryNTimes     (int n, int sleepMsBetweenRetries)  最大重试次数,每次重试间隔时间
+ *      RetryOneTime     上面n=1的情况
+ *      RetryUntilElapsed  重试的时间超过最大时间后，就不再尝试
+ */
+```
