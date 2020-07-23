@@ -296,3 +296,51 @@
  *      RetryUntilElapsed  重试的时间超过最大时间后，就不再尝试
  */
 ```
+
+## zookeeper选举算法
+### ZAB协议
++ Zookeeper Atomic Broadcast： zk原子广播协议
+    - 选举过程需要依赖此协议
+    - 数据写入也需要依赖此协议
+    - Zab的核心是定义了哪些会改变zk服务器数据状态的事务请求处理方式
+    - 所有的事务请求都会有一个全局唯一的服务器来协调处理，这样的服务器被称为Leader服务器，其他服务器称为Follow服务器
+    - leader接收到客户端请求将分发到所有的follow上，之后leader等待follow，超过半数的follow正常反馈之后，向所有follower服务器分发commit消息，将前一个事务进行提交
++ ZAB协议三阶段
+    - 发现，即选举过程
+    - 同步，选出新leader之后follower或者observer从leader同步最新数据
+    - 广播，同步完成之后就可以接收客户端新的事务请求，并进行消息广播，实现数据在集群节点的副本存储
++ ZK选举的服务器角色 
+    - leader: 事务请求的唯一调度者，保证集群事务处理的顺序性
+    - follow: 处理客户端非事务请求，转发事务请求给leader服务器，参与请求Proposal投票，参与leader选举投票
+    - observer: 同follow，但是不参与任何形式的投票，主要是用来提高读性能
++ ZK选举的服务器状态
+    - LOOKING: 集群还没有构成，可以发起一次选举，寻找leader,需要进入选举流程
+    - FOLLOWING: 表示当前服务器角色是follower
+    - OBSERVING: 表示当前服务器角色是observer
+    - LEADING： leader
+    - @see: org.apache.zookeeper.server.quorum.QuorumPeer.ServerState
++ ZK选举的集群通信
+    - 基于TCP协议: 避免重复创建两个节点之间的TCP，zk按照myid数值方向来建立连接，较小的向较大的发送连接
+    - 多端口: 第一个端口是通信和数据同步的端口(2888),第二个是投票端口(3888)
++ ZK选举算法
+    - LeaderElection: udp协议
+    - FastLeaderElection: udp、tcp       3.4之后只支持该算法
+    - AuthFastLeaderElection: udp
++ zk选举触发时机
+    - 集群启动
+        - 寻找leader状态
+        - 当服务器处于此状态时，表示当前没有Leader，需要进入选举流程
+    - 崩溃恢复
+        - leader宕机
+        - 网络原因导致过半节点与leader心跳中断
++ 影响成为leader的因素
+    - 数据新旧程度: 拥有最新数据的节点才有机会成为leader，通过事务id(zxid)的大小来表示数据的新旧，越大表示越新
+    - myid大小: 集群启动的时候会在data目录下配置myid文件，里面的数字表示当前zk的服务器编号，越大越可能被选举为leader,当集群已经有leader新加入的元素不会产生影响
+    - 投票数量: 只有集群中多半的投票，才能成为leader，多半即n/2+1
++ zxid组成
+    - 主进程周期: epoch,选举的轮次，每多一次选举主进程周期+1，总共64位，高32位表示主进程周期，比较数据新旧的时候先比较epoch
+    - 事务单调递增计数器： 低32位表示选举完成之后从0开始
++ zk选举初次启动
++ zk选举运行过程
++ zk选举同步
++ zk选举广播
