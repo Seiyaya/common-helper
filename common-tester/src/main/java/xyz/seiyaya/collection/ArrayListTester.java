@@ -91,4 +91,14 @@ public class ArrayListTester {
 
         System.out.println(list);
     }
+
+    @Test
+    public void testStringAdd(){
+        String str = "123";
+
+
+        str += "456";
+
+        System.out.println(str);
+    }
 }
