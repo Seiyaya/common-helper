@@ -315,6 +315,10 @@ private void setHeadAndPropagate(Node node, int propagate) {
 }
 ```
 
+### ReentrantLock中CAS使用的次数
++ 如果cas(0,1)成功直接将当前线程置为持有锁的线程
++ 失败则再次尝试获取锁
+
 ### AQS的应用
 + CountDownLatch
 ```
