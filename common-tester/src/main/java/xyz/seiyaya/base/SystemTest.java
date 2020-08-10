@@ -15,4 +15,12 @@ public class SystemTest {
 
         System.out.println(System.getProperty("a"));
     }
+
+    @Test
+    public void testNull(){
+        Integer num = null;
+
+        System.out.println(String.valueOf(num));
+        System.out.println(String.valueOf(null));
+    }
 }

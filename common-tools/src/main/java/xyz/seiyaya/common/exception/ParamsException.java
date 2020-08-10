@@ -2,7 +2,6 @@ package xyz.seiyaya.common.exception;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import xyz.seiyaya.common.constant.ResultConstant;
 
 /**
  * 用来进行参数校验
@@ -15,13 +14,16 @@ import xyz.seiyaya.common.constant.ResultConstant;
 public class ParamsException extends RuntimeException {
 
 
-    private ResultConstant result;
+    private int key;
+
+    private String msg;
 
     public ParamsException() {
     }
 
-    public ParamsException(String message) {
+    public ParamsException(int key,String message) {
         super(message);
-        this.result = ResultConstant.CODE_PARAM_ERROR;
+        this.key = key;
+        this.msg = message;
     }
 }

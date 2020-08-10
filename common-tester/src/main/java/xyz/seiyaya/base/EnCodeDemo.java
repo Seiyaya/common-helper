@@ -1,5 +1,9 @@
 package xyz.seiyaya.base;
 
+import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
+import redis.clients.jedis.Jedis;
+
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Random;
@@ -9,14 +13,26 @@ import java.util.Random;
  * @version 1.0
  * @date 2020/7/28 14:25
  */
+@Slf4j
 public class EnCodeDemo {
 
     public static void main(String[] args) {
         System.out.println(crackToken("6060607B67616766666F67666560646E6E6E63626464607B64626F67616E6E"));
 
 
-        String s = Encode.byte2HexStr(Encode.encode("666-1710091036288854226-1234567"));
+        String s = Encode.byte2HexStr(Encode.encode("666-1804040949326994236-1234567"));
         System.out.println(s);
+
+        long userId = Long.parseLong("5923");
+        Jedis jedis = new Jedis("redis.seiyaya.local",6382);
+        jedis.auth("#abF%F$c#197#33FF#");
+        String userString = jedis.get("USER:INFO:" + userId);
+        if(userString != null){
+            JSONObject jsonObject = JSONObject.parseObject(userString);
+            System.out.println(jsonObject.getString("token"));
+        }else{
+            log.info("login info is null");
+        }
     }
 
     private static Long crackToken(String token) {
