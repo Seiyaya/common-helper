@@ -24,7 +24,8 @@ public class BaseController {
         ResultBean resultBean = new ResultBean();
         if(e instanceof ParamsException){
             //自定义的参数异常
-            resultBean.setCodeAndMsg(((ParamsException) e).getResult());
+            resultBean.setCode(((ParamsException) e).getKey());
+            resultBean.setMsg(((ParamsException) e).getMsg());
         }else{
             resultBean.setError();
         }

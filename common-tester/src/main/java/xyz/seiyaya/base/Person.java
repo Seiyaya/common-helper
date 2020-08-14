@@ -1,6 +1,6 @@
 package xyz.seiyaya.base;
 
-import lombok.Data;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author wangjia
@@ -10,6 +10,7 @@ import lombok.Data;
 public class Person {
 
 
+    @NotNull
     private String name;
 
     public Person(String name) {
