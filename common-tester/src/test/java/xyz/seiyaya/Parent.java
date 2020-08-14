@@ -18,4 +18,8 @@ public class Parent {
     public Parent(){
 
     }
+
+    public static void print(){
+        System.out.println("print");
+    }
 }
