@@ -124,8 +124,16 @@ getActivateExtension  只是根据不同条件同时激活多个普通扩展类
 + getExtension
     - 检查缓存中是否有现成的数据，没有则调用 createExtension 开始创建，这里有个特殊点，getExtension(name) name = true返回默认的扩展类
     - 调用createExtension创建的过程中，也会检查缓存中的配置信息，如果不存在扩展类，则从对应的目录文件中读取
-    - 入口: @see:org.apache.dubbo.common.extension.ExtensionLoader.getExtension
-+ TODO::
+    - 入口: @see:org.apache.dubbo.common.extension.ExtensionLoader#getExtension
++ getAdaptiveExtension: 为扩展点自动生成实现类字符串
+    - 为接口中每个有 @Adaptive 注解的方式生成默认实现，没有注解的方法生成空实现
++ getActivateExtension: 获取所有自动激活扩展点
+    - 检查缓存，如果缓存中没有，则初始化所有扩展类的实现
+    - 遍历整个@Activate注解集合，然后根据@Activate中配置的before 、 after 、 order等参数进行排序
+    - 遍历所有用户自定义扩展类名称，根据用户URL配置的顺序，调整扩展点激活顺序
+    - 返回所有自动激活类集合
++ ExtensionFactory的实现原理
+    - ExtensionLoader是作为SPI的核心，被 ExtensionFactory 创建
 
 ### 扩展点动态编译的实现原理
 
