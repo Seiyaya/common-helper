@@ -4,6 +4,8 @@ import com.alibaba.dubbo.common.URL;
 import xyz.seiyaya.dubbo.ext.CarMaker;
 import xyz.seiyaya.dubbo.ext.WheelMaker;
 import xyz.seiyaya.dubbo.ext.bean.Car;
+import xyz.seiyaya.dubbo.ext.bean.RaceCar;
+import xyz.seiyaya.dubbo.ext.bean.Wheel;
 
 /**
  * @author wangjia
@@ -20,6 +22,7 @@ public class RaceCarMaker implements CarMaker {
 
     @Override
     public Car makeCar(URL url) {
-        return null;
+        Wheel wheel = wheelMaker.makeWheel(url);
+        return new RaceCar(wheel);
     }
 }

@@ -143,8 +143,29 @@ getActivateExtension  只是根据不同条件同时激活多个普通扩展类
 ### 配置解析
 + 基于xml的配置解析: @see DubboNamespaceHandler
     - 主要把不同的标签关联到解析实现类中 registerBeanDefinitionParser 方法约定了在dubbo框架遇到标签application、module和registry等都会委托给 DubboBeanDefinitionParser 处理
-    - 
+
++ 基于注解配置原理
++ 涉及到的注解
+    - EnableDubbo： 激活注解
+        - ServiceAnnotationBeanPostProcessor: 提升@Service注解的服务为Spring Bean
+        - ReferenceAnnotationBeanPostProcessor: 注入@Reference引用
+        - DubboConfigConfigurationSelector: 支持配置文件读取配置
+    - 如果注解上有@Import，则会触发对应的 selectImports,比如 EnableDubboConfig 注解中指定的 DubboConfigConfigurationSelector#selectImports
 ### 服务暴露的实现原理
++ 配置承载初始化
+    - -D添加JVM启动参数
+    - 代码或者xml配置
+    - dubbo.properties文件配置
++ 远程服务的暴露机制
+    - 服务转换成Invoker
+        - ServiceConfig: ref
+        - ProxyFactory: Javassist、JDK动态代理
+        - Invoker: AbstractProxyInvoker
+    - Invoker转成Exporter
+        - Protocol: dubbo、injvm
+        - Exporter
+    - 框架服务暴露的入口点: ServiceConfig#doExport
+    - 如果配置了多个注册中心，则会再会在 ServiceConfig#doExportUrls 中依次暴露
 ### 服务消费的实现原理
 ### 优雅停机原理
 

@@ -14,6 +14,11 @@ import xyz.seiyaya.dubbo.ext.bean.Wheel;
 public class AdaptiveWheelMaker implements WheelMaker {
     @Override
     public Wheel makeWheel(URL url) {
+        /**
+         * 1. 从url上获取WheelMaker名称
+         * 2. 通过SPI加载具体的WheelMaker
+         * 3. 调用目标方法
+         */
         if(url == null){
             throw new IllegalArgumentException("url == null");
         }

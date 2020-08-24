@@ -31,4 +31,9 @@ public class BitTest {
 
         System.out.println(set);
     }
+
+    @Test
+    public void testBit(){
+        System.out.println(1 | 3);
+    }
 }
