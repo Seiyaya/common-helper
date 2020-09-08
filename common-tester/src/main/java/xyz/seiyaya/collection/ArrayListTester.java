@@ -79,4 +79,26 @@ public class ArrayListTester {
         Collections.sort(intList);
         log.info("list:{}",intList);
     }
+
+    @Test
+    public void testAdd(){
+        List<String> list = new ArrayList<>();
+        list.add("123");
+
+        list.add(null);
+
+        list.add("456");
+
+        System.out.println(list);
+    }
+
+    @Test
+    public void testStringAdd(){
+        String str = "123";
+
+
+        str += "456";
+
+        System.out.println(str);
+    }
 }

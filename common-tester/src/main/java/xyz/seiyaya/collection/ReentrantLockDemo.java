@@ -1,8 +1,11 @@
 package xyz.seiyaya.collection;
 
+import org.junit.Test;
+
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * @author wangjia
@@ -46,5 +49,12 @@ public class ReentrantLockDemo {
             }
         }).start();
         TimeUnit.SECONDS.sleep(3);
+    }
+
+    @Test
+    public void testReadWriteLock(){
+        ReentrantReadWriteLock reentrantReadWriteLock = new ReentrantReadWriteLock();
+        ReentrantReadWriteLock.ReadLock readLock = reentrantReadWriteLock.readLock();
+        ReentrantReadWriteLock.WriteLock writeLock = reentrantReadWriteLock.writeLock();
     }
 }

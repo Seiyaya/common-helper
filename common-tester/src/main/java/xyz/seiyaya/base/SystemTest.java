@@ -1,6 +1,7 @@
 package xyz.seiyaya.base;
 
 import org.junit.Test;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * @author wangjia
@@ -14,5 +15,23 @@ public class SystemTest {
 
 
         System.out.println(System.getProperty("a"));
+    }
+
+    @Test
+    public void testNull(){
+        Integer num = null;
+
+        System.out.println(String.valueOf(num));
+        System.out.println(String.valueOf(null));
+    }
+
+    @Test
+    public void testValid(){
+        this.methodA(new Person());
+    }
+
+
+    public void methodA(@Validated Person person){
+        System.out.println(person);
     }
 }

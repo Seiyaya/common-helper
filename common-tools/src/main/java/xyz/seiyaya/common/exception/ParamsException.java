@@ -15,13 +15,22 @@ import xyz.seiyaya.common.constant.ResultConstant;
 public class ParamsException extends RuntimeException {
 
 
-    private ResultConstant result;
+    private int key;
+
+    private String msg;
 
     public ParamsException() {
     }
 
+    public ParamsException(int key,String message) {
+        super(message);
+        this.key = key;
+        this.msg = message;
+    }
+
     public ParamsException(String message) {
         super(message);
-        this.result = ResultConstant.CODE_PARAM_ERROR;
+        this.key = ResultConstant.CODE_PARAM_ERROR.getCode();
+        this.msg = message;
     }
 }

@@ -191,3 +191,156 @@
 + 通过setAcl命令设置节点的权限
 + 节点的acl不具有继承关系
 + getAcl可以查看节点的acl信息
+
+
+## Java客户端
+### create session
+```java
+/**
+ * 客户端和服务端会话的建立是一个异步的过程
+ *  完成客户端的会话就返回，但是此时连接还没有真正的建立起来
+ *  当真正连接建立起来的时候会在watcher会接收到一个通知
+ *  connectionString: 想要连接的机器，多个用逗号分开,也可以在ip后面直接跟上操作的目录
+ *  sessionTimeout: 会话超时时间，单位是毫秒，这个时间内没有收到心跳检测会话就会失效
+ *  watcher: 注册的watcher,不设置则使用默认的watcher
+ *  canBeReadOnly: 当前会话是否支持"read-only"模式 , 当zk集群中某个机器与过半以上机器断开后，此机器将不会再接受客户端的任何读请求，但是有时候希望继续接受读请求可以使用该参数
+ *  sessionId: 会话id
+ *  password: 可以通过sessionId和password实现会话复用
+ */
+```
+### create node
+```java
+/**
+ * 创建节点同步创建和异步创建，都不支持递归创建
+ *      当节点存在的时候抛出异常
+ *  path: 被创建的节点路径
+ *  data: 字节数组
+ *  acl: acl策略
+ *  createMode: 节点类型，主要包含： 持久、持久顺序、临时、临时顺序
+ *  cb: 异步回调函数，需要实现StringCallback接口，当服务器创建成功会自动调用它的 processResult 方法
+ *  ctx: 传递上下文信息或者添加自定义参数
+ */
+```
+
+### delete node
+```java
+/**
+ * 删除节点
+ * path: 被删除节点的路径
+ * version: 数据节点的版本，如果不是最新版本将会报错，类似乐观锁
+ * cb: 异步回调函数
+ * ctx: 传递上下文对象
+ * 异步删除的时候主线程不能提前结束 
+ */
+```
+
+### get child node
+```java
+/**
+ * 获取子节点 getChildren()
+ * path: 指定路径的子节点
+ * watch: 是否使用默认的watcher
+ * cb: 回调函数
+ * ctx: 上下文信息
+ * stat: 指定数据节点的状态信息
+ */
+```
+### get child node data
+```java
+/**
+ * getData
+ * path: 需要获取数据的路径
+ * watcher: 设置watcher后发生数据变化时会受到通知
+ * watch: 是否使用默认watcher
+ * stat: 指定数据节点状态信息
+ * cb: 回调函数
+ * ctx: 上下文信息
+ */
+```
+## zookeeper集群
++ 是一种对等集群，所有的节点的数据都一样
++ 集群之间依靠心跳来感知彼此的存在
++ 所有的写操作都在主节点，其他节点只能读，虽然可以接受写请求，但是会把写请求转发给主节点
++ 通过选举机制选出主节点，从而保证主节点的高可用
++ 至少三个节点，必须是奇数个节点
++ 当一半以上的节点数据写入成功后，则返回成功，是最终一致性策略
+### 数据一致性
++ 数据复制
+    - 单节点写入再复制到其他节点，zookeeper的实现方式
+    - 多节点同时写入，数据没有相关性  tomcat的实现方式
++ 集中存储
+    - redis
+## 开源客户端
++ 原生api的不足
+    - 连接的创建是异步的，需要编码人员自行编码实现等待
+    - 连接没有自动超时重连机制
+    - zk本身不提供序列化机制，需要开发人员自行指定，从而实现数据的序列化和反序列化
+    - watcher注册一次只会失效一次，需要不断的重复注册
+    - 不支持递归创建树形节点
++ zkClient
+    - 解决了超时重连、反复注册、简化开发api
++ curator
+    - 解决session会话超时重连
+    - watcher反复注册
+    - 简化开发api
+    - 遵循Fluent风格api
+    - 共享锁、master选举、分布式计数器
+```java
+/**
+ * connectionString: 连接字符串信息
+ * sessionTimeoutMs: 会话超时时间,默认6s
+ * connectionTimeoutMs: 创建连接超时时间 ，默认15s
+ * retryPolicy: 重试策略,官方实现有三种
+ *      RetryNTimes     (int n, int sleepMsBetweenRetries)  最大重试次数,每次重试间隔时间
+ *      RetryOneTime     上面n=1的情况
+ *      RetryUntilElapsed  重试的时间超过最大时间后，就不再尝试
+ */
+```
+
+## zookeeper选举算法
+### ZAB协议
++ Zookeeper Atomic Broadcast： zk原子广播协议
+    - 选举过程需要依赖此协议
+    - 数据写入也需要依赖此协议
+    - Zab的核心是定义了哪些会改变zk服务器数据状态的事务请求处理方式
+    - 所有的事务请求都会有一个全局唯一的服务器来协调处理，这样的服务器被称为Leader服务器，其他服务器称为Follow服务器
+    - leader接收到客户端请求将分发到所有的follow上，之后leader等待follow，超过半数的follow正常反馈之后，向所有follower服务器分发commit消息，将前一个事务进行提交
++ ZAB协议三阶段
+    - 发现，即选举过程
+    - 同步，选出新leader之后follower或者observer从leader同步最新数据
+    - 广播，同步完成之后就可以接收客户端新的事务请求，并进行消息广播，实现数据在集群节点的副本存储
++ ZK选举的服务器角色 
+    - leader: 事务请求的唯一调度者，保证集群事务处理的顺序性
+    - follow: 处理客户端非事务请求，转发事务请求给leader服务器，参与请求Proposal投票，参与leader选举投票
+    - observer: 同follow，但是不参与任何形式的投票，主要是用来提高读性能
++ ZK选举的服务器状态
+    - LOOKING: 集群还没有构成，可以发起一次选举，寻找leader,需要进入选举流程
+    - FOLLOWING: 表示当前服务器角色是follower
+    - OBSERVING: 表示当前服务器角色是observer
+    - LEADING： leader
+    - @see: org.apache.zookeeper.server.quorum.QuorumPeer.ServerState
++ ZK选举的集群通信
+    - 基于TCP协议: 避免重复创建两个节点之间的TCP，zk按照myid数值方向来建立连接，较小的向较大的发送连接
+    - 多端口: 第一个端口是通信和数据同步的端口(2888),第二个是投票端口(3888)
++ ZK选举算法
+    - LeaderElection: udp协议
+    - FastLeaderElection: udp、tcp       3.4之后只支持该算法
+    - AuthFastLeaderElection: udp
++ zk选举触发时机
+    - 集群启动
+        - 寻找leader状态
+        - 当服务器处于此状态时，表示当前没有Leader，需要进入选举流程
+    - 崩溃恢复
+        - leader宕机
+        - 网络原因导致过半节点与leader心跳中断
++ 影响成为leader的因素
+    - 数据新旧程度: 拥有最新数据的节点才有机会成为leader，通过事务id(zxid)的大小来表示数据的新旧，越大表示越新
+    - myid大小: 集群启动的时候会在data目录下配置myid文件，里面的数字表示当前zk的服务器编号，越大越可能被选举为leader,当集群已经有leader新加入的元素不会产生影响
+    - 投票数量: 只有集群中多半的投票，才能成为leader，多半即n/2+1
++ zxid组成
+    - 主进程周期: epoch,选举的轮次，每多一次选举主进程周期+1，总共64位，高32位表示主进程周期，比较数据新旧的时候先比较epoch
+    - 事务单调递增计数器： 低32位表示选举完成之后从0开始
++ zk选举初次启动
++ zk选举运行过程
++ zk选举同步
++ zk选举广播

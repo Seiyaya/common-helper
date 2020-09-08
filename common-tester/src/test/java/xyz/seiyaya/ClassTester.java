@@ -84,4 +84,10 @@ public class ClassTester {
             }
         }));
     }
+
+    @Test
+    public void testPrint(){
+        Son son = new Son();
+        son.print();
+    }
 }

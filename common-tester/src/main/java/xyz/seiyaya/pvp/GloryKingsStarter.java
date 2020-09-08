@@ -25,7 +25,7 @@ public class GloryKingsStarter {
 
     private static String BASE_DIR = "E:/images/";
 
-    public static final int LAST_END = 1582;
+    public static final int LAST_END = 1584;
 
     public static void main(String[] args) {
         String itemUrl = "http://apps.game.qq.com/cgi-bin/ams/module/ishow/V1.0/query/workList_inc.cgi?activityId=2735&sVerifyCode=ABCD&sDataType=JSON&iListNum=20&totalpage=0&iOrder=0&iSortNumClose=1&jsoncallback=jQuery17106357796163591201_1570099686332&iAMSActivityId=51991&_everyRead=true&iTypeId=2&iFlowId=267733&iActId=2735&iModuleId=2735&_=1570099763797&page=";

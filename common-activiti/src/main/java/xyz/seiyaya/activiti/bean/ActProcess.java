@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -27,6 +28,7 @@ public class ActProcess {
     /**
      * 流水号
      **/
+    @NotNull(message = "流程水不能为空")
     private String serialNo;
 
     /**

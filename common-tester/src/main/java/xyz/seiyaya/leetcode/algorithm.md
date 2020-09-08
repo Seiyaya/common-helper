@@ -24,6 +24,7 @@
     - Solution101: 判断一个树是否是镜像对称
 + 二进制
     - Solution136: 异或的使用
+    - 
 + 设计
     - Solution146: 实现lru缓存
 + 单调栈
@@ -75,3 +76,8 @@ public static int coinChangeByDp(int[] coins, int amount, int[] dp){
     return dp[amount]  == amount +1 ? -1 : dp[amount];
 }
 ```
+## 题目类型
+### topK问题
++ 变形快排解决( O(N) )
++ 小根堆( N * LogK )
++ 二叉搜索树 ( N * LogK )
