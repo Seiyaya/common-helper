@@ -1,4 +1,4 @@
-package xyz.seiyaya.thread;
+package xyz.seiyaya.base;
 
 import org.junit.Test;
 
@@ -7,7 +7,7 @@ import org.junit.Test;
  * @version 1.0
  * @date 2020/1/10 14:25
  */
-public class AQSTest {
+public class AQSDemo {
 
     /**
      * 测试排他锁

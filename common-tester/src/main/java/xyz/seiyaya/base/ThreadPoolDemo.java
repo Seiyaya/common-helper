@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2020/5/14 14:14
  */
 @Slf4j
-public class ThreadPoolTest {
+public class ThreadPoolDemo {
 
     public static void main(String[] args) throws InterruptedException {
         ExecutorService execute = new ThreadPoolExecutor(1, 1,

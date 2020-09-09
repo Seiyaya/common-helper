@@ -1,4 +1,4 @@
-package xyz.seiyaya.thread;
+package xyz.seiyaya.base;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -13,7 +13,7 @@ import java.util.TimerTask;
  */
 @Slf4j
 @SuppressWarnings("all")
-public class TimerTest {
+public class TimerDemo {
 
     public static void main(String[] args) {
         /**

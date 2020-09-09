@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
  */
 @SuppressWarnings("all")
 @Slf4j
-public class ArrayListTester {
+public class ArrayListDemo {
 
     public static void main(String[] args) {
         String one = "1";

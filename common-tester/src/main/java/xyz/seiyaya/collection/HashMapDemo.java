@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  * @date 2019/10/31 15:57
  */
-public class HashMapTester {
+public class HashMapDemo {
 
     public static void main(String[] args) {
         int size = 64;

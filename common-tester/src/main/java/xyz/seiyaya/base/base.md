@@ -177,3 +177,207 @@ if (interruptMode != 0)
 + @see xyz.seiyaya.base.StampedLockDemo
 + 乐观锁原理
     - 采用和读写锁一样的都使用一个变量表示读锁的数量和写锁的数量，另外需要版本号也使用该变量
+
+# 同步工具类
+## Semaphore
++ 信号量，提供了资源数量的并发访问控制
+## CountDownLatch
++ 场景: 一个主线程要等待10个Work线程执行完才推出
++ await() 和  countDown()
+## CyclicBarrier
+## Exchanger
+## Phaser
++ CountDownLatch 和 CyclicBarrieer的增强版
+
+# 并发容器
+## BlockingQueue
++ ArrayBlockingQueue
+    - 数组实现的环形队列
+```java
+// 构造函数
+public ArrayBlockingQueue(int capacity, boolean fair){}
+
+/* add offer put 
+add 队列满时抛出异常
+offer 队列满时返回false
+put 没有返回值，会抛出中断异常
+
+remove peek take
+remove和peek是非阻塞式的
+take是阻塞式的
+*/  
+
+// 核心是 排他锁 + 2个condition
+lock = new ReentrantLock(fair);
+notEmpty = lock.newCondition();
+notFull =  lock.newCondition();
+```
+
++ LinkedBlockQueue
+    - 基于单项链表的阻塞队列，拥有队头和队尾两个指针，所以用了2个锁+2个条件+AtomicInteger记录元素数量
+    - 两个锁的结果是put与take之间不互斥，同种操作互斥，但是count数量必须为原子类型，两边都会操作
+
++ PriorityBlockingQueue
+    - 按照优先级的从小到大出队
+    - 数组实现的二叉小根堆，1把锁+1个条件没有非满的条件(超出限制进行扩容)，默认的大小是11
++ DelayQueue
+    - 按照延迟时间从小到大的出队
++ SynchronousQueue
+    - 特殊的BlockingQueue,本身没有容量，调用put线程会阻塞，直到另外一个线程调用了take(),两个线程才同时解锁
+    - 线程池CachedThreadPool 的实现就用到了 SynchronousQueue 
+## BlockDequeue
++ LinkedBlockDequeue
+    - 阻塞的双端队列,实现为1把锁+2个条件，与LinkedBlockingQueue 实现不同的是它采用的是双向链表
+## CopyOnWrite
++ 写的时候不是直接向数据源写数据，而是把数据拷贝一份进行修改，再通过悲观锁或者乐观锁的方式进行回写
++ CopyOnWriteArrayList
+    - 数据结构是一个数组，读相关的函数都没有做额外的锁处理
+    - 写数据的时候会进行悲观锁处理,把新的数组赋值给旧的数组
++ CopyOnWriteArraySet
+    - 内部维护的仍然是一个CopyOnWriteArrayList，但是元素添加的时候会去判断是否重复
+## ConcurrentLinkedQueue
++ 和AQS中的队列原理基本一致，头尾都是基于CAS进行出队和入队，区别在于 ConcurrentLinkedQueue 是单向链表
+    - 初始化，tail 和 head 都指向一个空节点
+## ConcurrentHashMap
++ jdk1.7的实现方式
+    - 一个hashmap被拆分成多个hashmap,每个子hashmap被称为Segment。多个线程操作多个Segment相互独立
++ jdk1.7实现的好处
+    - 减少hash冲突，避免一个槽内太多元素
+    - 提高读和写的并发度，段与段之间隔离
+    - 提高扩容的并发度，扩容的时候不是整个ConcurrentHashMap扩容，而是Segment进行扩容
++ jdk1.8的实现方式
+    - 去除了JDK1.7的分段锁，数组中的节点可能是 Node 或者 TreeNode
++ jdk1.8实现的好处
+    - 使用红黑树当一个槽内有很多元素的时候，查询更新速度快，避免大量hash冲突的问题
+    - 加锁的粒度不是对整个Map进行加锁，对数组的每个头结点进行加锁
+    - 并发扩容，
+## ConcurrentSkipListMap
++ 基于红黑树实现的Map --> TreeMap , concurrent包中提供key有序的HashMap --> ConcurrentSkipListMap
++ 没有使用红黑树，而是选用SkipList是实现有序性。(原因是无锁化编程作用在树上效果不及list)，ConcurrentHashMap使用红黑树也是使用悲观锁控制修改对应位置的Node
++ 无锁链表
+    - 因为不是对头和尾进行添加删除进行CAS操作，对中间的元素也可以操作，就会导致线程安全问题。比如添加一个节点和删除一个节点，添加之后，再删除，导致新的节点也删掉了
+    - 解决上面的问题必须将 插入一个新节点 和 判断上一个节点是否删除 作为一个原子操作进行CAS
++ 跳查表
+    - 跳查表的本质是多层链表叠加起来
+    - 查找的顺序是从左到右，从上到下
+```java
+// 存储真实的数据，作为SkipList的最底层
+static final class Node{
+    final K key;
+    volatile Object value;
+    volatile Node<K,V> next;
+}
+// index层节点
+static final class Index{
+    // 不存储实际数据，指向Node
+    final Node<K,V> node;
+    // 每个Index节点，必须有个指针指向下一个level对应的节点
+    final Index<K,V> down;
+    // 自身组成单向链表，同一个层级
+    volatile Index<K,V> right;
+}
+
+class ConcurrentSkipList extends AbstractMap{
+    // 指向顶层index的head节点
+    private transient volatile HeadIndex<K,V> head;
+}
+```
+# 线程池与Future
+## 实现原理
++ 调用方提交任务到线程池的队列，线程池的线程消费队列中的任务
++ 线程池需要考虑的问题
+    - 队列有界无界，调用方不断往队列中放任务，可能导致内存耗尽，有界针对多余的任务的处理
+    - 线程池的线程数量动态还是静态
+    - 每次提交任务是放入队列还是开线程
+    - 当没有任务的时候线程是休眠还是阻塞，阻塞的话是谁唤醒
++ 没有任务的时候线程池策略
+    - 不使用阻塞队列，只是用一般的线程安全的队列，也没有阻塞-唤醒机制，通过休眠来等待新的任务
+    - 不使用阻塞队列，在队列的外部、线程池内部使用阻塞-唤醒机制
+    - 使用阻塞队列
+## ThreadPoolExecutor
+```java
+// 状态变量
+final AtomicInteger ctl = new AtomicInteger(ctlOf(RUNNING, 0));
+// 存放任务的阻塞队列
+final BlockingQueue<Runnable> workQueue;
+// 对线程池内部各种变量进行互斥访问控制
+final ReentrantLock mainLock = new ReentrantLock();
+// 线程集合，每个线程是一个Worker对象
+final HashSet<Worker> workers = new HashSet<Worker>();
+
+// 继承aqs，本身就是一把锁
+class Worker extends AbstractQueuedSynchronizer implements Runnable{
+    // 封装成worker的线程
+    final Thread thread;
+    // worker接收到的第一个任务
+    Runnable firstTask;
+    // worker执行完毕的任务个数
+    volatile long completedTasks;
+}
+```
++ 核心配置参数解释
+    - corePoolSize: 在线程池中始终维护的线程个数
+    - maxPoolSize: 在corePooSize已满、队列也满的情况下，扩充线程至此值
+    - keepAliveTime: maxPoolSize 中的空闲线程，销毁所需要的时间，总线程数收缩回corePoolSize
+    - blockingQueue: 线程池所用的队列类型
+    - threadFactory: 线程创建工厂，可以自定义，也有一个默认的
+    - RejectExecutionHandler: corePoolSize 已满，队列已满，maxPoolSize 已满，最后的拒绝策略
+    - 新建的任务会优先交给新建的core线程执行，只有当线程数 > corePoolSize,则添加到队列
++ 线程池的关闭
+    - 线程数量和线程状态在jdk1.7是分开存储，即 AtomicInteger的ctl，最高的三位表示线程池状态，其余29位表示线程数量 ，1.6是分开存储
+    - 线程池状态: 
+        - RUNNING(-1) 
+        - SHUTDOWN(0执行了shutdown方法)
+        - STOP(1执行了shutdownNow方法)
+        - TIDYING(2队列和线程池为空)
+        - TERMINATED(3执行terminated方法,被动执行)，只要是TIDYING状态就会执行terminated方法
+        - 只会从小到大迁移，不会逆过程
++ 正确关闭线程池的步骤
+    - 调用shutdown()或者shutdownNow()不会立刻关闭，接下来需要调用 awaitTermination 来等待线程池关闭
+    - awaitTermination 方法不断循环判断线程池是否到达了最终状态 TERMINATED
++ shutdown 与 shutdownNow 的区别
+    - 前者不会清空任务队里，会等所有任务执行完成，后者会请清空任务队列
+    - 前者只会中断空闲的线程，后者会中断所有线程
++ 线程池的四种拒绝策略
+    - AbortPolicy: 线程池直接抛出异常，默认策略
+    - CallerRunsPolicy: 让调用者直接在自己的线程里执行，线程池不做处理
+    - DiscardPolicy: 线程池直接把任务丢弃
+    - DiscardOldestPolicy: 将队列里面最老的任务删除掉，把该任务放入队列
+## Callable与Future
+```java
+// 具有返回值的Runnable
+public interface Callable<V>{
+    V call() throws Exception;
+}
+
+// submit最终也是将callable通过适配器转换成Runnable
+Future<String> f = executor.submit(callable);
+// 没有执行完就阻塞在这里
+String result = f.get();
+
+// jdk1.6借用AQS的功能实现阻塞和唤醒   1.7 使用CAS+state+park/unpark实现阻塞与唤醒
+```
+## ScheduledThreadPoolExecutor
++ 实现了按照时间调度来执行任务
+    - 延迟执行任务
+    - 周期执行任务
+        - scheduleAtFixRate: 与本身执行时间无关，间隔5s就是开始的下5s执行下一次
+        - scheduleWithFixedDelay: 与本身执行时间有关，执行时间+间隔下次的时间为下一次的执行时间
++ 延迟执行任务原理
+    - 没有使用 DelayQueue，而是使用ScheduledThreadPoolExecutor内部又实现的一个特定DelayQueue
+# ForkJoinPool
+## 用法 & 数据结构
+## ForkJoin状态控制
+## Work线程的阻塞
+## 任务的提交过程
+## 工作窃取算法
+## ForkJoinTask的fork/join
+## ForkJoin的关闭
+
+# CompletableFuture
+## 用法
+## 四种任务类型
+## CompletionStage
+## CompletableFuture内部原理
+## 任务的网状执行
+## allOf内部的计算图分析

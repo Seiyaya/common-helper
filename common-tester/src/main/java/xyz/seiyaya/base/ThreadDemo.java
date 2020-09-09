@@ -66,4 +66,38 @@ public class ThreadDemo {
 
         System.out.println("main exit");
     }
+
+    @Test
+    public void testYield() throws InterruptedException {
+        Runnable run = ()->{
+          for(int i=0;i<30;i++){
+              System.out.println(Thread.currentThread().getName()+"-->"+i);
+              if(i == 20){
+                  System.out.println(Thread.currentThread().getName()+" 执行yield");
+                  Thread.yield();
+              }
+          }
+        };
+
+        new Thread(run).start();
+        new Thread(run).start();
+
+        Thread.currentThread().join();
+    }
+
+    @Test
+    public void testJoin() throws InterruptedException {
+        Thread start = new Thread(()->{
+            try {
+                TimeUnit.SECONDS.sleep(3);
+                log.info("sleep three second");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
+        start.start();
+        // 等待start线程终止
+        start.join();
+    }
 }

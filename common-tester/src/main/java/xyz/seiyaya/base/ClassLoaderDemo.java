@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  * @date 2020/1/8 15:45
  */
-public class ClassLoaderTester {
+public class ClassLoaderDemo {
 
 //    private static Object newInstance;
 
