@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  * @date 2020/8/26 9:35
  */
+@SuppressWarnings("all")
 public class SetFlagThreadDemo {
 
     public static void main(String[] args) throws InterruptedException {
@@ -15,7 +16,9 @@ public class SetFlagThreadDemo {
         thread.start();
         TimeUnit.SECONDS.sleep(3);
         // 只有声明了抛出interrupt异常的才会抛出异常，正常情况下和加锁都不会
-//        thread.interrupt();
+        thread.interrupt();
+
+        System.out.println("main thread print sub thread :" +thread.isInterrupted());
         thread.stopThread();
         thread.join();
     }
@@ -30,7 +33,8 @@ public class SetFlagThreadDemo {
                     System.out.println("sub thread running");
                     TimeUnit.SECONDS.sleep(1);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    System.out.println("catch exception, current thread status : "+Thread.interrupted());
+                    throw new RuntimeException(e.getCause());
                 }
             }
         }

@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author wangjia
@@ -11,6 +13,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2020/8/25 18:12
  */
 @Slf4j
+@SuppressWarnings("all")
 public class ThreadDemo {
 
 
@@ -99,5 +102,56 @@ public class ThreadDemo {
         start.start();
         // 等待start线程终止
         start.join();
+    }
+
+    @Test
+    public void testPrint(){
+        ReentrantLock lock = new ReentrantLock();
+        Condition aCondition = lock.newCondition();
+        Condition lCondition = lock.newCondition();
+        Condition iCondition = lock.newCondition();
+        Thread a = new Thread(() -> {
+            while(true){
+                System.out.println("a");
+                try {
+                    aCondition.await();
+                    lCondition.signal();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+        Thread l = new Thread(() -> {
+            while(true){
+                System.out.println("l");
+                try {
+                    lCondition.await();
+                    iCondition.signal();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+        Thread i = new Thread(() -> {
+            while(true){
+                System.out.println("i");
+                try {
+                    lCondition.await();
+                    iCondition.signal();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+        a.start();
+        l.start();
+        i.start();
+
+
+
     }
 }

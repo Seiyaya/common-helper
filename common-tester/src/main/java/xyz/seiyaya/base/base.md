@@ -50,12 +50,23 @@
 
 ## volatile
 + 64位写入的原子性
-+ 内存可见性
-+ 禁止重排序
++ 内存可见性: A线程修改的内容，对B线程来说不是立即可见
++ 禁止重排序: 执行的顺序不一致都导致的错误
 ## JMM 和 happen-before
 + cpu缓存一致性问题
-    - 多个CPU之间不会出现不同步的问题
-+ 内存可见性的问题
+    - 多个CPU之间的缓存不会出现不同步的问题(CPU缓存一致性)，也就是l1、l2之间不会存在不同步的问题
+    - 但是同步缓存存在性能消耗，在计算单元和l1之间增加了 store buffer 和 load buffer。这些buffer和l1之间的同步是异步的
++ 重排序和内存可见性的关系
+    - store buffer延迟写入是重排序的一种，称为内存重排序，还有CPU指令重排序和编译器的重排序
+    - CPU内存重排序: CPU有自己的缓存，指令的顺序和写入内存的顺序不一致
+    - CPU指令重排序: 在指令级别，让没有依赖关系的多条指令并行
+    - 编译器重排序: 对于没有依赖关系的语句，编译器可以重新调整语句的执行顺序
++ as-if-serial
+    - 每个线程对外的表现可以认为是完全串行的
++ 内存屏障
+    - 为了禁止 编译器重排序 和 CPU重排序 ，在编译器和CPU层面都有对应的指令。这也是JMM和happen-before规则的底层实现原理
++ JDK中的内存屏障
+    - unsafe类提供了三个内存屏障函数
 
 ## 无锁编程
 + 一写一读的无锁队列: 内存屏障
@@ -365,19 +376,3 @@ String result = f.get();
         - scheduleWithFixedDelay: 与本身执行时间有关，执行时间+间隔下次的时间为下一次的执行时间
 + 延迟执行任务原理
     - 没有使用 DelayQueue，而是使用ScheduledThreadPoolExecutor内部又实现的一个特定DelayQueue
-# ForkJoinPool
-## 用法 & 数据结构
-## ForkJoin状态控制
-## Work线程的阻塞
-## 任务的提交过程
-## 工作窃取算法
-## ForkJoinTask的fork/join
-## ForkJoin的关闭
-
-# CompletableFuture
-## 用法
-## 四种任务类型
-## CompletionStage
-## CompletableFuture内部原理
-## 任务的网状执行
-## allOf内部的计算图分析
