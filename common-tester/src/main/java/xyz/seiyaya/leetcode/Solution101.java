@@ -1,5 +1,7 @@
 package xyz.seiyaya.leetcode;
 
+import xyz.seiyaya.leetcode.common.TreeNode;
+
 /**
  * 给定一个二叉树，检查它是否是镜像对称的。
  * 即每个根结点的左子树和右子树是一样的
@@ -31,15 +33,5 @@ public class Solution101 {
             return judgeSymmetric(left.left,right.right) && judgeSymmetric(left.right,right.left);
         }
         return false;
-    }
-
-    private static class TreeNode{
-        int val;
-        TreeNode left;
-        TreeNode right;
-
-        public TreeNode(int val){
-            this.val = val;
-        }
     }
 }

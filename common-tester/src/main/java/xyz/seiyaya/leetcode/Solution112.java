@@ -1,21 +1,15 @@
 package xyz.seiyaya.leetcode;
 
+import xyz.seiyaya.leetcode.common.TreeNode;
+
 /**
+ * 给定一个二叉树和一个目标和，判断该树中是否存在根节点到叶子节点的路径，这条路径上所有节点值相加等于目标和。
+ * 给定如下二叉树，以及目标和 sum = 22，
  * @author wangjia
  * @version 1.0
  * @date 2020/7/7 8:39
  */
 public class Solution112 {
-
-    private static class TreeNode {
-        int val;
-        TreeNode left;
-        TreeNode right;
-
-        public TreeNode(int val) {
-            this.val = val;
-        }
-    }
 
     public static void main(String[] args) {
         TreeNode root = new TreeNode(5);

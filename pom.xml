@@ -8,7 +8,6 @@
         <module>common-mybatis</module>
         <module>common-quartz</module>
         <module>common-tools</module>
-        <module>common-manager</module>
         <module>common-tester</module>
         <module>common-deploy</module>
         <module>common-activiti</module>

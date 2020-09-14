@@ -6,10 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.common.Mapper;
 import xyz.seiyaya.common.base.impl.BaseServiceImpl;
 import xyz.seiyaya.common.quartz.bean.QuartzLog;
-import xyz.seiyaya.common.quartz.mapper.QuartzLogMapper;
 import xyz.seiyaya.common.quartz.service.QuartzLogService;
-
-import javax.annotation.Resource;
 
 /**
  * @author wangjia
@@ -17,14 +14,6 @@ import javax.annotation.Resource;
  * @date: 2019/9/6 15:21
  */
 @Service
-@Transactional(propagation = Propagation.REQUIRED, readOnly = false, rollbackFor = Throwable.class)
-public class QuartzLogServiceImpl extends BaseServiceImpl<QuartzLog,Long> implements QuartzLogService {
-
-    @Resource
-    private QuartzLogMapper quartzLogMapper;
-
-    @Override
-    public Mapper<QuartzLog> getMapper() {
-        return quartzLogMapper;
-    }
+@Transactional(propagation = Propagation.REQUIRED, rollbackFor = Throwable.class)
+public class QuartzLogServiceImpl extends BaseServiceImpl<QuartzLog,Mapper<QuartzLog>> implements QuartzLogService {
 }

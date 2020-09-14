@@ -15,7 +15,3 @@ pagehelper:
 
 mybatis:
   mapper-locations: classpath*:mapper/*.xml
-
-repeat:
-  submit:
-    flag: false

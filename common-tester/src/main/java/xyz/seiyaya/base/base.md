@@ -89,6 +89,9 @@
 ## AtomicInteger和AtomicLong
 + 乐观锁与悲观锁
 + unsafe的cas操作(compare and swap)
+    - unsafe.compareAndSwapInt(obj,valueOffset,expect,update)
+    - 第二个参数是long类型的，表示的是某个成员变量在对应类中的内存偏移量，也就是成员变量本身(非引用)  
+    - unsafe.objectFieldOffset(Field) 成员变量转成对应的内存偏移量
 + 自旋与阻塞
     - 放弃CPU进入阻塞状态，等待后序被唤醒
     - 不放弃CPU，空转，不断重试

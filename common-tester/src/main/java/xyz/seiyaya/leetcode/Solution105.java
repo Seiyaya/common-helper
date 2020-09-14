@@ -1,7 +1,7 @@
 package xyz.seiyaya.leetcode;
 
 import com.alibaba.fastjson.JSON;
-import lombok.Data;
+import xyz.seiyaya.leetcode.common.TreeNode;
 
 /**
  * 根据一棵树的前序遍历与中序遍历构造二叉树。
@@ -53,16 +53,5 @@ public class Solution105 {
             }
         }
         return 0;
-    }
-
-    @Data
-    private static class TreeNode {
-        int val;
-        TreeNode left;
-        TreeNode right;
-
-        TreeNode(int x) {
-            val = x;
-        }
     }
 }

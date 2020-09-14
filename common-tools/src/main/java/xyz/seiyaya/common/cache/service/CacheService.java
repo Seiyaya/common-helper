@@ -16,19 +16,40 @@ public interface CacheService {
 
     void set(String key,String value);
 
-    void set(String key);
-
-    void set(String key , int second);
-
     void set(String key , String value , int second);
 
     String get(String key);
 
     String hget(String hashKey,String key);
 
-    void remove(String key);
+    Boolean remove(String key);
 
     boolean exists(String key);
 
     <T>T getObject(String s, Class<T> clazz);
+
+    /**
+     * 加锁
+     * @param key
+     * @param value
+     * @return
+     */
+    boolean lock(String key,String value);
+
+    /**
+     * 加锁并指定时间
+     * @param key
+     * @param value
+     * @param time
+     * @return
+     */
+    Boolean lock(String key,String value,int time);
+
+    /**
+     * 解锁
+     * @param key
+     * @param value
+     * @return
+     */
+    Boolean unlock(String key, String value);
 }

@@ -1,9 +1,21 @@
 package xyz.seiyaya.leetcode;
 
+import xyz.seiyaya.leetcode.common.TreeNode;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 给定一个二叉树，返回所有从根节点到叶子节点的路径。
+ * 输入:
+ *
+ *    1
+ *  /   \
+ * 2     3
+ *  \
+ *   5
+ *
+ * 输出: ["1->2->5", "1->3"]
  * @author wangjia
  * @version 1.0
  * @date 2020/9/4 16:06
@@ -27,7 +39,7 @@ public class Solution257 {
         return result;
     }
 
-    private void dfs(TreeNode root,String cur,List<String> list) {
+    private void dfs(TreeNode root, String cur, List<String> list) {
         if(root == null){
             return;
         }
@@ -37,17 +49,6 @@ public class Solution257 {
         }else{
             dfs(root.left,cur+"->", list);
             dfs(root.right, cur+"->" ,list);
-        }
-    }
-
-    private static class TreeNode{
-        int val;
-
-        TreeNode left;
-        TreeNode right;
-
-        public TreeNode(int x){
-            this.val = x;
         }
     }
 }

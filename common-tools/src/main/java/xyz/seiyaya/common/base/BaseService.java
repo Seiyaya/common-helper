@@ -2,7 +2,6 @@ package xyz.seiyaya.common.base;
 
 import com.github.pagehelper.PageInfo;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -10,7 +9,7 @@ import java.util.List;
  * @version 1.0
  * @date: 2019/9/6 15:00
  */
-public interface BaseService<T,ID extends Serializable> {
+public interface BaseService<T> {
 
     /**
      * 插入数据
@@ -24,7 +23,7 @@ public interface BaseService<T,ID extends Serializable> {
      * @param id
      * @return
      */
-    T getById(ID id);
+    T getById(Long id);
 
     /**
      * 根据主键更新数据

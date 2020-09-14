@@ -20,8 +20,16 @@
 + 字符串
     - Solution5: 判断回文串
 + 树
-    - Solution102: 树的层序遍历
+    - Solution94: 树的中序遍历(循环与递归)
     - Solution101: 判断一个树是否是镜像对称
+    - Solution102: 树的层序遍历(自顶向下)
+    - Solution104: 二叉树的最大深度
+    - Solution105: 根据前序、中序遍历得到树
+    - Solution107: 树的层次遍历 II  (自底向上)
+    - Solution108: 将有序数组转换为二叉搜索树
+    - Solution112: 路径总和
+    - Solution257: 树的所有路径
+    - Solution297: 二叉树的序列化与反序列化  
 + 二进制
     - Solution136: 异或的使用
     - 

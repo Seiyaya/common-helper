@@ -1,5 +1,7 @@
 package xyz.seiyaya.leetcode;
 
+import xyz.seiyaya.leetcode.common.TreeNode;
+
 import java.util.*;
 
 /**
@@ -37,7 +39,7 @@ public class Solution102 {
         return list;
     }
 
-    private void forTreeNode(TreeNode tmp,Map<Integer,List<Integer>> maps,int level) {
+    private void forTreeNode(TreeNode tmp, Map<Integer,List<Integer>> maps, int level) {
         List<Integer> innerList = new ArrayList<>();
         if(tmp.left == null && tmp.right == null){
             return ;
@@ -58,16 +60,6 @@ public class Solution102 {
         }
         if(tmp.right != null){
             forTreeNode(tmp.right,maps,level+1);
-        }
-    }
-
-    private static class TreeNode {
-        int val;
-        TreeNode left;
-        TreeNode right;
-
-        TreeNode(int x) {
-            val = x;
         }
     }
 }

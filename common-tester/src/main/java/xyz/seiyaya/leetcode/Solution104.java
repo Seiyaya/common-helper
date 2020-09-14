@@ -1,6 +1,9 @@
 package xyz.seiyaya.leetcode;
 
+import xyz.seiyaya.leetcode.common.TreeNode;
+
 /**
+ * 二叉树的最大深度
  * @author wangjia
  * @version 1.0
  * @date 2020/7/28 8:39
@@ -28,16 +31,5 @@ public class Solution104 {
             return 0;
         }
         return Math.max(getRootLength(root.left)+1,getRootLength(root.right)+1);
-    }
-
-
-    private static class TreeNode {
-        int val;
-        TreeNode left;
-        TreeNode right;
-
-        TreeNode(int x) {
-            val = x;
-        }
     }
 }

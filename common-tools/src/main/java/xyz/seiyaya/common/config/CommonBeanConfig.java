@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
+import xyz.seiyaya.common.cache.service.CacheService;
+import xyz.seiyaya.common.cache.service.impl.RedisCacheServiceImpl;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
@@ -54,5 +56,10 @@ public class CommonBeanConfig {
             }
         }));
         return mapper;
+    }
+
+    @Bean
+    public CacheService cacheService(){
+        return new RedisCacheServiceImpl();
     }
 }

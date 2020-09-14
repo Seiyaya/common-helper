@@ -8,8 +8,5 @@ spring:
 mybatis:
   mapper-locations: classpath*:/mapper/**/*.xml
 
-repeat:
-  submit:
-    flag: true
 server:
   port: 9999

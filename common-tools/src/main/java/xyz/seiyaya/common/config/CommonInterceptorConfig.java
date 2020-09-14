@@ -8,6 +8,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import xyz.seiyaya.common.interceptor.LoginInterceptor;
 import xyz.seiyaya.common.interceptor.LoginUserHandlerMethodArgumentResolver;
+import xyz.seiyaya.common.interceptor.RepeatSubmitInterceptor;
 
 import java.util.List;
 
@@ -24,11 +25,17 @@ public class CommonInterceptorConfig extends WebMvcConfigurationSupport {
     @Override
     protected void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(getLoginInterceptor()).addPathPatterns("/**");
+        registry.addInterceptor(getRepeatSubmitInterceptor()).addPathPatterns("/**");
     }
 
     @Bean
     public LoginInterceptor getLoginInterceptor(){
         return new LoginInterceptor();
+    }
+
+    @Bean
+    public RepeatSubmitInterceptor getRepeatSubmitInterceptor(){
+        return new RepeatSubmitInterceptor();
     }
 
     @Bean
