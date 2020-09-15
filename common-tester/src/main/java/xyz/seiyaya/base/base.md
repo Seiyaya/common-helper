@@ -115,7 +115,7 @@
 + jdk8新增对long的原子操作
 + LongAddr主要运用分片的思想，类似ConcurrentHashMap的分段锁。一个base变量和多个子Cell并发度高的情况分摊到子Cell,最后合并
 + 没有直接的AtomicDouble类，都是double和long相互转换进行操作
-+ 只具有最重一致性，而不是强一致性
++ 只具有最终一致性，而不具有强一致性
 + 伪共享与缓存行填充
     - JDK8新增注解 @Contended 
     - CPU缓存与主内存进行数据交换的基本单位是 Cache Line, 如果多个变量在同一个cache line中，改变一个三个变量都要刷新到主内存
@@ -139,6 +139,14 @@
      - unlock
         - tryRelease释放锁，不需要CAS操作，因为是排他锁，持有锁的线程只有一个
         - unparkSuccessor唤醒队列的后继者
++ Node的waitStatus属性: 决定对应节点在当前情况下处于何种状态
+    - CANCELLED(1): 取消状态，等待超时或者中断了，这时需要将其从等待队列中删除，进入到该状态的节点也将不再变化，作为结束状态
+    - SIGNAL(-1): 等待触发状态，当前线程需要阻塞，等待前置节点释放锁之后唤醒当前节点
+    - CONDITION(-2): 等待条件状态，当前节点再等待condition,即在condition队列中，当调用 Condition#signal 将状态变为等待同步锁
+    - PROPAGATE(-3): 状态需要向后传播，表示releaseShared需要传播给后序节点，尽在共享锁模式下使用
++ Node的 nextWaiter 属性
+    - AQS中条件队列是使用单向列表保存的，用 nextWaiter来连接
+    - nextWaiter实际上标记的就是在该节点唤醒后依据该节点的状态判断是否依据条件唤醒下一个节点
 + 公平锁(FairSync)
     - 调用 acquire(1) 排队申请
 ## 读写锁
