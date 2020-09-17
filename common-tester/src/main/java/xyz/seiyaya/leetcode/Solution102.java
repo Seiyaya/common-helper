@@ -15,8 +15,40 @@ public class Solution102 {
         TreeNode treeNode = new TreeNode(1);
         treeNode.left = new TreeNode(2);
 
+        foreachTreeNode(treeNode);
+
+
         List<List<Integer>> lists = new Solution102().levelOrder(treeNode);
         System.out.println(lists);
+    }
+
+    /**
+     * 使用队列遍历二叉树更简单
+     * @param root
+     */
+    public static void foreachTreeNode(TreeNode root){
+        if(root == null){
+            return ;
+        }
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        List<List<Integer>> list = new ArrayList<>();
+        while(!queue.isEmpty()){
+            List<Integer> innerList = new ArrayList<>();
+            int forCount = queue.size();
+            for(int i=0;i<forCount;i++){
+                TreeNode poll = queue.poll();
+                innerList.add(poll.val);
+                if(poll.left != null){
+                    queue.add(poll.left);
+                }
+                if(poll.right != null){
+                    queue.add(poll.right);
+                }
+            }
+            list.add(innerList);
+        }
+        System.out.println(list);
     }
 
 

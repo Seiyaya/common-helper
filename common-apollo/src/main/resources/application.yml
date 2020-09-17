@@ -1,0 +1,13 @@
+server:
+  port: 9000
+app:
+  id: common-apollo
+apollo:
+  meta: http://local.seiyaya.com:8080
+  bootstrap:
+    enable: true  # 在应用启动阶段，向Spring容器注入被托管的application.properties文件的配置信息
+    eagerLoad:
+      enabled: true # 将Apollo配置加载提到初始化日志系统之前
+logging:
+  level:
+    root: info
