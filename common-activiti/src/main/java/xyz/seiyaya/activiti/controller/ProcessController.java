@@ -16,7 +16,7 @@ import xyz.seiyaya.activiti.service.ProcessService;
 import xyz.seiyaya.common.annotation.LoginUser;
 import xyz.seiyaya.common.bean.LoginUserInfo;
 import xyz.seiyaya.common.bean.ResultBean;
-import xyz.seiyaya.common.config.Constant;
+import xyz.seiyaya.common.constant.Constant;
 
 import javax.annotation.Resource;
 import java.io.IOException;

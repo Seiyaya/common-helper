@@ -67,6 +67,12 @@ public class RedisCacheServiceImpl implements CacheService {
     }
 
     @Override
+    public void setObject(String key, Object obj, long time) {
+        String value = JSONObject.toJSONString(obj);
+        stringRedisTemplate.opsForValue().set(key,value,Duration.ofMillis(time));
+    }
+
+    @Override
     public <T> T getObject(String key, Class<T> clazz) {
         String result = stringRedisTemplate.opsForValue().get(key);
         return JSONObject.parseObject(result,clazz);

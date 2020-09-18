@@ -13,6 +13,8 @@ public class LoginUserInfo implements Serializable {
 
     private Long id;
     private String username;
+    private String password;
+    private String salt;
     private String name;
     private String phone;
 }
