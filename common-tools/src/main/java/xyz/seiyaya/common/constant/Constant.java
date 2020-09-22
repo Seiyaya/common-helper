@@ -1,4 +1,4 @@
-package xyz.seiyaya.common.config;
+package xyz.seiyaya.common.constant;
 
 /**
  * 常量相关
@@ -43,7 +43,15 @@ public class Constant {
         public static final Byte BYTE_10 = 10;
     }
 
-    public static class UserConstant{
-        public static final String USER_KEY = "user:key";
+    public static class User{
+        public static final String USER_KEY = "user:key:";
+    }
+
+    public static class Time{
+        public static final int M1 = 60;
+
+        public static final int H1 = 60 * M1;
+
+        public static final int D1 = 12 * H1;
     }
 }

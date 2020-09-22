@@ -3,7 +3,7 @@ package xyz.seiyaya.common.interceptor;
 import org.springframework.web.servlet.HandlerInterceptor;
 import xyz.seiyaya.common.bean.LoginUserInfo;
 import xyz.seiyaya.common.bean.ResultBean;
-import xyz.seiyaya.common.config.Constant;
+import xyz.seiyaya.common.constant.Constant;
 import xyz.seiyaya.common.helper.ResponseHelper;
 import xyz.seiyaya.common.helper.SpringHelper;
 import xyz.seiyaya.common.helper.StringHelper;
@@ -23,19 +23,16 @@ public class LoginInterceptor implements HandlerInterceptor {
         ResponseHelper responseHelper = SpringHelper.getBean(ResponseHelper.class);
         ResultBean resultBean = new ResultBean();
         String token = request.getHeader("token");
-        if(true){
-            return true;
-        }
         if(StringHelper.isBlank(token)){
             responseHelper.writeResult(resultBean.setParamError("token不能为空"),response);
             return false;
         }
-        LoginUserInfo loginUserInfo = UserHelper.getLoginUserInfo(token);
+        LoginUserInfo loginUserInfo = UserHelper.getUser();
         if(loginUserInfo == null){
             responseHelper.writeResult(resultBean.setParamError("token不存在"),response);
             return false;
         }
-        request.setAttribute(Constant.UserConstant.USER_KEY,loginUserInfo);
+        request.setAttribute(Constant.User.USER_KEY,loginUserInfo);
         return true;
     }
 }

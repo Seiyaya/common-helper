@@ -23,7 +23,7 @@ import xyz.seiyaya.activiti.bean.vo.ActProcessVO;
 import xyz.seiyaya.activiti.mapper.ActProcessMapper;
 import xyz.seiyaya.activiti.service.ProcessService;
 import xyz.seiyaya.common.bean.ResultBean;
-import xyz.seiyaya.common.config.Constant;
+import xyz.seiyaya.common.constant.Constant;
 import xyz.seiyaya.common.exception.ParamsException;
 import xyz.seiyaya.common.helper.SnowflakeIdHelper;
 import xyz.seiyaya.common.msg.bean.ProcessMsg;

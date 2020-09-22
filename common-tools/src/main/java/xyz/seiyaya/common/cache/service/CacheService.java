@@ -26,6 +26,8 @@ public interface CacheService {
 
     boolean exists(String key);
 
+    void setObject(String key,Object obj, long time);
+
     <T>T getObject(String s, Class<T> clazz);
 
     /**
