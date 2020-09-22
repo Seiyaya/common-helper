@@ -16,7 +16,7 @@ public class UserHelper {
 
     private static CacheService cacheService = SpringHelper.getBean(CacheService.class);
 
-    private static BaseUserService<LoginUserInfo> baseUserService;
+    private static BaseUserService baseUserService;
 
     static{
         baseUserService = SpringHelper.getBean(BaseUserService.class);
