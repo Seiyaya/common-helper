@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Stack;
 
 /**
+ * 二叉树的中序遍历
  * @author wangjia
  * @version 1.0
  * @date 2020/9/14 8:48
@@ -18,8 +19,8 @@ public class Solution94 {
         root.right = new TreeNode(2);
         root.right.left = new TreeNode(3);
         List<Integer> integers = new Solution94().inorderTraversal(root);
+        System.out.printf("递归结果:%s \n",integers);
         new Solution94().foreachIterable(root);
-        System.out.println(integers);
     }
 
     public List<Integer> inorderTraversal(TreeNode root) {
@@ -42,18 +43,16 @@ public class Solution94 {
         List<Integer> result = new ArrayList<>();
 
         TreeNode tmp = root;
-        while(tmp != null ){
+        while(tmp != null || !stack.isEmpty()){
             while(tmp != null){
-                stack.push(tmp);
+                stack.add(tmp);
                 tmp = tmp.left;
             }
-            while(!stack.isEmpty()){
-                tmp = stack.pop();
-                result.add(tmp.val);
-                tmp = tmp.right;
-            }
+            TreeNode pop = stack.pop();
+            result.add(pop.val);
+            tmp = pop.right;
         }
 
-        System.out.println("foreach result:"+result);
+        System.out.println("迭代结果:"+result);
     }
 }
