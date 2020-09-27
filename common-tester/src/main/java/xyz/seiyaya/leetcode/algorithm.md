@@ -25,19 +25,24 @@
 + 链表
 + 树
     - Solution94: 树的中序遍历(循环与递归)
+    - Solution98: 验证二叉查找树
     - Solution101: 判断一个树是否是镜像对称
     - Solution102: 树的层序遍历(自顶向下)
     - Solution103: z字形打印二叉树
     - Solution104: 二叉树的最大深度
     - Solution105: 根据前序、中序遍历得到树
+    - Solution106: 根据中序、后序遍历得到树
     - Solution107: 树的层次遍历 II  (自底向上)
     - Solution108: 将有序数组转换为二叉搜索树
     - Solution112: 路径总和
     - Solution144: 二叉树的前序遍历
     - Solution145: 二叉树的后序遍历
     - Solution226: 二叉树的翻转
+    - Solution235: 二叉查找树的最近公共祖先
+    - Solution236: 二叉树的最近公共祖先
     - Solution257: 树的所有路径
     - Solution297: 二叉树的序列化与反序列化  
+    - Solution501: 二叉搜索树的众数
     - Solution637: 二叉树层的平均值  
     - Solution655: 输出二叉树
     - <font color="#dd0000">Solution968</font>: 安装监视器

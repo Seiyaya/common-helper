@@ -9,6 +9,7 @@ import xyz.seiyaya.leetcode.common.TreeNode;
  * @author wangjia
  * @date 2020/5/22 8:37
  */
+@SuppressWarnings("all")
 public class Solution105 {
 
     public static void main(String[] args) {
@@ -32,7 +33,7 @@ public class Solution105 {
         // 对于中序遍历的左子树和右子树划分 [inStart,mid-1]  [mid+1,inEnd]
         // 对于后序遍历
         //   左子树      [backStart,backStart+(mid-1-inStart+1)] ==> [backStart,backStart+mid-inStart]
-        //   右子树      [backStart+(mid-1-inStart+1)+(inEnd-mid-1+1),backEnd] ==> [backStart
+        //   右子树      [backStart+(mid-1-inStart+1)+(inEnd-mid-1+1),backEnd] ==> [backStart+inEnd+mid,backEnd]
         int mid = inStart;
         for (int i = inStart; i <= inEnd; i++) {
             if (inorder[i] == root) {
