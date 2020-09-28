@@ -17,7 +17,7 @@ import java.util.List;
  */
 public abstract class BaseServiceImpl<T, M extends Mapper<T>> implements BaseService<T> {
 
-    @Resource
+//    @Resource
     protected M mapper;
 
     private Class<T> clazz;
