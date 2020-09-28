@@ -2,8 +2,7 @@ package xyz.seiyaya.leetcode;
 
 import xyz.seiyaya.leetcode.common.TreeNode;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * 序列化是将一个数据结构或者对象转换为连续的比特位的操作，进而可以将转换后的数据存储在一个文件或者内存中，同时也可以通过网络传输到另一个计算机环境，采取相反方式重构得到原数据。
@@ -25,6 +24,7 @@ import java.util.List;
  * @version 1.0
  * @date 2020/6/16 8:45
  */
+@SuppressWarnings("all")
 public class Solution297 {
 
     public static void main(String[] args) {
@@ -40,7 +40,8 @@ public class Solution297 {
         System.out.println("序列化之后:"+serialize);
 
         TreeNode deserialize = solution.deserialize(serialize);
-        System.out.println("反序列化之后:"+serialize);
+        System.out.println("反序列化之后:");
+        deserialize.foreachTreeNode();
     }
 
 
@@ -52,15 +53,46 @@ public class Solution297 {
     }
 
     private void foreachTreeNode(TreeNode root, List<Integer> list) {
-        list.add(root == null ? null : root.val);
-        if(root == null){
-            return ;
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        while(!queue.isEmpty()){
+            int size = queue.size();
+            for(int i=0;i<size;i++){
+                TreeNode poll = queue.poll();
+                list.add(poll == null ? null : poll.val);
+                if(poll != null){
+                    if (poll.left == null) {
+                        queue.add(null);
+                    } else {
+                        queue.add(poll.left);
+                    }
+                    if (poll.right == null) {
+                        queue.add(null);
+                    } else {
+                        queue.add(poll.right);
+                    }
+                }
+            }
         }
-        foreachTreeNode(root.left,list);
-        foreachTreeNode(root.right,list);
+        for(int i=list.size()-1;i>=0;i--){
+            if(list.get(i) == null){
+                list.remove(i);
+            }else{
+                break;
+            }
+        }
     }
 
     public TreeNode deserialize(String data) {
-        return null;
+        data = data.substring(1, data.length() - 1);
+        String[] split = data.split(",");
+        List<String> nodeList = new LinkedList<>(Arrays.asList(split));
+        if("null".equals(split[0])){
+            return null;
+        }
+        TreeNode root = new TreeNode(Integer.valueOf(nodeList.get(0)));
+        nodeList.remove(0);
+
+        return new TreeNode(1);
     }
 }

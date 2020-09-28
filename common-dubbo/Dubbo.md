@@ -184,3 +184,105 @@ getActivateExtension  只是根据不同条件同时激活多个普通扩展类
 ### 负载均衡的实现
 ### Merger的实现
 ### Mock
+
+## @Reference注解
+### ReferenceAnnotationBeanPostProcessor
++ 针对`@Reference`注解进行后置处理
+```java
+/**
+spring调用 postProcessPropertyValues 方法
+    从 injectionMetadataCache 中查找 InjectionMetadata 数据
+        从 buildReferenceMetadata 构建 添加了@Reference方法和属性的缓存
+            最后注入对象 metadata.inject()
+*/
+// 缓存加了@Referece注解的元数据信息，key是bean的名称或者类名，value是加了@Reference的属性和方法
+ConcurrentMap<String, InjectionMetadata> injectionMetadataCache = new ConcurrentHashMap<String, InjectionMetadata>(256);
+
+// 缓存new过的ReferenceBean，相同的key，只会产生一个ReferenceBean 
+// 可以通过获取该 ReferenceBean 最后得到代理的dubbo接口
+ConcurrentMap<String, ReferenceBean<?>> referenceBeansCache = new ConcurrentHashMap<String, ReferenceBean<?>>();
+
+// spring设置属性到bean之前调用该方法
+@Override
+public PropertyValues postProcessPropertyValues(PropertyValues pvs, PropertyDescriptor[] pds, Object bean, String beanName) throws BeanCreationException {
+    // 根据bean的类型，获取需要注入的元数据信息
+    InjectionMetadata metadata = findReferenceMetadata(beanName, bean.getClass(), pvs);
+    try {
+        // 注入对象
+        metadata.inject(bean, beanName, pvs);
+    } catch (BeanCreationException ex) {
+        throw ex;
+    } catch (Throwable ex) {
+        throw new BeanCreationException(beanName, "Injection of @Reference dependencies failed", ex);
+    }
+    return pvs;
+}
+
+// 获取注解元数据
+private InjectionMetadata findReferenceMetadata(String beanName, Class<?> clazz, PropertyValues pvs) {
+    // 如果是自定义的消费者，没有beanName，退化成使用类名作为缓存key
+    String cacheKey = (StringUtils.hasLength(beanName) ? beanName : clazz.getName());
+    // 双重检查，判断是否需要刷新注入信息
+    ReferenceInjectionMetadata metadata = this.injectionMetadataCache.get(cacheKey);
+    // 判断是否需要刷新
+    if (InjectionMetadata.needsRefresh(metadata, clazz)) {
+        // 第一次判断为需要刷新，则锁住injectionMetadataCache对象
+        synchronized (this.injectionMetadataCache) {
+            // 再次判断是否需要刷新
+            metadata = this.injectionMetadataCache.get(cacheKey);
+            if (InjectionMetadata.needsRefresh(metadata, clazz)) {
+                // 需要刷新，而且原来缓存的信息不为空，清除缓存信息
+                if (metadata != null) {
+                    metadata.clear(pvs);
+                }
+                try {
+                    // 生成新的元数据信息
+                    metadata = buildReferenceMetadata(clazz);
+                    // 放入缓存
+                    this.injectionMetadataCache.put(cacheKey, metadata);
+                } catch (NoClassDefFoundError err) {
+                    throw new IllegalStateException("Failed to introspect bean class [" + clazz.getName() +
+                            "] for reference metadata: could not find class that it depends on", err);
+                }
+            }
+        }
+    }
+    return metadata;
+}
+
+private ReferenceInjectionMetadata buildReferenceMetadata(final Class<?> beanClass) {
+    // 查找加了@Reference注解的属性
+    Collection<ReferenceFieldElement> fieldElements = findFieldReferenceMetadata(beanClass);
+    // 查找加了@Reference注解的方法
+    Collection<ReferenceMethodElement> methodElements = findMethodReferenceMetadata(beanClass);
+    return new ReferenceInjectionMetadata(beanClass, fieldElements, methodElements);
+}
+
+// 查找加了@Reference注解的属性
+private List<ReferenceFieldElement> findFieldReferenceMetadata(final Class<?> beanClass) {
+    // 保存加了@Reference注解的属性列表
+    final List<ReferenceFieldElement> elements = new LinkedList<ReferenceFieldElement>();
+
+    ReflectionUtils.doWithFields(beanClass, new ReflectionUtils.FieldCallback() {
+        @Override
+        public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
+            // 获取属性上的@Reference注解
+            Reference reference = getAnnotation(field, Reference.class);
+            // 如果存在@Reference注解
+            if (reference != null) {
+                // 不支持静态属性的注入
+                if (Modifier.isStatic(field.getModifiers())) {
+                    if (logger.isWarnEnabled()) {
+                        logger.warn("@Reference annotation is not supported on static fields: " + field);
+                    }
+                    return;
+                }
+                // 添加到队列里
+                elements.add(new ReferenceFieldElement(field, reference));
+            }
+
+        }
+    });
+    return elements;
+}
+```
