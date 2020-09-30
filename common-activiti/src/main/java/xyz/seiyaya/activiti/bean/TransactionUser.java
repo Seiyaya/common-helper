@@ -16,4 +16,11 @@ public class TransactionUser {
     private String name;
 
     private Integer age;
+
+    public TransactionUser(){}
+
+    public TransactionUser(Long id,String name){
+        this.id = id;
+        this.name = name;
+    }
 }

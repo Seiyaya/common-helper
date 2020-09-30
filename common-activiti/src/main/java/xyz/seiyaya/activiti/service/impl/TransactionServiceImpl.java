@@ -1,6 +1,5 @@
 package xyz.seiyaya.activiti.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -14,7 +13,10 @@ import xyz.seiyaya.common.base.impl.BaseServiceImpl;
 import xyz.seiyaya.common.helper.SpringHelper;
 
 import javax.annotation.Resource;
+import java.lang.ref.Reference;
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.Objects;
 
 @Service
 @Slf4j
@@ -37,10 +39,37 @@ public class TransactionServiceImpl extends BaseServiceImpl<TransactionUser,Tran
         try {
             ThreadLocal<String> objectThreadLocal = new ThreadLocal<>();
             objectThreadLocal.set("String");
-            Field threadLocals = Thread.currentThread().getClass().getField("threadLocals");
+            Arrays.stream(Thread.currentThread().getClass().getDeclaredFields()).forEach(model-> log.info("field :" + model.getName()));
+            Field threadLocals = Thread.currentThread().getClass().getDeclaredField("threadLocals");
             threadLocals.setAccessible(true);
-            Object o = threadLocals.get(Thread.currentThread());
-            log.info("{}", JSON.toJSONString(o));
+            Object threadLocalMap = threadLocals.get(Thread.currentThread());
+            Class threadLocalMapClazz = Class.forName("java.lang.ThreadLocal$ThreadLocalMap");
+            Field tableField = threadLocalMapClazz.getDeclaredField("table");
+            tableField.setAccessible(true);
+
+
+            Class entryClass = Class.forName("java.lang.ThreadLocal$ThreadLocalMap$Entry");
+            Object[] objects = (Object[]) tableField.get(threadLocalMap);
+            Field entryValueField = entryClass.getDeclaredField("value");
+            entryValueField.setAccessible(true);
+            Field referenceField = Reference.class.getDeclaredField("referent");
+            referenceField.setAccessible(true);
+
+            Arrays.stream(objects).filter(Objects::nonNull).forEach((obj) -> {
+                try {
+                    Object value = entryValueField.get(obj);
+                    if (value != null) {
+                        if (value instanceof Reference) {
+                            Reference ref = (Reference) value;
+                            log.info(" ref {} ref to {}",ref.getClass().getName(),ref.get());
+                        } else {
+                            log.info("{}",value);
+                        }
+                    }
+                } catch (IllegalAccessException e) {
+                    log.error("",e);
+                }
+            });
         }catch (Exception e){
             log.error("",e);
         }

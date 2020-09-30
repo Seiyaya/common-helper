@@ -3,9 +3,9 @@ spring:
     database-schema-update: true
     check-process-definitions: false
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/activiti?useUnicode=true&characterEncoding=utf8&autoReconnect=true&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
+    url: jdbc:mysql://www.seiyaya.xyz:3306/activiti?useUnicode=true&characterEncoding=utf8&autoReconnect=true&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
     username: root
-    password: 123456
+    password: wangjia321_
     driver-class-name: com.mysql.jdbc.Driver
   redis:
     database: 0
