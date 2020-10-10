@@ -133,20 +133,27 @@ public class HttpHelper {
     }
 
     public String sendGet(String url) {
-        return sendGet(url, null, ENCODING);
+        return sendGet(url, null, ENCODING,null);
     }
 
     public String sendGet(String url, DBParam params) {
-        return sendGet(url, params, ENCODING);
+        return sendGet(url, params, ENCODING,null);
     }
 
-    public String sendGet(String url, DBParam params, String encoding) {
+    public String sendGet(String url, DBParam params,DBParam headers) {
+        return sendGet(url, params, ENCODING,headers);
+    }
+
+    public String sendGet(String url, DBParam params, String encoding, DBParam headers) {
         log.info("请求方式->get 请求的url->{} 请求的参数->{}", url, params);
         String resultJson = null;
         CloseableHttpClient client = getHttpClient();
         CloseableHttpResponse response = null;
         HttpGet httpGet = new HttpGet();
         try {
+            if(headers != null && !headers.isEmpty()){
+                headers.forEach((key,value)-> httpGet.addHeader(key,value.toString()));
+            }
             URIBuilder builder = new URIBuilder(url);
             if (params != null) {
                 for (String key : params.keySet()) {
