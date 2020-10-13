@@ -13,9 +13,18 @@ import xyz.seiyaya.dubbo.api.service.DubboDemoService;
 public class DemoConsumer {
 
     public static void main(String[] args) {
+        // 当前应用配置
+        ApplicationConfig applicationConfig = new ApplicationConfig();
+        applicationConfig.setName("dubbo-consumer");
+
+        // 连接注册中心配置
+        RegistryConfig registryConfig = new RegistryConfig();
+        registryConfig.setAddress("zookeeper://127.0.0.1:2181");
+
+        // 引用远程服务
         ReferenceConfig<DubboDemoService> referenceConfig = new ReferenceConfig<>();
-        referenceConfig.setApplication(new ApplicationConfig("dubbo-consumer"));
-        referenceConfig.setRegistry(new RegistryConfig("zookeeper://127.0.0.1:2181"));
+        referenceConfig.setApplication(applicationConfig);
+        referenceConfig.setRegistry(registryConfig);
         referenceConfig.setInterface(DubboDemoService.class);
 
         DubboDemoService dubboDemoService = referenceConfig.get();

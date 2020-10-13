@@ -14,4 +14,22 @@ public class ListNode {
     public ListNode(int val){
         this.val = val;
     }
+
+    public static ListNode init(int[] ints) {
+        ListNode head = new ListNode(ints[0]);
+        ListNode current = head;
+        for(int i=1;i<ints.length;i++){
+            current.next = new ListNode(ints[i]);
+            current = current.next;
+        }
+        return head;
+    }
+
+    public static void foreach(ListNode head){
+        while(head != null){
+            System.out.print(head.val+" --> ");
+            head = head.next;
+        }
+        System.out.println();
+    }
 }
