@@ -2,6 +2,7 @@ package xyz.seiyaya.common.bean;
 
 import lombok.Data;
 import xyz.seiyaya.common.annotation.CrawlAttribute;
+import xyz.seiyaya.common.annotation.DictFormat;
 import xyz.seiyaya.common.annotation.UpdateLogInfo;
 import xyz.seiyaya.common.helper.DateHelper;
 
@@ -29,4 +30,7 @@ public class User {
 
     @UpdateLogInfo(value = "地址")
     private List<Address> addressList;
+
+    @DictFormat(type="USER_STATUS",fieldName = "statusStr")
+    private Integer status;
 }

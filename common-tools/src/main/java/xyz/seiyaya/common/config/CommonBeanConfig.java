@@ -11,6 +11,7 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import xyz.seiyaya.common.cache.service.CacheService;
 import xyz.seiyaya.common.cache.service.impl.RedisCacheServiceImpl;
+import xyz.seiyaya.common.serializer.DictFormatSerializerModifier;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
@@ -55,6 +56,7 @@ public class CommonBeanConfig {
                 gen.writeNumber(value.stripTrailingZeros().toPlainString());
             }
         }));
+        mapper.setSerializerFactory(mapper.getSerializerFactory().withSerializerModifier(new DictFormatSerializerModifier()));
         return mapper;
     }
 

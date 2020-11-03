@@ -3,6 +3,7 @@ package xyz.seiyaya.common.bean;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import xyz.seiyaya.common.annotation.DictFormat;
 import xyz.seiyaya.common.annotation.UpdateLogInfo;
 
 import java.util.Objects;
@@ -25,6 +26,14 @@ public class Address {
     @UpdateLogInfo("路程")
     private Integer route;
 
+    @DictFormat(type = "ADDRESS_STATUS",fieldName = "statusStr")
+    private Integer status;
+
+    public Address(Long id, String addressName, Integer route) {
+        this.id = id;
+        this.addressName = addressName;
+        this.route = route;
+    }
 
     @Override
     public boolean equals(Object o) {

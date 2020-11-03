@@ -13,6 +13,7 @@
 + `CrawlAttribute`注解: 标注在bean上面主要是快速映射字段，想把一个对象的属性复制到另外一个属性上面
 + `AuthorityTableData`注解: 后端控制权限的列表
 + `@UpdateLogInfo`注解: 用来得到 旧值修改为新值的比较，类似禅道的bug状态流转  
++ `@DictFormat`注解: 用来返回json时直接根据对应的字典key转成value
 
 ### 常用工具类
 + `MybatisSqlHelper`: 主要用来快速得到xml片段参数化后的sql,方便更快的调试。
