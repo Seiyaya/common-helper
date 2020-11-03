@@ -3,7 +3,9 @@ package xyz.seiyaya.leetcode;
 import xyz.seiyaya.leetcode.common.TreeNode;
 
 /**
- * 给定一个二叉树，它的每个结点都存放一个 0-9 的数字，每条从根到叶子节点的路径都代表一个数字
+ * @author wangjia
+ * @version 1.0
+ * @date 2020/10/29 18:11
  */
 public class Solution129 {
 
@@ -13,8 +15,6 @@ public class Solution129 {
         root.right = new TreeNode(0);
         root.left.left = new TreeNode(5);
         root.left.right = new TreeNode(1);
-
-
         int i = new Solution129().sumNumbers(root);
         System.out.println("result:"+i);
     }
@@ -22,21 +22,26 @@ public class Solution129 {
     private int result = 0;
 
     public int sumNumbers(TreeNode root) {
-        StringBuilder stringBuilder = new StringBuilder();
-
         dfs(root,0);
-
         return result;
     }
 
-    public void dfs(TreeNode root,int num){
-        if(root == null){
-            return ;
+    /**
+     * 本层该做什么   叶子节点的累加到result
+     * 本层为上层(下层)提供什么   提供之前累加的数
+     * 终止条件 root == null
+     * @param root
+     * @param sb
+     */
+    private void dfs(TreeNode root, int sb) {
+        if( root == null){
+            return;
         }
         if(root.left == null && root.right == null){
-            result += 10 * num +root.val;
+            System.out.println(sb * 10 + root.val);
+            result = result + sb * 10 + root.val;
         }
-        dfs(root.left,10 * num + root.val);
-        dfs(root.right,10 * num + root.val);
+        dfs(root.left, sb * 10 + root.val);
+        dfs(root.right, sb * 10 + root.val);
     }
 }

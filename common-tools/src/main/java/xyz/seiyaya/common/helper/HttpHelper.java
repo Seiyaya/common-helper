@@ -16,6 +16,7 @@ import org.apache.http.conn.socket.LayeredConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
@@ -27,6 +28,7 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -37,7 +39,6 @@ import java.util.List;
  */
 @Slf4j
 public class HttpHelper {
-    private static final String ENCODING = "UTF-8";
 
     private PoolingHttpClientConnectionManager cm = null;
 
@@ -57,6 +58,28 @@ public class HttpHelper {
 
     public static HttpHelper getHttpUtils() {
         return httpUtils;
+    }
+
+    public String sendPostJson(String url, String params) {
+        String resultJson = "";
+        CloseableHttpClient client = HttpClients.custom().build();
+        CloseableHttpResponse response = null;
+        HttpPost httpPost;
+        try {
+            httpPost = new HttpPost(url);
+            httpPost.addHeader("Content-type","application/json");
+            httpPost.setEntity(new StringEntity(params,"utf-8"));
+            response = client.execute(httpPost);
+            int status = response.getStatusLine().getStatusCode();
+            if (status == HttpStatus.SC_OK) {
+                resultJson = EntityUtils.toString(response.getEntity(),"utf-8");
+            }
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }finally {
+            release(response);
+        }
+        return resultJson;
     }
 
     public void init() throws Exception {
@@ -133,15 +156,15 @@ public class HttpHelper {
     }
 
     public String sendGet(String url) {
-        return sendGet(url, null, ENCODING,null);
+        return sendGet(url, null, StandardCharsets.UTF_8.toString(),null);
     }
 
     public String sendGet(String url, DBParam params) {
-        return sendGet(url, params, ENCODING,null);
+        return sendGet(url, params, StandardCharsets.UTF_8.toString(),null);
     }
 
     public String sendGet(String url, DBParam params,DBParam headers) {
-        return sendGet(url, params, ENCODING,headers);
+        return sendGet(url, params, StandardCharsets.UTF_8.toString(),headers);
     }
 
     public String sendGet(String url, DBParam params, String encoding, DBParam headers) {

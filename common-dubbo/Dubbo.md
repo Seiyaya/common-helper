@@ -227,6 +227,22 @@ notified = new ConcurrentHashMap<URL, Map<String, List<URL>>>();
 
 ## Dubbo扩展点加载机制
 所在模块: `dubbo-common` 的 `extension`包下面
+
+### ExtensionLoader属性
++ SERVICES_DIRECTORY 和 DUBBO_DIRECTORY
+    - 这两个目录下放置 `接口全限定名` 配置文件，每行内容为 `扩展名=扩展实现类全限定名`
++ NAME_SEPARATOR
+    - 扩展名分隔符，使用逗号
++ 静态属性
+    - 一个拓展( 拓展接口 )对应一个 ExtensionLoader 对象
++ 对象属性
+    - 一个拓展通过其 `ExtensionLoader` 对象，加载它的拓展实现们
+    - 缓存加载的拓展配置
+    - 缓存创建的拓展实现对象
++ 扩展点自动包装
++ 扩展点自动装配
++ 扩展点自适应
++ 扩展点自动激活
 ### 加载机制
 + java SPI存在的问题
     - 会一次初始化所有的扩展点，没有使用的扩展也会被加载
@@ -300,8 +316,37 @@ getActivateExtension  只是根据不同条件同时激活多个普通扩展类
     - 返回所有自动激活类集合
 + ExtensionFactory的实现原理
     - ExtensionLoader是作为SPI的核心，被 ExtensionFactory 创建
++ getExtensionClasses: 获得扩展类实现数组
+    - cachedClasses: 缓存的拓展实现类集合,主要包含自适应扩展实现类、带唯一参数为扩展接口的 
+    - cachedAdaptiveClass: 拓展 Adaptive 实现类，会添加到 cachedAdaptiveClass 属性中
+    - cachedWrapperClasses: 拓展 Wrapper 实现类，会添加到 cachedWrapperClasses 属性中
++ loadExtensionClasses: 从多个配置文件中，加载扩展类实现数组
++ loadFile: 从一个配置文件中加载实现类数组
++ getExtensionLoader: 根据扩展点的接口获得扩展加载器
+    - 必须是接口且被@SPI注解标记
++ getExtension： 获取指定扩展对象
++ injectExtension: 注入获取的扩展对象的属性(需要与set方法)
++ getAdaptiveExtension： 获取自适应扩展对象
++ createAdaptiveExtensionClass: 生成自适应扩展类
++ getExtensionLoader(url, key, group)： 获得符合自动激活条件的拓展对象数组
 
-### 扩展点动态编译的实现原理
+## 线程模型
++ 线程池实现: dubbo-common下面的threadpool包
+    - fixed
+    - cached
+    - limited: 空闲时间无限大，导致不会回收暂时空闲的线程
++ 线程池的拒绝策略: com.alibaba.dubbo.common.threadpool.support.AbortPolicyWithReport.AbortPolicyWithReport
+    - 打印警告日志
+    - 输出到jstack
+## 服务暴露
+### 本地暴露(injvm)
+<dubbo:service scope="local"/>
+不配置scope默认两种方式都暴露
+### 远程暴露
+<dubbo:service scope="remote"/>
+### 本地引用
+
+### 远程引用
 
 ## Dubbo启动和停止
 + duboo提供3种配置方式：xml配置、注解、属性文件
