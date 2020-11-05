@@ -1,6 +1,6 @@
 package xyz.seiyaya.base;
 
-import xyz.seiyaya.common.helper.ThreadPoolHelper;
+import xyz.seiyaya.common.cache.helper.ThreadPoolHelper;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;

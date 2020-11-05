@@ -1,7 +1,7 @@
 package xyz.seiyaya.base;
 
 import lombok.Data;
-import xyz.seiyaya.common.helper.DateHelper;
+import xyz.seiyaya.common.cache.helper.DateHelper;
 
 import java.util.Date;
 

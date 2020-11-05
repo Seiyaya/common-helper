@@ -1,6 +1,6 @@
 package xyz.seiyaya.base;
 
-import xyz.seiyaya.common.helper.TimeHelper;
+import xyz.seiyaya.common.cache.helper.TimeHelper;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;

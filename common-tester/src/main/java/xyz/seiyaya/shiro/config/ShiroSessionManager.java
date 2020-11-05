@@ -9,7 +9,7 @@ import org.apache.shiro.web.servlet.ShiroHttpServletRequest;
 import org.apache.shiro.web.servlet.SimpleCookie;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.apache.shiro.web.util.WebUtils;
-import xyz.seiyaya.common.helper.StringHelper;
+import xyz.seiyaya.common.cache.helper.StringHelper;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;

@@ -10,7 +10,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import xyz.seiyaya.activiti.bean.dto.StartProcessDTO;
 import xyz.seiyaya.boot.ProcessApplication;
 import xyz.seiyaya.common.bean.ResultBean;
-import xyz.seiyaya.common.helper.SnowflakeIdHelper;
+import xyz.seiyaya.common.cache.helper.SnowflakeIdHelper;
 
 /**
  * @author wangjia

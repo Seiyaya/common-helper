@@ -3,10 +3,6 @@
 ## common-quartz
 + 数据库配置定时任务，通过后台管理系统直接管理定时任务
 
-## common-manage
-+ 权限管理系统
-    - 包含权限、角色、用户、菜单后台相关代码
-
 ## common-tools
 ### 常用注解
 + `RepeatSubmitLimit`: 防止重复提交的注解: 可以通过expression来配置需要作为锁定的key，会在第一个参数中通过ognl查找对应的key的组成部分
@@ -18,11 +14,6 @@
 ### 常用工具类
 + `MybatisSqlHelper`: 主要用来快速得到xml片段参数化后的sql,方便更快的调试。
 + `RepeatSubmitInterceptor`: 防止重复提交的拦截器，目前只实现了针对userId的，后面可以直接根据传递的参数通过ognl表达式得到针对一个接口的防止重复提交
-
-## common-deploy
-### 内容
-+ 软件安装与相关问题记录
-
 
 ## common-tester
 + 主要是做一些源码的测试类，或者一些不明白、不太清楚的地方的Tester

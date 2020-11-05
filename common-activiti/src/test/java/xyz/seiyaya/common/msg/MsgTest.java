@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import xyz.seiyaya.boot.ProcessApplication;
-import xyz.seiyaya.common.helper.SnowflakeIdHelper;
+import xyz.seiyaya.common.cache.helper.SnowflakeIdHelper;
 import xyz.seiyaya.common.msg.bean.ProcessMsg;
 import xyz.seiyaya.common.msg.config.MsgConstant;
 import xyz.seiyaya.common.msg.service.MsgService;

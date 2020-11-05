@@ -1,6 +1,5 @@
 package xyz.seiyaya.common.quartz.controller;
 
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +8,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.seiyaya.common.base.BaseController;
-import xyz.seiyaya.common.bean.ConstantBean;
 import xyz.seiyaya.common.bean.ResultBean;
+import xyz.seiyaya.common.constant.Constant;
+import xyz.seiyaya.common.constant.ConstantBean;
 import xyz.seiyaya.common.quartz.bean.QuartzInfo;
 import xyz.seiyaya.common.quartz.bean.QuartzLog;
 import xyz.seiyaya.common.quartz.bean.dto.QuartzInfoDto;
@@ -77,10 +77,10 @@ public class QuartzController extends BaseController {
             return new ResultBean().setError("参数错误");
         }
 
-        if(ConstantBean.NUMBER_ZERO.equals(quartzInfo.getState())){
+        if(Constant.IntegerConstant.INTEGER_0.equals(quartzInfo.getState())){
             //禁用定时任务
             QuartzHelper.removeJob(quartzInfo.getCode());
-        }else if(ConstantBean.NUMBER_ONE.equals(quartzInfo.getState())){
+        }else if(Constant.IntegerConstant.INTEGER_1.equals(quartzInfo.getState())){
             //启动定时任务
             Object clazz = Class.forName(quartzInfo.getClassName()).newInstance();
             QuartzHelper.addJob(quartzInfo);

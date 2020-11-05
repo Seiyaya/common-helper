@@ -1,6 +1,5 @@
 package xyz.seiyaya.leetcode;
 
-import com.alibaba.fastjson.JSON;
 import xyz.seiyaya.leetcode.common.TreeNode;
 
 /**
@@ -14,7 +13,7 @@ public class Solution105 {
 
     public static void main(String[] args) {
         TreeNode treeNode = new Solution105().buildTree(new int[]{3, 9, 20, 15, 7}, new int[]{9, 3, 15, 20, 7});
-        System.out.println(JSON.toJSONString(treeNode));
+        treeNode.foreachTreeNode();
     }
 
     public TreeNode buildTree(int[] preorder, int[] inorder) {

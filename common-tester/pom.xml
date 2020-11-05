@@ -8,6 +8,7 @@
         <artifactId>common-helper</artifactId>
         <groupId>xyz.seiyaya</groupId>
         <version>1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>xyz.seiyaya</groupId>
@@ -25,8 +26,23 @@
     <dependencies>
         <dependency>
             <groupId>xyz.seiyaya</groupId>
-            <artifactId>common-tools</artifactId>
+            <artifactId>common-cache</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>xyz.seiyaya</groupId>
+            <artifactId>common-core</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>xyz.seiyaya</groupId>
+            <artifactId>common-mybatis</artifactId>
             <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>xyz.seiyaya</groupId>
+            <artifactId>common-web</artifactId>
+            <version>${revision}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -116,6 +132,11 @@
             <groupId>cglib</groupId>
             <artifactId>cglib</artifactId>
             <version>3.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.54</version>
         </dependency>
     </dependencies>
 </project>

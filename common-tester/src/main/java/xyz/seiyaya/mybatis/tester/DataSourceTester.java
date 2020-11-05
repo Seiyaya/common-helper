@@ -1,7 +1,7 @@
 package xyz.seiyaya.mybatis.tester;
 
 import org.junit.Test;
-import xyz.seiyaya.common.helper.DateHelper;
+import xyz.seiyaya.common.cache.helper.DateHelper;
 
 import java.util.Calendar;
 

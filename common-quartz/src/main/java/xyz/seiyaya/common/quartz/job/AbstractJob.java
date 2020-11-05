@@ -4,9 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import xyz.seiyaya.common.bean.ConstantBean;
-import xyz.seiyaya.common.helper.DateHelper;
-import xyz.seiyaya.common.helper.SpringHelper;
+import xyz.seiyaya.common.cache.helper.DateHelper;
+import xyz.seiyaya.common.cache.helper.SpringHelper;
+import xyz.seiyaya.common.constant.Constant;
 import xyz.seiyaya.common.quartz.bean.QuartzInfo;
 import xyz.seiyaya.common.quartz.bean.QuartzLog;
 import xyz.seiyaya.common.quartz.service.QuartzInfoService;
@@ -36,7 +36,7 @@ public abstract class AbstractJob implements Job {
         //获取定时任务信息
         QuartzInfo quartzInfoParams = new QuartzInfo();
         quartzInfoParams.setCode(jobCode);
-        quartzInfoParams.setState(ConstantBean.NUMBER_ONE);
+        quartzInfoParams.setState(Constant.IntegerConstant.INTEGER_1);
         QuartzInfo dbQuartzInfo = quartzInfoService.getByCondition(quartzInfoParams);
 
         if(null == dbQuartzInfo){
@@ -53,15 +53,15 @@ public abstract class AbstractJob implements Job {
         quartzInfoParams.setId(dbQuartzInfo.getId());
         try {
             String remark = doExecute();
-            quartzLog.setTime(new Date().getTime() - quartzLog.getStartTime().getTime());
-            quartzLog.setResult(ConstantBean.NUMBER_ONE);
+            quartzLog.setTime(System.currentTimeMillis() - quartzLog.getStartTime().getTime());
+            quartzLog.setResult(Constant.IntegerConstant.INTEGER_1);
             quartzLog.setRemark(remark);
 
             quartzInfoParams.setSuccess(dbQuartzInfo.getSuccess()+1);
 
             log.info("[定时任务][{}][{}]",jobFuncDesc, DateHelper.formatNowDate());
         } catch (Exception e) {
-            quartzLog.setResult(ConstantBean.NUMBER_ZERO);
+            quartzLog.setResult(Constant.IntegerConstant.INTEGER_0);
             quartzInfoParams.setFail(dbQuartzInfo.getFail()+1);
             log.error("执行定时任务失败", e);
         } finally {

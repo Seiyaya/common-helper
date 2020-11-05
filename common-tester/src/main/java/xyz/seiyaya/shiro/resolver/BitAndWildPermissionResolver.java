@@ -3,7 +3,7 @@ package xyz.seiyaya.shiro.resolver;
 import org.apache.shiro.authz.Permission;
 import org.apache.shiro.authz.permission.PermissionResolver;
 import org.apache.shiro.authz.permission.WildcardPermission;
-import xyz.seiyaya.common.bean.SymbolConstant;
+import xyz.seiyaya.common.constant.SymbolConstant;
 
 /**
  * @author wangjia

@@ -1,11 +1,10 @@
 package xyz.seiyaya.stock.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.seiyaya.common.bean.ResultBean;
-import xyz.seiyaya.common.helper.StringHelper;
+import xyz.seiyaya.common.cache.helper.StringHelper;
 import xyz.seiyaya.stock.bean.Stock;
 import xyz.seiyaya.stock.bean.dto.StockDto;
 import xyz.seiyaya.stock.service.StockService;

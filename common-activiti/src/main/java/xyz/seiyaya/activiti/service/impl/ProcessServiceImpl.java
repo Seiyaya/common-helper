@@ -1,6 +1,5 @@
 package xyz.seiyaya.activiti.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
@@ -23,9 +22,10 @@ import xyz.seiyaya.activiti.bean.vo.ActProcessVO;
 import xyz.seiyaya.activiti.mapper.ActProcessMapper;
 import xyz.seiyaya.activiti.service.ProcessService;
 import xyz.seiyaya.common.bean.ResultBean;
+import xyz.seiyaya.common.cache.helper.JSONHelper;
+import xyz.seiyaya.common.cache.helper.SnowflakeIdHelper;
 import xyz.seiyaya.common.constant.Constant;
 import xyz.seiyaya.common.exception.ParamsException;
-import xyz.seiyaya.common.helper.SnowflakeIdHelper;
 import xyz.seiyaya.common.msg.bean.ProcessMsg;
 import xyz.seiyaya.common.msg.config.MsgConstant;
 import xyz.seiyaya.common.msg.service.MsgService;
@@ -99,7 +99,7 @@ public class ProcessServiceImpl implements ProcessService {
         identityService.setAuthenticatedUserId(String.valueOf(startProcess.getUserId()));
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(startProcess.getProcessType(), startProcess.getSerialNo(), startProcess.getParams());
         if(processInstance == null){
-            log.error("start process error , process info : {}", JSON.toJSONString(startProcess));
+            log.error("start process error , process info : {}", JSONHelper.toJSONString(startProcess));
             return resultBean.setError("流程发起失败");
         }
 

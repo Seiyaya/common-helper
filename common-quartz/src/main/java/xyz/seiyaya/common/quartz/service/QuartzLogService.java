@@ -8,5 +8,5 @@ import xyz.seiyaya.common.quartz.bean.QuartzLog;
  * @version 1.0
  * @date: 2019/9/6 15:21
  */
-public interface QuartzLogService extends BaseService<QuartzLog,Long> {
+public interface QuartzLogService extends BaseService<QuartzLog> {
 }

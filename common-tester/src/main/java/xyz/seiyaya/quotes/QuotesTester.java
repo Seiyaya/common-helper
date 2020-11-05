@@ -1,9 +1,9 @@
 package xyz.seiyaya.quotes;
 
 import org.junit.Test;
-import xyz.seiyaya.common.helper.DBParam;
-import xyz.seiyaya.common.helper.DateHelper;
-import xyz.seiyaya.common.helper.HttpHelper;
+import xyz.seiyaya.common.cache.helper.DBParam;
+import xyz.seiyaya.common.cache.helper.DateHelper;
+import xyz.seiyaya.common.cache.helper.HttpHelper;
 import xyz.seiyaya.quotes.bean.Fund;
 
 import java.math.BigDecimal;

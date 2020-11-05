@@ -1,11 +1,11 @@
 package xyz.seiyaya.mq.sender;
 
-import com.rabbitmq.client.*;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.MessageProperties;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.aop.support.AopUtils;
-import xyz.seiyaya.common.helper.DBParam;
-
-import java.io.IOException;
+import xyz.seiyaya.common.cache.helper.DBParam;
 
 import static xyz.seiyaya.mq.config.SimpleRabbitConstant.*;
 

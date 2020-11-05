@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import xyz.seiyaya.common.helper.HttpHelper;
+import xyz.seiyaya.common.cache.helper.HttpHelper;
 import xyz.seiyaya.stock.bean.Stock;
 import xyz.seiyaya.stock.mapper.StockMapper;
 

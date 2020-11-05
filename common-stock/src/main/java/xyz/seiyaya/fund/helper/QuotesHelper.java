@@ -1,19 +1,16 @@
 package xyz.seiyaya.fund.helper;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import xyz.seiyaya.common.helper.DBParam;
-import xyz.seiyaya.common.helper.DateHelper;
-import xyz.seiyaya.common.helper.HttpHelper;
-import xyz.seiyaya.common.helper.StringHelper;
+import xyz.seiyaya.common.cache.helper.DBParam;
+import xyz.seiyaya.common.cache.helper.DateHelper;
+import xyz.seiyaya.common.cache.helper.HttpHelper;
+import xyz.seiyaya.common.cache.helper.StringHelper;
 import xyz.seiyaya.fund.bean.FundInfo;
 import xyz.seiyaya.fund.bean.HistFundInfo;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -112,21 +109,22 @@ public class QuotesHelper {
                 return resultList;
             }
             s = s.substring(s.indexOf("(") + 1, s.length() - 2);
-            JSONObject jsonObject = JSONObject.parseObject(s);
-            jsonObject = jsonObject.getJSONObject("result").getJSONObject("data");
-            JSONArray data = jsonObject.getJSONArray("data");
-            if(data.isEmpty()){
-                break;
-            }
-            data.forEach(model->{
-                JSONObject current = (JSONObject) model;
-                Date date = current.getDate("fbrq");
-                int backupDate = Integer.parseInt(DateHelper.formatDate(date, "yyyyMMdd"));
-                HistFundInfo fundInfo = new HistFundInfo(backupDate,current.getBigDecimal("jjjz"),current.getBigDecimal("ljjz"));
-                fundInfo.setCode(code);
-                resultList.add(fundInfo);
-            });
+//            JSONObject jsonObject = JSONObject.parseObject(s);
+//            jsonObject = jsonObject.getJSONObject("result").getJSONObject("data");
+//            JSONArray data = jsonObject.getJSONArray("data");
+//            if(data.isEmpty()){
+//                break;
+//            }
+//            data.forEach(model->{
+//                JSONObject current = (JSONObject) model;
+//                Date date = current.getDate("fbrq");
+//                int backupDate = Integer.parseInt(DateHelper.formatDate(date, "yyyyMMdd"));
+//                HistFundInfo fundInfo = new HistFundInfo(backupDate,current.getBigDecimal("jjjz"),current.getBigDecimal("ljjz"));
+//                fundInfo.setCode(code);
+//                resultList.add(fundInfo);
+//            });
             page++;
+            break;
         }
         return resultList;
     }

@@ -1,11 +1,12 @@
 package xyz.seiyaya.shiro.resolver;
 
 import org.apache.shiro.authz.Permission;
-import xyz.seiyaya.common.helper.StringHelper;
+import xyz.seiyaya.common.cache.helper.StringHelper;
 
-import static xyz.seiyaya.common.bean.ConstantBean.NUMBER_THREE;
-import static xyz.seiyaya.common.bean.ConstantBean.NUMBER_TWO;
-import static xyz.seiyaya.common.bean.SymbolConstant.SYMBOL_ASTERISK;
+import static xyz.seiyaya.common.constant.ConstantBean.NUMBER_THREE;
+import static xyz.seiyaya.common.constant.ConstantBean.NUMBER_TWO;
+import static xyz.seiyaya.common.constant.SymbolConstant.SYMBOL_ASTERISK;
+
 
 /**
  * @author wangjia

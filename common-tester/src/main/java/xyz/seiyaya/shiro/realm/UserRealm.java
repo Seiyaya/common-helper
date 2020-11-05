@@ -7,7 +7,7 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
-import xyz.seiyaya.common.helper.SpringHelper;
+import xyz.seiyaya.common.cache.helper.SpringHelper;
 import xyz.seiyaya.shiro.bean.User;
 import xyz.seiyaya.shiro.serivce.UserService;
 

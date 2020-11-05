@@ -2,7 +2,7 @@ package xyz.seiyaya.websocket;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import xyz.seiyaya.common.helper.StringHelper;
+import xyz.seiyaya.common.cache.helper.StringHelper;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;

@@ -10,7 +10,7 @@ import java.util.List;
  * @version 1.0
  * @date: 2019/9/6 15:21
  */
-public interface QuartzInfoService extends BaseService<QuartzInfo,Long> {
+public interface QuartzInfoService extends BaseService<QuartzInfo> {
 
     List<QuartzInfo> getRealList(QuartzInfo quartzInfo);
 }

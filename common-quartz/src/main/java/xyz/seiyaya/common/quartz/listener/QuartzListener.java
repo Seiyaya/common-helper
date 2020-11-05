@@ -3,8 +3,8 @@ package xyz.seiyaya.common.quartz.listener;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.SchedulerException;
 import org.springframework.stereotype.Component;
-import xyz.seiyaya.common.bean.ConstantBean;
-import xyz.seiyaya.common.helper.SpringHelper;
+import xyz.seiyaya.common.cache.helper.SpringHelper;
+import xyz.seiyaya.common.constant.Constant;
 import xyz.seiyaya.common.quartz.bean.QuartzInfo;
 import xyz.seiyaya.common.quartz.service.QuartzInfoService;
 import xyz.seiyaya.common.quartz.utils.QuartzHelper;
@@ -36,7 +36,7 @@ public class QuartzListener{
             log.info("all quartz job start ...");
             QuartzInfoService quartzInfoService = SpringHelper.getBean(QuartzInfoService.class);
             QuartzInfo quartzInfo = new QuartzInfo();
-            quartzInfo.setState(ConstantBean.NUMBER_ONE);
+            quartzInfo.setState(Constant.IntegerConstant.INTEGER_1);
             List<QuartzInfo> quartzInfoList = quartzInfoService.getRealList(quartzInfo);
 
             quartzInfoList.forEach(model->{

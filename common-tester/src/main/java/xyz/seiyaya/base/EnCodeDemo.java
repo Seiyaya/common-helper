@@ -1,6 +1,5 @@
 package xyz.seiyaya.base;
 
-import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import redis.clients.jedis.Jedis;
 
@@ -28,8 +27,6 @@ public class EnCodeDemo {
         jedis.auth("#abF%F$c#197#33FF#");
         String userString = jedis.get("USER:INFO:" + userId);
         if(userString != null){
-            JSONObject jsonObject = JSONObject.parseObject(userString);
-            System.out.println(jsonObject.getString("token"));
         }else{
             log.info("login info is null");
         }
