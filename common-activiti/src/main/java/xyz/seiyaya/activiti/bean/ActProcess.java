@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import xyz.seiyaya.common.annotation.DictFormat;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -64,6 +65,7 @@ public class ActProcess {
     /**
      * 流程类型:
      **/
+    @DictFormat(type = "PROCESS_TYPE")
     private String type;
 
     /**

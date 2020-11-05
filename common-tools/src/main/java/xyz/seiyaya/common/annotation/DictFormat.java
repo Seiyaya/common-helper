@@ -27,10 +27,10 @@ public @interface DictFormat {
     String type();
 
     /**
-     * 中文注释的key
+     * 默认取 字段+Str，showOriginal=true的时候才使用
      * @return
      */
-    String fieldName();
+    String fieldName() default "";
 
     /**
      * 字典默认值

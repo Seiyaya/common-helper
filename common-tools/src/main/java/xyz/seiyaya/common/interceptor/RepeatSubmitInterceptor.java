@@ -68,8 +68,10 @@ public class RepeatSubmitInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         LockBean lockBean = lockKeyThreadLocal.get();
-        CacheService cacheService = SpringHelper.getBean(CacheService.class);
-        cacheService.unlock(lockBean.getKey(),lockBean.getValue());
+        if(lockBean != null){
+            CacheService cacheService = SpringHelper.getBean(CacheService.class);
+            cacheService.unlock(lockBean.getKey(),lockBean.getValue());
+        }
         lockKeyThreadLocal.remove();
     }
 }

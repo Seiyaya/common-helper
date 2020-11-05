@@ -9,8 +9,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
-import xyz.seiyaya.common.cache.service.CacheService;
-import xyz.seiyaya.common.cache.service.impl.RedisCacheServiceImpl;
 import xyz.seiyaya.common.serializer.DictFormatSerializerModifier;
 
 import javax.annotation.Resource;
@@ -38,7 +36,7 @@ public class CommonBeanConfig {
     }
 
     @Bean
-    public ObjectMapper getObjectMapper() {
+    public ObjectMapper objectMapper() {
         ObjectMapper mapper = new ObjectMapper();
         //去掉默认的时间戳格式
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
@@ -58,10 +56,5 @@ public class CommonBeanConfig {
         }));
         mapper.setSerializerFactory(mapper.getSerializerFactory().withSerializerModifier(new DictFormatSerializerModifier()));
         return mapper;
-    }
-
-    @Bean
-    public CacheService cacheService(){
-        return new RedisCacheServiceImpl();
     }
 }

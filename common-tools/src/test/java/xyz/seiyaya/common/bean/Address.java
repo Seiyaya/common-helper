@@ -26,7 +26,7 @@ public class Address {
     @UpdateLogInfo("路程")
     private Integer route;
 
-    @DictFormat(type = "ADDRESS_STATUS",fieldName = "statusStr")
+    @DictFormat(type = "ADDRESS_STATUS")
     private Integer status;
 
     public Address(Long id, String addressName, Integer route) {

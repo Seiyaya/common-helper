@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import xyz.seiyaya.common.interceptor.LoginInterceptor;
 import xyz.seiyaya.common.interceptor.LoginUserHandlerMethodArgumentResolver;
 import xyz.seiyaya.common.interceptor.RepeatSubmitInterceptor;
@@ -20,10 +20,10 @@ import java.util.List;
  */
 @Configuration
 @Slf4j
-public class CommonInterceptorConfig extends WebMvcConfigurationSupport {
+public class CommonInterceptorConfig implements WebMvcConfigurer {
 
     @Override
-    protected void addInterceptors(InterceptorRegistry registry) {
+    public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(getLoginInterceptor()).addPathPatterns("/**");
         registry.addInterceptor(getRepeatSubmitInterceptor()).addPathPatterns("/**");
     }
@@ -45,8 +45,7 @@ public class CommonInterceptorConfig extends WebMvcConfigurationSupport {
 
 
     @Override
-    protected void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-        super.addArgumentResolvers(argumentResolvers);
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         argumentResolvers.add(getLoginUserHandlerMethodArgumentResolver());
     }
 }

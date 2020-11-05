@@ -37,19 +37,15 @@ public class DictJsonSerializer extends JsonSerializer<Object> {
 
     @Override
     public void serialize(Object o, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
-        // TODO: 没有该属性直接在json里面不显示
-        if(this.showOriginal){
-            jsonGenerator.writeObject(o);
-        }else{
-            jsonGenerator.writeObject(null);
-        }
         StringRedisTemplate bean = SpringHelper.getBean(StringRedisTemplate.class);
         Object result = bean.opsForHash().get(PREFIX_DICT + type, o.toString());
-        jsonGenerator.writeFieldName(this.fieldName);
-        if(result != null){
-            jsonGenerator.writeObject(result.toString());
-        }else{
+        result = result != null ? result.toString() : defaultValue;
+        if(this.showOriginal){
+            jsonGenerator.writeObject(o);
+            jsonGenerator.writeFieldName(this.fieldName);
             jsonGenerator.writeObject(defaultValue);
+        }else{
+            jsonGenerator.writeObject(result);
         }
     }
 }

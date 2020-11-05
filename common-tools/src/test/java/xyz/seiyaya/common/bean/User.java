@@ -31,6 +31,6 @@ public class User {
     @UpdateLogInfo(value = "地址")
     private List<Address> addressList;
 
-    @DictFormat(type="USER_STATUS",fieldName = "statusStr")
+    @DictFormat(type="USER_STATUS",showOriginal = true)
     private Integer status;
 }

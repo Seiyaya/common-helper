@@ -1,6 +1,5 @@
 package xyz.seiyaya.activiti.controller;
 
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,7 +27,9 @@ public class DemoController {
     }
 
     @RequestMapping("/valid")
-    public ResultBean testValid(@Validated ActProcess actProcess){
-        return new ResultBean();
+    public ResultBean testValid(@RequestBody ActProcess actProcess){
+        ResultBean resultBean = new ResultBean();
+        resultBean.setData(actProcess);
+        return resultBean;
     }
 }
