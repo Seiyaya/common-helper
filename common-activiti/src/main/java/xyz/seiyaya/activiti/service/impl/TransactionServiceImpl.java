@@ -10,7 +10,7 @@ import xyz.seiyaya.activiti.bean.TransactionUser;
 import xyz.seiyaya.activiti.mapper.TransactionUserMapper;
 import xyz.seiyaya.activiti.service.TransactionService;
 import xyz.seiyaya.common.base.impl.BaseServiceImpl;
-import xyz.seiyaya.common.cache.helper.SpringHelper;
+import xyz.seiyaya.common.helper.SpringHelper;
 
 import javax.annotation.Resource;
 import java.lang.ref.Reference;

@@ -3,7 +3,7 @@ package xyz.seiyaya.common.bean;
 import lombok.Data;
 import xyz.seiyaya.common.annotation.CrawlAttribute;
 import xyz.seiyaya.common.annotation.UpdateLogInfo;
-import xyz.seiyaya.common.cache.helper.DateHelper;
+import xyz.seiyaya.common.helper.DateHelper;
 
 import java.util.Date;
 import java.util.List;

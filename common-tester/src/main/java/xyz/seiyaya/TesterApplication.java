@@ -12,7 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import tk.mybatis.spring.annotation.MapperScan;
-import xyz.seiyaya.common.cache.helper.SpringHelper;
+import xyz.seiyaya.common.helper.SpringHelper;
 import xyz.seiyaya.mybatis.service.MybatisService;
 
 import javax.tools.JavaCompiler;

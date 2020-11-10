@@ -3,7 +3,7 @@ package xyz.seiyaya.common.annotation.handle;
 import xyz.seiyaya.common.annotation.AuthorityTableData;
 import xyz.seiyaya.common.bean.AuthorityHeadTitle;
 import xyz.seiyaya.common.bean.AuthorityInfo;
-import xyz.seiyaya.common.cache.helper.StringHelper;
+import xyz.seiyaya.common.helper.StringHelper;
 
 import java.lang.reflect.Field;
 

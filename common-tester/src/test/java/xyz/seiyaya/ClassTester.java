@@ -3,7 +3,7 @@ package xyz.seiyaya;
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 import org.junit.Test;
 import org.springframework.beans.BeanUtils;
-import xyz.seiyaya.common.cache.helper.DBParam;
+import xyz.seiyaya.common.helper.DBParam;
 import xyz.seiyaya.service.ParentTwo;
 
 import java.math.BigDecimal;

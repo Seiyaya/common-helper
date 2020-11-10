@@ -2,7 +2,8 @@ package xyz.seiyaya.mybatis.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import xyz.seiyaya.common.cache.helper.DBParam;
+import xyz.seiyaya.common.helper.DBParam;
+import xyz.seiyaya.common.mybatis.annotation.MybatisOptimisticLock;
 import xyz.seiyaya.mybatis.bean.UserBean;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public interface UserBeanMapper extends tk.mybatis.mapper.common.Mapper<UserBean
 
     UserBean findUserByCondition(DBParam param,@Param("name") String name);
 
+    @MybatisOptimisticLock(versionType = 1)
     void updateUserById(UserBean userBean);
 
     UserBean findExUser(@Param("id") Integer id);

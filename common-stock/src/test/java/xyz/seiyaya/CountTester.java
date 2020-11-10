@@ -6,7 +6,7 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import xyz.seiyaya.common.cache.helper.DateHelper;
+import xyz.seiyaya.common.helper.DateHelper;
 import xyz.seiyaya.stock.StockApplication;
 import xyz.seiyaya.stock.bean.Stock;
 import xyz.seiyaya.stock.bean.dto.StockDto;

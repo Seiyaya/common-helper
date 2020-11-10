@@ -5,8 +5,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
-import xyz.seiyaya.common.cache.helper.JSONHelper;
 import xyz.seiyaya.common.cache.service.CacheService;
+import xyz.seiyaya.common.helper.JSONHelper;
 
 import javax.annotation.PostConstruct;
 import java.time.Duration;

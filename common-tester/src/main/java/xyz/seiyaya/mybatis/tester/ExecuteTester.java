@@ -19,7 +19,9 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.session.defaults.DefaultSqlSession;
 import org.junit.Before;
 import org.junit.Test;
-import xyz.seiyaya.common.cache.helper.DBParam;
+import xyz.seiyaya.common.helper.DBParam;
+import xyz.seiyaya.common.mybatis.interceptor.OptimisticLockInterceptor;
+import xyz.seiyaya.common.mybatis.interceptor.SqlLogInterceptor;
 import xyz.seiyaya.mybatis.bean.UserBean;
 import xyz.seiyaya.mybatis.mapper.UserBeanMapper;
 
@@ -50,6 +52,8 @@ public class ExecuteTester {
         String resource = "mybatis-config.xml";
         InputStream inputStream = Resources.getResourceAsStream(resource);
         sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+        sqlSessionFactory.getConfiguration().addInterceptor(new SqlLogInterceptor());
+        sqlSessionFactory.getConfiguration().addInterceptor(new OptimisticLockInterceptor());
         inputStream.close();
     }
 
@@ -338,5 +342,16 @@ public class ExecuteTester {
         names.setAccessible(true);
         Object o = names.get(paramNameResolver);
         System.out.println(o);
+    }
+
+    @Test
+    public void testUpdateUserBean(){
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        UserBeanMapper mapper = sqlSession.getMapper(UserBeanMapper.class);
+        UserBean userBean = new UserBean();
+        userBean.setId(13);
+        userBean.setAge(11);
+        userBean.setVersion(1);
+        mapper.updateUserById(userBean);
     }
 }

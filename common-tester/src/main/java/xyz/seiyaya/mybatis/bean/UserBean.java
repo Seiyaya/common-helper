@@ -1,14 +1,11 @@
 package xyz.seiyaya.mybatis.bean;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author wangjia
@@ -30,6 +27,8 @@ public class UserBean implements Serializable {
     private String sex;
     private String[] status;
     private Date birthday;
+
+    private Integer version;
 
 
     public UserBean(String name, String password, Integer age, Date birthday) {

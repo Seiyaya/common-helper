@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import xyz.seiyaya.common.cache.helper.StringHelper;
 import xyz.seiyaya.common.cache.service.CacheService;
+import xyz.seiyaya.common.helper.StringHelper;
 import xyz.seiyaya.shiro.dao.SessionDao;
 
 import javax.servlet.http.HttpServletRequest;

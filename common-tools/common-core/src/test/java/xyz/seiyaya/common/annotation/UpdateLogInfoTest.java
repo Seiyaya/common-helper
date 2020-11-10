@@ -5,7 +5,7 @@ import org.junit.Test;
 import xyz.seiyaya.common.annotation.handle.CompareValueHelper;
 import xyz.seiyaya.common.bean.Address;
 import xyz.seiyaya.common.bean.User;
-import xyz.seiyaya.common.cache.helper.DateHelper;
+import xyz.seiyaya.common.helper.DateHelper;
 
 import java.util.Calendar;
 import java.util.Date;

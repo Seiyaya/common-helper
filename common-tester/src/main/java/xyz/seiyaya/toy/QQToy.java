@@ -1,8 +1,8 @@
 package xyz.seiyaya.toy;
 
-import xyz.seiyaya.common.cache.helper.DBParam;
-import xyz.seiyaya.common.cache.helper.ExcelHelper;
-import xyz.seiyaya.common.cache.helper.HttpHelper;
+import xyz.seiyaya.common.helper.DBParam;
+import xyz.seiyaya.common.helper.ExcelHelper;
+import xyz.seiyaya.common.helper.HttpHelper;
 
 import java.io.File;
 import java.io.FileOutputStream;

@@ -52,6 +52,7 @@
         update t_test_user
         <set>
             <if test="name != null"> name = #{name}</if>
+            <if test="age != null"> age = #{age}</if>
         </set>
         where id = #{id}
     </update>

@@ -3,8 +3,8 @@ package xyz.seiyaya.common.annotation.handle;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import xyz.seiyaya.common.annotation.UpdateLogInfo;
-import xyz.seiyaya.common.cache.helper.CollectionHelper;
-import xyz.seiyaya.common.cache.helper.DateHelper;
+import xyz.seiyaya.common.helper.CollectionHelper;
+import xyz.seiyaya.common.helper.DateHelper;
 
 import java.lang.reflect.Field;
 import java.util.Date;

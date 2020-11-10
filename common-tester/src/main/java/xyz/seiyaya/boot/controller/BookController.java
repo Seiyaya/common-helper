@@ -7,7 +7,7 @@ import xyz.seiyaya.boot.bean.Feedback;
 import xyz.seiyaya.boot.dao.FeedBackMapper;
 import xyz.seiyaya.boot.helper.EmojiFilterUtils;
 import xyz.seiyaya.common.bean.ResultBean;
-import xyz.seiyaya.common.cache.helper.StringHelper;
+import xyz.seiyaya.common.helper.StringHelper;
 
 import javax.annotation.Resource;
 

@@ -1,7 +1,7 @@
 package xyz.seiyaya.pvp.bean;
 
 import lombok.Data;
-import xyz.seiyaya.common.cache.helper.URLHelper;
+import xyz.seiyaya.common.helper.URLHelper;
 
 /**
  * 具体的图片

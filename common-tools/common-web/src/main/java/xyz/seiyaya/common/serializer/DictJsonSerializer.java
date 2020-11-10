@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import lombok.Data;
 import xyz.seiyaya.common.annotation.DictFormat;
-import xyz.seiyaya.common.cache.helper.SpringHelper;
 import xyz.seiyaya.common.cache.service.CacheService;
+import xyz.seiyaya.common.helper.SpringHelper;
 
 import java.io.IOException;
 

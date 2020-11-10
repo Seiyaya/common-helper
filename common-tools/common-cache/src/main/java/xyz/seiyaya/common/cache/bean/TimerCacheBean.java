@@ -1,7 +1,7 @@
 package xyz.seiyaya.common.cache.bean;
 
-import xyz.seiyaya.common.cache.helper.StringHelper;
 import xyz.seiyaya.common.cache.task.CleanExpiredDataTask;
+import xyz.seiyaya.common.helper.StringHelper;
 
 import java.util.Iterator;
 import java.util.Map;

@@ -1,7 +1,7 @@
 package xyz.seiyaya.common.quartz.job;
 
 import lombok.extern.slf4j.Slf4j;
-import xyz.seiyaya.common.cache.helper.DateHelper;
+import xyz.seiyaya.common.helper.DateHelper;
 
 /**
  * @author wangjia

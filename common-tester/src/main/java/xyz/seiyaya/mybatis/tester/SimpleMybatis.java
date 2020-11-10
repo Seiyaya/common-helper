@@ -15,7 +15,7 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.defaults.DefaultSqlSession;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.jdbc.JdbcTransaction;
-import xyz.seiyaya.common.interceptor.SqlLogInterceptor;
+import xyz.seiyaya.common.mybatis.interceptor.SqlLogInterceptor;
 import xyz.seiyaya.mybatis.bean.UserBean;
 
 import java.sql.SQLException;

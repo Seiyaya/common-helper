@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import xyz.seiyaya.common.cache.helper.HttpHelper;
+import xyz.seiyaya.common.helper.HttpHelper;
 import xyz.seiyaya.stock.bean.HistStockInfo;
 import xyz.seiyaya.stock.mapper.HistStockInfoMapper;
 import xyz.seiyaya.stock.service.StockInfoService;

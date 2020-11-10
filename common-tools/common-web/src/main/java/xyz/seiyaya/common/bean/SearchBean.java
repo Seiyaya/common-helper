@@ -1,11 +1,11 @@
 package xyz.seiyaya.common.bean;
 
 import lombok.Data;
-import xyz.seiyaya.common.cache.helper.DateHelper;
+import xyz.seiyaya.common.helper.DateHelper;
 
 import java.util.Date;
 
-import static xyz.seiyaya.common.cache.helper.ObjectHelper.ifNull;
+import static xyz.seiyaya.common.helper.ObjectHelper.ifNull;
 
 /**
  * 通用查询的bean

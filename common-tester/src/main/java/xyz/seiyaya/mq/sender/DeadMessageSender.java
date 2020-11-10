@@ -5,7 +5,7 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.MessageProperties;
 import lombok.extern.slf4j.Slf4j;
-import xyz.seiyaya.common.cache.helper.DBParam;
+import xyz.seiyaya.common.helper.DBParam;
 
 import static xyz.seiyaya.mq.config.SimpleRabbitConstant.*;
 

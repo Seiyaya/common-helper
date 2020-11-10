@@ -4,7 +4,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.junit.Before;
 import org.junit.Test;
-import xyz.seiyaya.common.cache.helper.DBParam;
+import xyz.seiyaya.common.helper.DBParam;
 import xyz.seiyaya.mybatis.bean.UserBean;
 import xyz.seiyaya.mybatis.mapper.UserBeanMapper;
 

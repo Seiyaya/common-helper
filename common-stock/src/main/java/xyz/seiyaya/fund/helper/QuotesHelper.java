@@ -3,10 +3,10 @@ package xyz.seiyaya.fund.helper;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import xyz.seiyaya.common.cache.helper.DBParam;
-import xyz.seiyaya.common.cache.helper.DateHelper;
-import xyz.seiyaya.common.cache.helper.HttpHelper;
-import xyz.seiyaya.common.cache.helper.StringHelper;
+import xyz.seiyaya.common.helper.DBParam;
+import xyz.seiyaya.common.helper.DateHelper;
+import xyz.seiyaya.common.helper.HttpHelper;
+import xyz.seiyaya.common.helper.StringHelper;
 import xyz.seiyaya.fund.bean.FundInfo;
 import xyz.seiyaya.fund.bean.HistFundInfo;
 

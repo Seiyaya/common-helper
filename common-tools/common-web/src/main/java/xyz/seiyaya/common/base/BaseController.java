@@ -3,9 +3,9 @@ package xyz.seiyaya.common.base;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import xyz.seiyaya.common.bean.ResultBean;
-import xyz.seiyaya.common.cache.helper.JSONHelper;
 import xyz.seiyaya.common.constant.HttpHeaderConstant;
 import xyz.seiyaya.common.exception.ParamsException;
+import xyz.seiyaya.common.helper.JSONHelper;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
