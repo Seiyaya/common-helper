@@ -16,7 +16,7 @@ import java.util.Random;
 public class EnCodeDemo {
 
     public static void main(String[] args) {
-        System.out.println(crackToken("6060607B67616766666F67666560646E6E6E63626464607B64626F67616E6E"));
+        System.out.println(crackToken("6766617B61667B6E656163636660"));
 
 
         String s = Encode.byte2HexStr(Encode.encode("666-1804040949326994236-1234567"));

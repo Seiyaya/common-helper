@@ -1,8 +1,9 @@
 package xyz.seiyaya.common.cache.helper;
 
-import com.google.common.collect.Lists;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.builder.MapperBuilderAssistant;
+import org.apache.ibatis.builder.xml.XMLIncludeTransformer;
 import org.apache.ibatis.builder.xml.XMLMapperEntityResolver;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.ParameterMapping;
@@ -14,8 +15,8 @@ import org.apache.ibatis.session.Configuration;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,31 +31,62 @@ import java.util.Map;
 public class MybatisSqlHelper {
 
     /**
+     * mapper文件后缀
+     */
+    public static final String SUFFIX = "Mapper";
+
+
+    /**
+     * 获取sql相关信息
+     * @param sqlId
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    public static SqlInfo getSqlInfo(String sqlId, Map<String, Object> param) throws Exception {
+        return getSqlInfo(sqlId,param,"");
+    }
+
+    /**
      * 根据sqlId(即MappedStatement.id)
      * @param sqlId
      * @param param
      * @return
      */
-    public static SqlInfo getSqlInfo(String sqlId , Map<String,Object> param) throws Exception {
+    public static SqlInfo getSqlInfo(String sqlId , Map<String,Object> param, String subDir) throws Exception {
         if(sqlId == null || sqlId.isEmpty()){
             return null;
         }
         String namespace = sqlId.substring(0, sqlId.lastIndexOf("."));
         String fileName = namespace.substring(namespace.lastIndexOf(".")+1);
+        if(!fileName.endsWith(SUFFIX)){
+            throw new RuntimeException(String.format("请输入正确的mapper[%s],检查是否没有添加需要转换的sql片段",fileName));
+        }
         String id = sqlId.substring(sqlId.lastIndexOf(".")+1);
-        InputStream inputStream = new FileInputStream(MybatisSqlHelper.class.getClassLoader().getResource("mapper/"+fileName+".xml").getFile());
+        String resourceName = "mapper/" + subDir + "/" +fileName+".xml";
+        URL resource = MybatisSqlHelper.class.getClassLoader().getResource(resourceName);
+        if(resource == null){
+            throw new RuntimeException(String.format("请检查配置mapper[%s]文件是否存在",resourceName));
+        }
+        String filePath = resource.getFile();
+        InputStream inputStream = new FileInputStream(filePath);
         XPathParser parser = new XPathParser(inputStream, false, null, new XMLMapperEntityResolver());
         List<XNode> xNodeList = parser.evalNodes("mapper/select|mapper/update|mapper/delete|mapper/insert");
+        List<XNode> sqlNodeList = parser.evalNodes("mapper/sql");
         SqlInfo sqlInfo = null;
+        boolean flag = false;
         if(xNodeList != null && !xNodeList.isEmpty()){
             for(XNode xNode : xNodeList){
                 if(id.equals(xNode.getStringAttribute("id"))){
-                    sqlInfo = getSqlInfo(xNode,param);
+                    sqlInfo = getSqlInfo(xNode,param,resourceName,namespace,sqlNodeList);
+                    flag = true;
                     break;
                 }
             }
         }
-
+        if(!flag){
+            throw new RuntimeException(String.format("请检查mapper文件是否有对应的sql片段,mapper[%s]   sqlId[%s]",resourceName,id));
+        }
         return sqlInfo;
     }
 
@@ -64,14 +96,15 @@ public class MybatisSqlHelper {
      * @param param
      * @return
      */
-    public static SqlInfo getSqlInfoByString(String xmlPart , Map<String,Object> param){
+    public static SqlInfo getSqlInfoByString(String xmlPart , Map<String,Object> param,String resourceName,String namespace){
         if(xmlPart == null || xmlPart.isEmpty()){
             return null;
         }
 
         XPathParser xPathParser = new XPathParser(xmlPart);
         XNode xNode = xPathParser.evalNode("select|update|delete|insert");
-        return getSqlInfo(xNode,param);
+
+        return getSqlInfo(xNode,param,resourceName,namespace,null);
     }
 
     /**
@@ -80,13 +113,37 @@ public class MybatisSqlHelper {
      * @param param
      * @return
      */
-    public static SqlInfo getSqlInfo(XNode xNode, Map<String,Object> param){
+    public static SqlInfo getSqlInfo(XNode xNode, Map<String,Object> param,String resource,String namespace,List<XNode> sqlNodeList){
         Configuration configuration = new Configuration();
         XMLScriptBuilder builder = new XMLScriptBuilder(configuration, xNode);
+        // 将include标签替换到需要执行的代码段
+        replaceInclude(configuration,xNode,resource,namespace,sqlNodeList);
+        // 得到具体的sql
         SqlSource sqlSource = builder.parseScriptNode();
         BoundSql boundSql = sqlSource.getBoundSql(param);
         SqlInfo sqlInfo = convertSqlInfo(boundSql);
         return sqlInfo;
+    }
+
+    /**
+     * 解析include标签并将它设置到configuration中
+     * 此处暂时不考虑 <include/>标签中含有表达式的情况
+     * @param configuration
+     * @param xNode
+     * @param resource
+     * @param namespace
+     * @param sqlNodeList
+     */
+    private static void replaceInclude(Configuration configuration,XNode xNode, String resource, String namespace, List<XNode> sqlNodeList) {
+        MapperBuilderAssistant builderAssistant = new MapperBuilderAssistant(configuration, resource);
+        builderAssistant.setCurrentNamespace(namespace);
+        for (XNode context : sqlNodeList) {
+            String id = context.getStringAttribute("id");
+            id = builderAssistant.applyCurrentNamespace(id, false);
+            configuration.getSqlFragments().put(id, context);
+        }
+        XMLIncludeTransformer includeParser = new XMLIncludeTransformer(configuration, builderAssistant);
+        includeParser.applyIncludes(xNode.getNode());
     }
 
     /**
@@ -155,16 +212,5 @@ public class MybatisSqlHelper {
             }
             return sql;
         }
-    }
-
-    public static void main(String[] args) throws Exception {
-        Map<String,Object> map = new HashMap<>();
-        map.put("id",1);
-        ArrayList<Object> list = Lists.newArrayList();
-        list.add(1);
-        list.add(2);
-        map.put("list",list);
-        SqlInfo sqlInfo = MybatisSqlHelper.getSqlInfo("xyz.seiyaya.mybatis.mapper.UserBeanMapper.sqlExecuteWithMapParamsAndForeach", map);
-        log.info("[{}]",sqlInfo.formatSql());
     }
 }

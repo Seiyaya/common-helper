@@ -30,8 +30,12 @@
         <result property="initBalance" column="init_balance"/>
     </resultMap>
 
+    <sql id="selectContent">
+        id,name,age,password,birthday,sex
+    </sql>
+
     <select id="findUser" resultMap="userBeanMap">
-        SELECT * FROM t_test_user
+        SELECT <include refid="selectContent"/> FROM t_test_user
         <where>
             <if test="id != null">and id = #{id,javaType=int,jdbcType=INTEGER}</if>
         </where>
@@ -53,7 +57,9 @@
     </update>
 
     <select id="sqlExecuteWithMapParamsAndForeach" resultType="xyz.seiyaya.mybatis.bean.UserBean">
-        select * from t_test_user
+        select
+        <include refid="selectContent"></include>
+        from t_test_user
         <where>
             <if test="id != null"> and id = ${id}</if>
             <if test="list == null or list.size() == 0">

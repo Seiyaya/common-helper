@@ -37,7 +37,7 @@
         <dependency>
             <groupId>xyz.seiyaya</groupId>
             <artifactId>common-mybatis</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${revision}</version>
         </dependency>
         <dependency>
             <groupId>xyz.seiyaya</groupId>
