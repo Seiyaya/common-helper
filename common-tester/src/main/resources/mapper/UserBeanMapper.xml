@@ -2,6 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="xyz.seiyaya.mybatis.mapper.UserBeanMapper">
 
+    <sql id="userBeanConstant">
+        <bind name="_delFlag" value="@xyz.seiyaya.mybatis.bean.MybatisConstant$MybatisInnerConstant@INTEGER_0"/>
+        <bind name="_statusList" value="@xyz.seiyaya.mybatis.bean.MybatisConstant@getInParam(@xyz.seiyaya.mybatis.bean.MybatisConstant@STATUS_LIST)"/>
+    </sql>
+
+
     <resultMap id="userBeanMap" type="xyz.seiyaya.mybatis.bean.UserBean">
         <result property="id" column="id"/>
         <result property="name" column="name"/>
@@ -35,6 +41,7 @@
     </sql>
 
     <select id="findUser" resultMap="userBeanMap">
+        <include refid="userBeanConstant"/>
         SELECT <include refid="selectContent"/> FROM t_test_user
         <where>
             <if test="id != null">and id = #{id,javaType=int,jdbcType=INTEGER}</if>
@@ -75,6 +82,7 @@
     </select>
 
     <select id="findUserList" resultMap="userBeanMapAll">
-        select * from t_test_user
+        <include refid="userBeanConstant"></include>
+        select * from t_test_user where del_flag = #{_delFlag}
     </select>
 </mapper>

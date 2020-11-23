@@ -23,7 +23,7 @@ public class MybatisSqlHelperTest {
         list.add(1);
         list.add(2);
         map.put("list",list);
-        MybatisSqlHelper.SqlInfo sqlInfo = MybatisSqlHelper.getSqlInfo("xyz.seiyaya.mybatis.mapper.UserBeanMapper.sqlExecuteWithMapParamsAndForeach", map);
+        MybatisSqlHelper.SqlInfo sqlInfo = MybatisSqlHelper.getSqlInfo("xyz.seiyaya.mybatis.mapper.UserBeanMapper.findUser", map);
         log.info("[{}]",sqlInfo.formatSql());
     }
 }
