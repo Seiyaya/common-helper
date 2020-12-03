@@ -2,10 +2,22 @@ spring:
   profiles:
     active: local
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/common_tester?useUnicode=true&characterEncoding=utf8&autoReconnect=true&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
-    username: root
-    password: 123456
-    driver-class-name: com.mysql.jdbc.Driver
+    orders:
+      url: jdbc:mysql://127.0.0.1:3306/common_tester?useUnicode=true&characterEncoding=utf8&autoReconnect=true&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
+      username: root
+      password: 123456
+      driver-class-name: com.mysql.jdbc.Driver
+      hikari:
+        minimum-idle: 1 # 池中维护的最小空闲连接数，默认为 10 个
+        maximum-pool-size: 10 # 池中最大连接数，包括闲置和使用中的连接，默认为 10 个
+    users:
+      url: jdbc:mysql://127.0.0.1:3306/website?useUnicode=true&characterEncoding=utf8&autoReconnect=true&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
+      username: root
+      password: 123456
+      driver-class-name: com.mysql.jdbc.Driver
+      hikari:
+        minimum-idle: 1 # 池中维护的最小空闲连接数，默认为 10 个
+        maximum-pool-size: 10 # 池中最大连接数，包括闲置和使用中的连接，默认为 10 个
   application:
     name: home-server
   redis:
