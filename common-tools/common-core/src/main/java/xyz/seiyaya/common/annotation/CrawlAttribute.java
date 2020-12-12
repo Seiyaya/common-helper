@@ -1,5 +1,8 @@
 package xyz.seiyaya.common.annotation;
 
+import xyz.seiyaya.common.annotation.handle.CrawlHandler;
+import xyz.seiyaya.common.bean.NoneCrawlHandler;
+
 import java.lang.annotation.*;
 
 /**
@@ -24,5 +27,12 @@ public @interface CrawlAttribute {
      * 日期格式化策略
      * @return
      */
-    int dateFormat() default 0;
+    int dateFormat() default -1;
+
+    /**
+     * 特殊字段的处理
+     * 比如2020-09-30表示的是第四季度
+     * @return
+     */
+    Class<? extends CrawlHandler> handleClass() default NoneCrawlHandler.class;
 }

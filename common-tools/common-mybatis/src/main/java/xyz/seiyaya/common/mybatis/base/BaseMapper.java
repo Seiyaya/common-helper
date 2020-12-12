@@ -2,6 +2,7 @@ package xyz.seiyaya.common.mybatis.base;
 
 import tk.mybatis.mapper.common.Mapper;
 import tk.mybatis.mapper.common.MySqlMapper;
+import xyz.seiyaya.common.mybatis.tk.BatchMapper;
 
 
 /**
@@ -9,5 +10,5 @@ import tk.mybatis.mapper.common.MySqlMapper;
  * @param <T>
  * @author seiyaya
  */
-public interface BaseMapper<T> extends Mapper<T>, MySqlMapper<T> {
+public interface BaseMapper<T> extends Mapper<T>, MySqlMapper<T>, BatchMapper<T> {
 }
