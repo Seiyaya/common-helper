@@ -75,7 +75,11 @@ public class DateHelper {
     }
 
     public static Date parseDate(String str){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(YYYY_MM_DD_HH_MM_SS);
+        return parseDate(str,YYYY_MM_DD_HH_MM_SS);
+    }
+
+    public static Date parseDate(String str,String pattern){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         try {
             Date parse = simpleDateFormat.parse(str);
             return parse;

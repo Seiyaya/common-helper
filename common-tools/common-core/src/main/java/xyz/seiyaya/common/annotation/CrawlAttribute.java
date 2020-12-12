@@ -19,4 +19,10 @@ public @interface CrawlAttribute {
      * @return
      */
     String value();
+
+    /**
+     * 日期格式化策略
+     * @return
+     */
+    int dateFormat() default 0;
 }

@@ -20,7 +20,7 @@ public class CheckConditionHelper {
     }
 
     public static void check(boolean condition,int key,String msg){
-        if(!condition){
+        if(condition){
             throw new ParamsException(key,msg);
         }
     }
