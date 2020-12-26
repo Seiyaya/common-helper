@@ -27,8 +27,6 @@ import java.util.Map;
 @Slf4j
 public class CrawlHelper<T> {
 
-    //TODO: 通过构造函数进行对T进行参数化，get方法不再需要传递class对象
-
     /**
      * 从json转对应的属性到bean上面
      * @param clazz
