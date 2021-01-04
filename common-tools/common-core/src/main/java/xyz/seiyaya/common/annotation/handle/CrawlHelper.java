@@ -6,10 +6,7 @@ import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import xyz.seiyaya.common.annotation.CrawlAttribute;
 import xyz.seiyaya.common.bean.NoneCrawlHandler;
-import xyz.seiyaya.common.helper.CheckConditionHelper;
-import xyz.seiyaya.common.helper.CollectionHelper;
-import xyz.seiyaya.common.helper.DateHelper;
-import xyz.seiyaya.common.helper.NumberHelper;
+import xyz.seiyaya.common.helper.*;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
@@ -27,6 +24,9 @@ import java.util.Map;
 @Slf4j
 public class CrawlHelper<T> {
 
+
+    public static final String SPECIAL_SIGN = "--";
+
     /**
      * 从json转对应的属性到bean上面
      * @param clazz
@@ -42,20 +42,50 @@ public class CrawlHelper<T> {
             if(fields.length == 0){
                 return null;
             }
+            // 缓存handler对象
+            Map<String,CrawlHandler> handlerMap = Maps.newHashMap();
             for(Field field : fields){
                 field.setAccessible(true);
                 // 设置属性的值
                 CrawlAttribute crawlAttribute = field.getAnnotation(CrawlAttribute.class);
                 if(crawlAttribute != null){
-                    String key = crawlAttribute.value();
-                    Object o = obj.get(key);
-                    field.set(t,o);
+                    convertFieldValue(obj, t, handlerMap, field, crawlAttribute);
                 }
             }
         }catch (Exception e){
             log.error("",e);
         }
         return t;
+    }
+
+    /**
+     * 转换字段的值
+     * @param obj
+     * @param t
+     * @param handlerMap
+     * @param field
+     * @param crawlAttribute
+     * @return
+     * @throws Exception
+     */
+    private boolean convertFieldValue(JSONObject obj, T t, Map<String, CrawlHandler> handlerMap, Field field, CrawlAttribute crawlAttribute) throws Exception {
+        String value = crawlAttribute.value();
+        Object o = obj.get(value);
+        // 特殊字符处理
+        if (StringHelper.isEmpty(o.toString()) || SPECIAL_SIGN.equals(o.toString())) {
+            return true;
+        }
+        if (!NoneCrawlHandler.class.equals(crawlAttribute.handleClass())) {
+            o = dealSpecialField(handlerMap, value, o, crawlAttribute);
+        } else if (Date.class.equals(field.getType())) {
+            o = dealDateType(crawlAttribute, o);
+        } else if (BigDecimal.class.equals(field.getType())) {
+            o = NumberHelper.parseBigDecimal(o.toString());
+        } else if (Byte.class.equals(field.getType())) {
+            o = NumberHelper.parseByte(o.toString());
+        }
+        field.set(t, o);
+        return false;
     }
 
     /**
@@ -78,18 +108,7 @@ public class CrawlHelper<T> {
                 T t = clazz.newInstance();
                 for (Field field : fieldList) {
                     CrawlAttribute crawlAttribute = field.getAnnotation(CrawlAttribute.class);
-                    String value = crawlAttribute.value();
-                    Object o = obj.get(value);
-                    if(!NoneCrawlHandler.class.equals(crawlAttribute.handleClass())){
-                        o = dealSpecialField(handlerMap,value,o,crawlAttribute);
-                    } else if( Date.class.equals(field.getType())){
-                        o = dealDateType(crawlAttribute, o);
-                    }else if(BigDecimal.class.equals(field.getType())){
-                        o = NumberHelper.parseBigDecimal(o.toString());
-                    }else if(Byte.class.equals(field.getType())){
-                        o = NumberHelper.parseByte(o.toString());
-                    }
-                    field.set(t, o);
+                    convertFieldValue(obj, t, handlerMap, field, crawlAttribute);
                 }
                 list.add(t);
             } catch (Exception e) {
