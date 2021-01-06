@@ -1,5 +1,61 @@
 # 集合
 
+## Map必知必会
+1. 如何把一个Map转化为List
+```java
+// key转换成list
+List keyList = new ArrayList(map.keySet());
+
+// value转换成list
+List valueList = new ArrayList(map.values());
+
+// 键值对转换成list
+List entryList = new ArrayList(map.entrySet());
+```
+
+2. 如何遍历一个map
+```java
+// entrySet+for实现遍历
+for(Entry entry: map.entrySet()) {
+    
+}
+
+// Iterator+while实现遍历
+Iterator itr = map.entrySet().iterator();
+while(itr.hasNext()) {
+  Entry entry = itr.next();
+  K key = entry.getKey();
+  V value = entry.getValue();
+}
+
+// java8遍历
+map.foreach((key,value)->{
+
+})
+```
+3. 根据map的keys排序
+```java
+List list = new ArrayList(map.entrySet());
+Collections.sort(list, (Entry e1, Entry e2)-> {
+    return e1.getKey().compareTo(e2.getKey());
+});
+
+// SortedMap+TreeMap+Comparator
+SortedMap sortedMap = new TreeMap(new Comparator() {
+  @Override
+  public int compare(K k1, K k2) {
+    return k1.compareTo(k2);
+  }
+});
+sortedMap.putAll(map);
+```
+
+4. 如何对Map的values进行排序
+同上，借助Collections.sort方法
+
+
+5. 如何初始化一个静态/不可变的Map
+
 ## HashMap
 + 多线程下的HashMap有什么问题
 ```

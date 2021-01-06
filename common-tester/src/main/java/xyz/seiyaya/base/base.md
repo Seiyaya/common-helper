@@ -365,6 +365,11 @@ class Worker extends AbstractQueuedSynchronizer implements Runnable{
     - CallerRunsPolicy: 让调用者直接在自己的线程里执行，线程池不做处理
     - DiscardPolicy: 线程池直接把任务丢弃
     - DiscardOldestPolicy: 将队列里面最老的任务删除掉，把该任务放入队列
+
+线程池类型
+    + newFixedThreadPool  -->  LinkedBlockingQueue
+    + newScheduledThreadPool  --> DelayQueue
+    + newCachedThreadPool --> SynchronousQueue
 ## Callable与Future
 ```java
 // 具有返回值的Runnable
