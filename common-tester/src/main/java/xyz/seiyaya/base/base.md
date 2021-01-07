@@ -392,3 +392,30 @@ String result = f.get();
         - scheduleWithFixedDelay: 与本身执行时间有关，执行时间+间隔下次的时间为下一次的执行时间
 + 延迟执行任务原理
     - 没有使用 DelayQueue，而是使用ScheduledThreadPoolExecutor内部又实现的一个特定DelayQueue
+    
+# logback
+## logback解决的问题
+1. 内核重写、充分测试、初始化内存加载更小
+2. logback实现了slf4j
+3. 文档齐全
+4. logback当配置文件修改了，支持自动重新加载配置文件，扫描过程快且安全，它并不需要另外创建一个扫描线程
+
+## logback加载
+1. 在系统配置文件System Properties中寻找是否有``logback.configurationFile``对应的value
+2. 在classpath下寻找是否有logback.groovy（即logback支持groovy与xml两种配置方式）
+3. 在classpath下寻找是否有logback-test.xml
+4. 在classpath下寻找是否有logback.xml
+5. 具体实现代码参考: ``ch.qos.logback.classic.util.ContextInitializer#findURLOfDefaultConfigurationFile``
+
+
+## logback的configuration
++ ``<configuration>``
+    - scan: 当scan被设置为true时，当配置文件发生改变，将会被重新加载，默认为true
+    - scanPeriod: 检测配置文件是否有修改的时间间隔，如果没有给出时间单位，默认为毫秒，当scan=true时这个值生效，默认时间间隔为1分钟
+    - debug: 当被设置为true时，将打印出logback内部日志信息，实时查看logback运行信息，默认为false
++ ``<logger>``
+    - 用来设置某一个包或者具体某一个类的日志打印级别,以及指定子节点 **appender**，**logger**可以包含0个或多个**appender-ref**元素
+    - name属性: 用来指定受此logger约束的某一个包或者具体的某一个类
+    - level属性: 用来指定日志打印级别，未设置会继承上层的日志级别
+    - additivity属性: 是否向上级logger传递打印信息，默认为true
+    - root节点是一个特殊的logger，name = root,代码参考 ``LoggerContext``
