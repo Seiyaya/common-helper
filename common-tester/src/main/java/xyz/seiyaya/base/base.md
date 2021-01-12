@@ -419,3 +419,20 @@ String result = f.get();
     - level属性: 用来指定日志打印级别，未设置会继承上层的日志级别
     - additivity属性: 是否向上级logger传递打印信息，默认为true
     - root节点是一个特殊的logger，name = root,代码参考 ``LoggerContext``
++ ``<appender>``
+    - **<appender>** 是**<configuration>**的子节点，是负责**写日志**的组件，必要的属性name和class
+    - name值的是appender的名称，class表示的是appender的全限定名
+    - **<appender name="FILE" class="ch.qos.logback.core.FileAppender">**的子节点
+        - **<file>** 表示写入的文件名
+        - **<append>** 表示是否日志追加到末尾
+        - **<encoder>** 输出格式
+        - **<filter>** 当前日志级别下在进行一次过滤
+    - class = ch.qos.logback.core.rolling.RollingFileAppender,滚动记录文件，先将日志输出到指定文件，符合指定条件再将日志记录到其他文件
++ ``AsyncAppender``
+    1. 异步日志大致执行流程：配置了异步日志系统会初始化一个 **AsyncAppender-Worker-ASYNC** 的线程
+    2. 当**Logging Event**进入 AsyncAppender后，AsyncAppender会调用**appender()**方法，appender方法中再将event填入Buffer前(使用的Buffer为BlockingQueue，具体实现为ArrayBlockingQueue)
+        会先判断当前Buffer的容量以及丢弃日志特性是否开启，当消费能力不如生产能力时，AsyncAppender会将超出Buffer容量的Logging Event的级别进行丢弃，作为消费速度一旦跟不上生产速度导致Buffer溢出处理的一种方式。  
+        上面的线程的作用，就是从Buffer中取出Event，交给对应的appender进行后面的日志推送  
+    3. AsyncAppender并不处理日志，只是添加了一个缓冲区，并在内部创建一个工作线程从队列头部获取日志，之后将获取的日志循环记录到附加的其他appender上去。  
+        AsyncAppender仅仅充当的是事件转发器，必须引用另外一个appender来做事
+    4. 具体的代码参考 ** AsyncAppenderBase ** 

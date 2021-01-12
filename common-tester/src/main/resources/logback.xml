@@ -5,6 +5,41 @@
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%level] [%thread] [%c{0}.%M] Line:%-3L - [%msg]%n</pattern>
         </encoder>
     </appender>
+
+
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>/logs/demo.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%level] [%thread] [%c{0}.%M] Line:%-3L - [%msg]%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE-ROLLING-INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>/rolling-file-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- 控制保留的归档文件的最大数量 -->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%level] [%thread] [%c{0}.%M] Line:%-3L - [%msg]%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <!--匹配到了warn级别的日志就接收，否则不进行输出-->
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <appender name ="ASYNC" class= "ch.qos.logback.classic.AsyncAppender">
+        <!-- 不丢失日志.默认的,如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的日志，默认值为queueSize/5 -->
+        <discardingThreshold>0</discardingThreshold>
+        <!-- 更改默认的队列的深度,该值会影响性能.默认值为256 -->
+        <queueSize>256</queueSize>
+        <!-- 添加附加的appender,最多只能添加一个 -->
+        <appender-ref ref ="FILE-ROLLING-INFO"/>
+    </appender>
     <root level="DEBUG">
         <appender-ref ref="CONSOLE"/>
     </root>
