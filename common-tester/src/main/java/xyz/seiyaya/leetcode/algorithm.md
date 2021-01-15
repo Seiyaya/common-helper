@@ -104,6 +104,11 @@ public static int coinChangeByDp(int[] coins, int amount, int[] dp){
 + 二叉搜索树 ( N * LogK )
 
 ## 并查集
++ 并查集例子查看 ** xyz.seiyaya.leetcode.union** 的并查集变形
++ Solution947
++ Solution684
+
+
 并查集是一种树型的数据结构，用于处理一些不交集的合并及查询问题，有一种联合-查找定义两种操作
     - find: 确定元素属于哪一个子集。它可以被用来确定两个元素是否属于同一子集
     - union: 将两个子集合并成同一个集合
@@ -111,3 +116,9 @@ public static int coinChangeByDp(int[] coins, int amount, int[] dp){
 
 需要主要的地方
 + 并查集维护的是一堆集合而不是一个集合
+
+
+## 字典树
++ 字典树的例子查看: ** xyz.seiyaya.collection.data.TrieTree **
++ Solution208: 实现前缀树
++ Solution820: 单词的压缩编码

@@ -3,6 +3,30 @@
     - String 声明的是不可变的对象，每次操作都会生成新的 String 对象，然后将指针指向新的 String 对象。都是被final修饰过了的
     - StringBuffer的操作字符串的方法都是被synchronized同步关键字包装过
 
+# List
+## ArrayList
+扩容: size * 3/2 +1,jdk1.8进行的是 **size + (size >> 1)** ,最终都是调用**Arrays.copyOf**方法  
+
+删除: **System.arraycopy**方法整体向前移动一个位置，被删除的位置为null  
+
+添加: 添加位置之后的向后移动(判断是否需要扩容)，添加位置插入元素
+vector和arraylist的区别: Vector是线程安全的，ArrayList是线程非安全的,vector指定了增长因子，扩容的时候加上这个数  
+arraylist的elementData用transient修饰
+    - 因为在序列化的过程中ArrayList的elementData不一定是满的，所以ArrayList重写了**writeObject**方法
+    
+## LinkedList
+
+## CopyOnWriteArrayList
++ vector虽然是线程安全的，但是它针对的是单个操作的线程安全，几个操作组合在一起仍然是线程不安全的，同时增删也会抛出**ConcurrentModificationException**
++ CopyOnWriteArrayList的理念
+    - 读写分离
+    - 最终一致性: 能够容忍一定的时间内的数据不一致性，不是任何场景都实用(比如火车售票，秒杀)
+    
+# Map
+## HashMap
+HashMap的table为什么是transient   
+    因为hashCode方法和平台有关，不同的VM平台hashCode不一样，解决办法是重写**writeObject**方法
+
 # Object
 + 对象的深浅复制(深浅克隆)
     - 实现克隆的方法，实现接口`Cloneable`接口，然后实现方法clone，可以实现深克隆
@@ -16,7 +40,7 @@
 
 
 # 线程
-## stop() 和 destory()
+## stop() 和 destroy()
 + 能否将运行一半的线程直接杀死
     - 理论上可以但是并不推荐，因为线程使用的资源(文件描述符、网络链接)等不能正常关闭
     - 最好是不要强行打断线程，合理的方法是等待线程运行完毕
