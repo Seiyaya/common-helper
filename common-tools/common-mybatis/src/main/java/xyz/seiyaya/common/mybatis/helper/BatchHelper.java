@@ -22,17 +22,58 @@ public class BatchHelper {
      * @param list
      * @param <T>
      */
-    public static <T> void batchInsert(BaseMapper<T> baseMapper,List<T> list){
-        List<T> insertList = new ArrayList<>();
-        for(T t : list){
-            insertList.add(t);
-            if(insertList.size() >= DEFAULT_SIZE){
-                baseMapper.batchInsert(insertList);
-                insertList.clear();
+    public static <T> void batchInsert(BaseMapper<T> baseMapper,List<T> list,Boolean isLast){
+        if(isLast){
+            if(CollectionHelper.isNotEmpty(list)){
+                baseMapper.batchInsert(list);
+                list.clear();
+            }
+        }else{
+            if(list.size() >= DEFAULT_SIZE){
+                baseMapper.batchInsert(list);
             }
         }
-        if(CollectionHelper.isNotEmpty(insertList)){
-            baseMapper.batchInsert(insertList);
+    }
+
+
+    /**
+     * 批量插入，默认不是插入所有
+     * @param baseMapper
+     * @param list
+     * @param <T>
+     */
+    public static <T> void batchInsert(BaseMapper<T> baseMapper,List<T> list){
+        batchInsert(baseMapper,list,Boolean.FALSE);
+    }
+
+
+    /**
+     * 批量插入，默认不是插入所有
+     * @param baseMapper
+     * @param list
+     * @param <T>
+     */
+    public static <T> void insertList(BaseMapper<T> baseMapper,List<T> list){
+        insertList(baseMapper,list,Boolean.FALSE);
+    }
+
+
+    /**
+     * 默认直接用200切割
+     * @param baseMapper
+     * @param list
+     * @param <T>
+     */
+    public static <T> void insertList(BaseMapper<T> baseMapper,List<T> list,Boolean isLast){
+        if(isLast){
+            if(CollectionHelper.isNotEmpty(list)){
+                baseMapper.insertList(list);
+                list.clear();
+            }
+        }else{
+            if(list.size() >= DEFAULT_SIZE){
+                baseMapper.insertList(list);
+            }
         }
     }
 }
