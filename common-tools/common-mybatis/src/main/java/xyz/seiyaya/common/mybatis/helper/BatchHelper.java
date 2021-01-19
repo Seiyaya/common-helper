@@ -3,7 +3,6 @@ package xyz.seiyaya.common.mybatis.helper;
 import xyz.seiyaya.common.helper.CollectionHelper;
 import xyz.seiyaya.common.mybatis.base.BaseMapper;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,6 +30,7 @@ public class BatchHelper {
         }else{
             if(list.size() >= DEFAULT_SIZE){
                 baseMapper.batchInsert(list);
+                list.clear();
             }
         }
     }
@@ -73,6 +73,7 @@ public class BatchHelper {
         }else{
             if(list.size() >= DEFAULT_SIZE){
                 baseMapper.insertList(list);
+                list.clear();
             }
         }
     }

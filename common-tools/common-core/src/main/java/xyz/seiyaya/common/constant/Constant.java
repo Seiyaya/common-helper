@@ -54,4 +54,12 @@ public class Constant {
 
         public static final int D1 = 12 * H1;
     }
+
+    /**
+     * 特殊符号
+     */
+    public static class Sign{
+
+        public static final String HORIZONTAL_LINE = "-";
+    }
 }
