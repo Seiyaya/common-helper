@@ -41,7 +41,7 @@
         <mysql.version>5.1.47</mysql.version>
         <fastjson.version>1.2.44</fastjson.version>
         <dubbo-spring-boot.version>2.0.0</dubbo-spring-boot.version>
-        <dubbo.version>2.6.1</dubbo.version>
+        <dubbo.version>2.6.9</dubbo.version>
         <shiro.version>1.2.3</shiro.version>
         <druid.version>0.2.23</druid.version>
         <math.version>3.6.1</math.version>
