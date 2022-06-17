@@ -39,7 +39,7 @@
         <mybatis.pagehelper.version>4.1.4</mybatis.pagehelper.version>
         <apache.poi.version>3.6</apache.poi.version>
         <mysql.version>5.1.47</mysql.version>
-        <fastjson.version>1.2.44</fastjson.version>
+        <fastjson.version>1.2.83</fastjson.version>
         <dubbo-spring-boot.version>2.0.0</dubbo-spring-boot.version>
         <dubbo.version>2.6.1</dubbo.version>
         <shiro.version>1.2.3</shiro.version>
